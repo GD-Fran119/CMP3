@@ -2,9 +2,13 @@ package com.example.cmp3
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
 
@@ -16,7 +20,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
         title = title
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        viewPager = findViewById<ViewPager2>(R.id.view_pager)
+        viewPager = findViewById(R.id.view_pager)
 
         viewPager.adapter = adapter
 
@@ -25,9 +29,6 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
                 val fragment = (viewPager.adapter as MainViewFragmentAdapter).createFragment(position)
                 tab.text = fragment.toString()
         }.attach()
-
-        //TODO
-        //Fix click on tabs
 
         tabLayout.addOnTabSelectedListener(this)
 

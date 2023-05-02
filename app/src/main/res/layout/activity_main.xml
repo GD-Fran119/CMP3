@@ -17,7 +17,16 @@
         android:clickable="true"
         android:focusable="true"
         app:tabBackground="@color/white"
+
         />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintBottom_toTopOf="@id/view_pager"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -27,6 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
