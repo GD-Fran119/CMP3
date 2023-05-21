@@ -28,8 +28,8 @@ class SongList{
         return canciones[pos]
     }
 
-    fun getCanciones(): Array<Song>{
-        return canciones.toTypedArray()
+    fun getListSize(): Int{
+        return canciones.size
     }
     fun setCanciones(newCanciones: Array<Song>){
         this.canciones = newCanciones.toMutableList()

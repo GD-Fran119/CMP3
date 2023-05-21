@@ -4,6 +4,7 @@ import Song
 import SongArrayAdapter
 import SongList
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -21,6 +22,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MimeTypes
+import androidx.recyclerview.widget.RecyclerView
 
 
 class SongListView : Fragment() {
@@ -37,8 +39,7 @@ class SongListView : Fragment() {
             }
         }
 
-    //private val songList = SongList("", mutableListOf(), "")
-    private val songList = arrayListOf<String>()
+    private val songList = SongList("", mutableListOf(), "")
 
 
     private val title = "Songs"
@@ -91,12 +92,12 @@ class SongListView : Fragment() {
     }
     private fun createListView(){
 
-        val listView = view?.findViewById<ListView>(R.id.mainSongListview)
-
-        if(listView == null) Toast.makeText(activity as Context, "Lista null", Toast.LENGTH_LONG).show()
+        val listView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
+        listView?.setHasFixedSize(true)
 
         findMusic()
-        val adapter = ArrayAdapter(activity as Context, android.R.layout.simple_list_item_1, songList)
+        val adapter = SongArrayAdapter.create(activity as Activity, songList)
+
         listView?.adapter = adapter
     }
 
@@ -125,7 +126,7 @@ class SongListView : Fragment() {
         val selectionArgs = arrayOf(MimeTypes.AUDIO_MPEG)
 
 // Display videos in alphabetical order based on their display name.
-        val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
+        val sortOrder = "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
 
         val query = activity?.contentResolver?.query(
             collection,
@@ -148,7 +149,6 @@ class SongListView : Fragment() {
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
-            Toast.makeText(activity as Context, cursor.count.toString(), Toast.LENGTH_SHORT).show()
             while (cursor.moveToNext()) {
                 // Get values of columns for a given video.
                 val path = cursor.getString(pathColumn)
@@ -158,9 +158,7 @@ class SongListView : Fragment() {
                 val album = cursor.getString(albumColumn)
                 val size = cursor.getInt(sizeColumn)
 
-                val s = " >< "
-                songList += path + s + title + s + duration + s + artist + s + album + s + size
-                //songList.addCancion(Song(name, artist, album, duration.toUInt(), path, size, null))
+                songList.addCancion(Song(title, artist, album, duration.toUInt(), path, size, null))
             }
         }
     }

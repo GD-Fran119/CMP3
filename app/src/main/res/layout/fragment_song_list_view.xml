@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SongListView"
     android:tag="Songs">
 
@@ -14,9 +15,13 @@
         android:text="Primera tab"
         android:textSize="20sp" />
 
-    <ListView
-        android:id="@+id/mainSongListview"
+    <androidx.recyclerview.widget.RecyclerView
+        tools:listitem="@layout/item_song_list_view"
+        android:id="@+id/mainSongListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10sp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 
 </RelativeLayout>
