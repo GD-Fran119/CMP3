@@ -8,7 +8,7 @@ class Song(
     val letraCancion: String?) {
 
     fun getSizeMB(): Float{
-        val TAMANO_MB = 1024.0f
+        val TAMANO_MB = 1024.0f * 1024f
 
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.HALF_EVEN
