@@ -1,37 +1,31 @@
-class SongList{
+class SongList(val title: String, private var songs: MutableList<Song>, val creationDate: String) {
 
-    val nombre: String
-    val fechaCreacion: String
     val DEFAULT_DATE = "1970-01-01"
-    private var canciones: MutableList<Song>
-    var duracion: UInt = 0u
+    var duration: UInt = 0u
         private set
 
-    constructor(nombre: String, canciones: MutableList<Song>, fechaCreacion: String) {
-        this.nombre = nombre
-        this.canciones = canciones
-        this.fechaCreacion = fechaCreacion
-        duracion = 0.toUInt()
-        this.computeDuracion()
+    init {
+        duration = 0.toUInt()
+        this.computeDuration()
     }
 
-    private fun computeDuracion(){
-        duracion = 0.toUInt()
-        canciones.forEach { s -> duracion += s.duracion }
+    private fun computeDuration(){
+        duration = 0.toUInt()
+        songs.forEach { s -> duration += s.duration }
     }
 
-    fun addCancion(cancion: Song){
-        canciones += cancion
+    fun addSong(newSong: Song){
+        songs += newSong
     }
 
-    fun getCancion(pos: Int): Song{
-        return canciones[pos]
+    fun getSong(pos: UInt): Song{
+        return songs[pos.toInt()]
     }
 
-    fun getListSize(): Int{
-        return canciones.size
+    fun getListSize(): UInt{
+        return songs.size.toUInt()
     }
-    fun setCanciones(newCanciones: Array<Song>){
-        this.canciones = newCanciones.toMutableList()
+    fun setSongs(newList: Array<Song>){
+        this.songs = newList.toMutableList()
     }
 }

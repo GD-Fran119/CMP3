@@ -37,7 +37,7 @@ class SongListView : Fragment() {
         }
 
     private val songList = SongList("", mutableListOf(), "")
-
+    private val player = Player.instance
 
     private val title = "Songs"
     override fun onCreateView(
@@ -93,6 +93,9 @@ class SongListView : Fragment() {
         listView?.setHasFixedSize(true)
 
         findMusic()
+        player.setList(songList)
+        player.setCurrentSong(0.toUInt())
+
         val adapter = SongArrayAdapter.create(activity as Activity, songList)
 
         listView?.adapter = adapter
@@ -118,11 +121,9 @@ class SongListView : Fragment() {
             MediaStore.Video.Media.SIZE
         )
 
-// Show only videos that are at least 5 minutes in duration.
         val selection = "${MediaStore.Audio.Media.MIME_TYPE} like ?"
         val selectionArgs = arrayOf(MimeTypes.AUDIO_MPEG)
 
-// Display videos in alphabetical order based on their display name.
         val sortOrder = "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
 
         val query = activity?.contentResolver?.query(
@@ -155,10 +156,11 @@ class SongListView : Fragment() {
                 val album = cursor.getString(albumColumn)
                 val size = cursor.getInt(sizeColumn)
 
-                songList.addCancion(Song(title, artist, album, duration.toUInt(), path, size, null))
+                songList.addSong(Song(title, artist, album, duration.toUInt(), path, size, null))
             }
         }
     }
+
 
     private fun showPermissionExplanation(){
         view?.findViewById<TextView>(R.id.textoPrimeraTab)?.text = "Permisos no garantizados"

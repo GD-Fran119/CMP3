@@ -1,4 +1,5 @@
-import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,23 +18,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SongArrayAdapter: RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder> {
-
-    private lateinit var context: Activity
-    private lateinit var songs: SongList
-
-    private constructor(c : Activity, s: SongList){
-        this.songs = s
-        this.context = c
-    }
+class SongArrayAdapter private constructor(private var context: Context, private var songs: SongList) :
+    RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder>() {
 
     companion object{
-        fun create(c : Activity, s: SongList): SongArrayAdapter{
+        fun create(c : Context, s: SongList): SongArrayAdapter{
             return SongArrayAdapter(c, s)
         }
     }
 
-    class SongListViewHolder(view: View, activity: Activity) : RecyclerView.ViewHolder(view) {
+    class SongListViewHolder(private val view: View, activity: Context) : RecyclerView.ViewHolder(view) {
 
         private val activity = activity
         private val titleText: TextView = view.findViewById(R.id.title)
@@ -42,31 +37,44 @@ class SongArrayAdapter: RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder
         private var job : Job? = null
         private lateinit var song: Song
 
-        fun bind(song: Song) {
+        fun bind(song: Song, pos: UInt) {
 
             this.song = song
-            titleText.text = song.nombre
-            subtitleText.text = "${song.artista} - ${song.album}"
+            titleText.text = song.title
+            val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
+            subtitleText.text = "${artist} - ${song.album}"
+
+            imageView.setImageResource(R.color.light_blue_400)
+
+            view.setOnClickListener(View.OnClickListener {
+                //New intent to play control view with song playing
+                Player.instance.setCurrentSong(pos)
+                val intent = Intent(activity, PlayControlView::class.java)
+                activity.startActivity(intent)
+
+            })
+
             button.setOnClickListener(View.OnClickListener {
                 Toast.makeText(activity, song.getSizeMB().toString(), Toast.LENGTH_SHORT).show()
             })
-
-            imageView.setImageResource(R.color.light_blue_400)
 
             if(job != null)
                 job?.cancel()
 
             job = CoroutineScope(Dispatchers.Main).launch(Dispatchers.Default) {
+
                 val mediaRetriever = MediaMetadataRetriever()
-                mediaRetriever.setDataSource(song.rutaArchivo)
+                mediaRetriever.setDataSource(song.path)
 
                 val data = mediaRetriever.embeddedPicture
                 mediaRetriever.release()
 
                 if(data != null) {
                     val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+
                     withContext(Dispatchers.Main) {
                         imageView.setImageBitmap(bitmap)
+                        imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
                     }
                 }
             }
@@ -81,11 +89,11 @@ class SongArrayAdapter: RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder
     }
 
     override fun onBindViewHolder(holder: SongListViewHolder, position: Int) {
-        val song = songs.getCancion(position)
-        holder.bind(song)
+        val song = songs.getSong(position.toUInt())
+        holder.bind(song, position.toUInt())
     }
 
     override fun getItemCount(): Int {
-        return songs.getListSize()
+        return songs.getListSize().toInt()
     }
 }

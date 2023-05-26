@@ -1,13 +1,25 @@
 package com.example.cmp3
 
+import ImageFadeInAnimation
+import ImageFinderAndSetter
+import Player
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
 
@@ -22,7 +34,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
         viewPager = findViewById(R.id.view_pager)
 
         findViewById<ConstraintLayout>(R.id.main_current_song_container).setOnClickListener(View.OnClickListener {
-            Toast.makeText(this, "Song view clicked", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, PlayControlView::class.java))
         })
 
         viewPager.adapter = adapter
@@ -35,6 +47,21 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener{
 
         tabLayout.addOnTabSelectedListener(this)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val currentSong = Player.instance.getCurrentSong()
+        val imageView = findViewById<ImageView>(R.id.main_current_song_img)
+        imageView.setImageResource(R.mipmap.ic_launcher)
+
+        if(currentSong != null){
+            findViewById<TextView>(R.id.main_current_song_title).text = currentSong.title
+            findViewById<TextView>(R.id.main_current_song_desc).text = currentSong.artist
+
+            ImageFinderAndSetter.setImage(imageView, currentSong.path)
+        }
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {

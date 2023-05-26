@@ -2,10 +2,10 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 class Song(
-    val nombre: String, val artista: String,
-    val album: String, val duracion: UInt,
-    val rutaArchivo: String, val tamanoArchivo: Int,
-    val letraCancion: String?) {
+    val title: String, val artist: String,
+    val album: String, val duration: UInt,
+    val path: String, val fileSize: Int,
+    val lyricsPath: String?) {
 
     fun getSizeMB(): Float{
         val TAMANO_MB = 1024.0f * 1024f
@@ -13,6 +13,6 @@ class Song(
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.HALF_EVEN
 
-        return df.format(tamanoArchivo.toFloat() / TAMANO_MB).toFloat()
+        return df.format(fileSize.toFloat() / TAMANO_MB).toFloat()
     }
 }
