@@ -18,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.media3.common.MimeTypes
 import androidx.recyclerview.widget.RecyclerView
 
@@ -31,12 +33,14 @@ class SongListView : Fragment() {
             if (isGranted) {
                 createListView()
                 deleteExplanationText()
+                val result = ""
+                setFragmentResult(resultKey, bundleOf("bundleKey" to result))
             } else {
                 showPermissionExplanation()
             }
         }
 
-    private val songList = SongList("", mutableListOf(), "")
+    private val mainSongList = SongList("Main song list", mutableListOf(), "")
     private val player = Player.instance
 
     private val title = "Songs"
@@ -45,7 +49,6 @@ class SongListView : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_song_list_view, container, false)
     }
 
@@ -65,6 +68,9 @@ class SongListView : Fragment() {
                 // You can use the API that requires the permission.
                 createListView()
                 deleteExplanationText()
+                //Notify activity that music is ready
+                val result = ""
+                setFragmentResult(resultKey, bundleOf("bundleKey" to result))
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_AUDIO) -> {
                 showPermissionExplanation()
@@ -93,10 +99,10 @@ class SongListView : Fragment() {
         listView?.setHasFixedSize(true)
 
         findMusic()
-        player.setList(songList)
+        player.setList(mainSongList)
         player.setCurrentSong(0.toUInt())
 
-        val adapter = SongArrayAdapter.create(activity as Activity, songList)
+        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList)
 
         listView?.adapter = adapter
     }
@@ -156,7 +162,7 @@ class SongListView : Fragment() {
                 val album = cursor.getString(albumColumn)
                 val size = cursor.getInt(sizeColumn)
 
-                songList.addSong(Song(title, artist, album, duration.toUInt(), path, size, null))
+                mainSongList.addSong(Song(title, artist, album, duration.toUInt(), path, size, null))
             }
         }
     }
@@ -167,6 +173,7 @@ class SongListView : Fragment() {
     }
 
     companion object {
+        const val resultKey = "llavecita"
         @JvmStatic
         fun newInstance() =
             SongListView()

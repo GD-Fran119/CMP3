@@ -1,3 +1,3 @@
 enum class PlayMode {
-    ACTUAL_LOOP, LIST_LOOP, RANDOM
+    CURRENT_LOOP, LIST_LOOP, RANDOM
 }
