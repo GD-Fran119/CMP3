@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class SongArrayAdapter private constructor(private var context: Context, private var songs: SongList) :
     RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder>() {
@@ -27,9 +28,8 @@ class SongArrayAdapter private constructor(private var context: Context, private
         }
     }
 
-    class SongListViewHolder(private val view: View, activity: Context) : RecyclerView.ViewHolder(view) {
+    class SongListViewHolder(private val view: View, private val activity: Context) : RecyclerView.ViewHolder(view) {
 
-        private val activity = activity
         private val titleText: TextView = view.findViewById(R.id.title)
         private val subtitleText: TextView = view.findViewById(R.id.albumNArtist)
         private val imageView: ImageView = view.findViewById(R.id.icon)
@@ -46,17 +46,21 @@ class SongArrayAdapter private constructor(private var context: Context, private
 
             imageView.setImageResource(R.color.light_blue_400)
 
-            view.setOnClickListener(View.OnClickListener {
+            view.setOnClickListener {
                 //New intent to play control view with song playing
-                Player.instance.setCurrentSong(pos)
+                try {
+                    Player.instance.setCurrentSongAndPLay(pos)
+                }catch (e: Exception){
+                    Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show()
+                }
                 val intent = Intent(activity, PlayControlView::class.java)
                 activity.startActivity(intent)
 
-            })
+            }
 
-            button.setOnClickListener(View.OnClickListener {
+            button.setOnClickListener {
                 Toast.makeText(activity, song.getSizeMB().toString(), Toast.LENGTH_SHORT).show()
-            })
+            }
 
             if(job != null)
                 job?.cancel()

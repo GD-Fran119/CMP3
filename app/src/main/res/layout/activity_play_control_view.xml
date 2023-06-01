@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".PlayControlView">
+    tools:context=".PlayControlView"
+    android:id="@+id/play_control_main_container">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/play_control_top_container"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="30sp"
-        android:layout_marginTop="30sp"
+        android:paddingHorizontal="30sp"
+        android:paddingVertical="20sp"
+        android:layout_marginBottom="30sp"
+        android:background="#80000000"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/play_control_img_card"
         android:layout_width="match_parent"
@@ -71,11 +75,13 @@
             android:insetRight="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="25dp"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/ic_random_mode"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/play_control_playmode_button"
-            android:id="@+id/play_control_songlist_button"
+            app:layout_constraintEnd_toStartOf="@id/play_control_songlist_button"
+            android:id="@+id/play_control_playmode_button"
             android:layout_width="50sp"
             android:layout_height="50sp"
             />
@@ -86,13 +92,16 @@
             android:insetRight="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="25dp"
-            android:id="@+id/play_control_playmode_button"
+            android:background="@drawable/ic_list_items"
+            android:backgroundTint="@color/white"
+            android:id="@+id/play_control_songlist_button"
+
             android:layout_width="50sp"
             android:layout_height="50sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/play_control_songlist_button"
+            app:layout_constraintStart_toEndOf="@id/play_control_playmode_button"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -118,6 +127,8 @@
             android:id="@+id/play_control_previous_button"
             android:layout_width="50sp"
             android:layout_height="50sp"
+            android:background="@drawable/ic_previous"
+            android:backgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -131,8 +142,10 @@
             android:insetRight="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="50dp"
+            android:background="@drawable/ic_play"
             android:layout_width="100sp"
             android:layout_height="100sp"
+            android:backgroundTint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/play_control_previous_button"
@@ -145,6 +158,8 @@
             android:insetRight="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="25dp"
+            android:background="@drawable/ic_next"
+            android:backgroundTint="@color/white"
             android:id="@+id/play_control_next_button"
             android:layout_width="50sp"
             android:layout_height="50sp"
