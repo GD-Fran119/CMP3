@@ -1,5 +1,7 @@
 package com.example.cmp3
 
+import CurrentSongAndPlaylistConfigSaver
+import MainListHolder
 import Song
 import SongArrayAdapter
 import SongList
@@ -16,12 +18,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.media3.common.MimeTypes
+import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.Exception
 
 
 class SongListView : Fragment() {
@@ -33,15 +36,12 @@ class SongListView : Fragment() {
             if (isGranted) {
                 createListView()
                 deleteExplanationText()
-                val result = ""
-                setFragmentResult(resultKey, bundleOf("bundleKey" to result))
             } else {
                 showPermissionExplanation()
             }
         }
 
-    private val mainSongList = SongList("Main song list", mutableListOf(), "")
-    private val player = Player.instance
+    private val mainSongList = SongList("Main list", mutableListOf(), "")
 
     private val title = "Songs"
     override fun onCreateView(
@@ -66,11 +66,13 @@ class SongListView : Fragment() {
                 Manifest.permission.READ_MEDIA_AUDIO
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
-                createListView()
-                deleteExplanationText()
-                //Notify activity that music is ready
-                val result = ""
-                setFragmentResult(resultKey, bundleOf("bundleKey" to result))
+                try {
+                    createListView()
+                    deleteExplanationText()
+
+                }catch (e: Exception){
+                    Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
+                }
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_AUDIO) -> {
                 showPermissionExplanation()
@@ -99,8 +101,9 @@ class SongListView : Fragment() {
         listView?.setHasFixedSize(true)
 
         findMusic()
-        player.setList(mainSongList)
-        player.setCurrentSong(0.toUInt())
+        MainListHolder.setMainList(mainSongList)
+
+        CurrentSongAndPlaylistConfigSaver.loadPlayList(activity as Context)
 
         val adapter = SongArrayAdapter.create(activity as Activity, mainSongList)
 
@@ -167,13 +170,11 @@ class SongListView : Fragment() {
         }
     }
 
-
     private fun showPermissionExplanation(){
         view?.findViewById<TextView>(R.id.textoPrimeraTab)?.text = "Permisos no garantizados"
     }
 
     companion object {
-        const val resultKey = "llavecita"
         @JvmStatic
         fun newInstance() =
             SongListView()

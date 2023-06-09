@@ -8,8 +8,8 @@ class Player private constructor(){
     private var currentSong : Song? = null
     private var playMode : PlayMode = PlayMode.LIST_LOOP
     private var currentPos : UInt = 0.toUInt()
-    private var playState = false
     private var mediaPLayer : MediaPlayer = MediaPlayer()
+    private var isPlaying = false
 
     init{
         mediaPLayer.reset()
@@ -21,7 +21,7 @@ class Player private constructor(){
         }
     }
 
-    public fun changePlayMode(){
+    fun changePlayMode(){
         playMode = when(playMode){
             PlayMode.RANDOM -> PlayMode.CURRENT_LOOP
             PlayMode.CURRENT_LOOP -> PlayMode.LIST_LOOP
@@ -29,64 +29,58 @@ class Player private constructor(){
         }
     }
 
-    public fun isListLoop(): Boolean{
+    fun isListLoop(): Boolean{
         return playMode == PlayMode.LIST_LOOP
     }
-    public fun isSongLoop(): Boolean{
+    fun isSongLoop(): Boolean{
         return playMode == PlayMode.CURRENT_LOOP
     }
-    public fun isRandomLoop(): Boolean{
+    fun isRandomLoop(): Boolean{
         return playMode == PlayMode.RANDOM
     }
-    public fun isPlayingSong(): Boolean{
-
-        val isPlaying: Boolean = try{
-            mediaPLayer.isPlaying
-        }catch (e: Exception){
-            false
-        }
-
-        return isPlaying
+    fun isPlayingSong() = isPlaying
+    fun pause(){
+        if(mediaPLayer.isPlaying)
+            mediaPLayer.pause()
+        isPlaying = false
     }
-    public fun pause(){
-        if(mediaPLayer.isPlaying) mediaPLayer.pause()
-        playState = false
-    }
-    public fun play(){
+    fun play(){
         try {
             mediaPLayer.start()
-            playState = true
+            isPlaying = true
         }catch (_: Exception){}
     }
-    public fun listSize(): UInt{
+    fun listSize(): UInt{
         if(songList == null) return 0.toUInt()
 
         return songList!!.getListSize()}
-    public fun setList(newList: SongList){
+    fun setList(newList: SongList){
         songList = newList
         mediaPLayer.reset()
         currentPos = 0.toUInt()
         currentSong = songList!!.getSong(currentPos)
     }
-    public fun next(){
+
+    fun getList() = songList
+    fun next(){
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos + 1.toUInt()) % songList!!.getListSize())
             PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
-            PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(0.toUInt(), songList!!.getListSize()))
+            PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(songList!!.getListSize()))
         }
     }
-    public fun previous(){
+    fun previous(){
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos - 1.toUInt()) % songList!!.getListSize())
             PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
             PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(0.toUInt(), songList!!.getListSize()))
         }
     }
-    public fun setTime(time: UInt){}
+    fun setTime(time: UInt){}
 
-    public fun setCurrentSong(pos: UInt){
+    fun setCurrentSong(pos: UInt){
 
-        if (pos < songList!!.getListSize()) {
+        if (pos < songList!!.getListSize() && pos != currentPos) {
             currentSong = songList!!.getSong(pos)
             currentPos = pos
 
@@ -97,19 +91,23 @@ class Player private constructor(){
         }
 
     }
-    public fun setCurrentSongAndPLay(pos: UInt){
+
+    fun getCurrentPos() = currentPos
+    fun setCurrentSongAndPLay(pos: UInt){
         setCurrentSong(pos)
         if(currentSong != null) {
             mediaPLayer.setOnPreparedListener {
                 mediaPLayer.start()
+                isPlaying = true
             }
-            playState = true
             mediaPLayer.setOnCompletionListener {
                 next()
+                SongFinishedNotifier.notifySongChanged()
             }
         }
+        SongFinishedNotifier.notifySongChanged()
     }
 
-    public fun getCurrentSong(): Song?{return currentSong}
+    fun getCurrentSong(): Song?{return currentSong}
 
 }

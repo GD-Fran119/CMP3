@@ -44,11 +44,12 @@ class SongArrayAdapter private constructor(private var context: Context, private
             val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
             subtitleText.text = "${artist} - ${song.album}"
 
-            imageView.setImageResource(R.color.light_blue_400)
+            imageView.setImageResource(R.drawable.ic_music_note)
 
             view.setOnClickListener {
                 //New intent to play control view with song playing
                 try {
+                    Player.instance.setList(MainListHolder.getMainList()!!)
                     Player.instance.setCurrentSongAndPLay(pos)
                 }catch (e: Exception){
                     Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show()

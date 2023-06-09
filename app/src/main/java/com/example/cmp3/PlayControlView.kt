@@ -1,8 +1,8 @@
 package com.example.cmp3
 
 import ImageFadeInAnimation
-import ImageFinderAndSetter
 import Player
+import SongFinishedNotifier
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AppCompatActivity
@@ -18,12 +18,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlayControlView : AppCompatActivity() {
+class PlayControlView : AppCompatActivity(), UpdateUI {
     private lateinit var title: TextView
     private lateinit var desc: TextView
     private lateinit var img: ImageView
     private lateinit var playModeBtn: MaterialButton
     private lateinit var playButton: MaterialButton
+    private lateinit var listButton: MaterialButton
     private val player = Player.instance
     private var defaultBGColor: Int = 0
 
@@ -40,10 +41,15 @@ class PlayControlView : AppCompatActivity() {
         playButton.setOnClickListener{
             playPauseBtn()
         }
+        listButton = findViewById(R.id.play_control_songlist_button)
+        listButton.setOnClickListener{
+            showSongs()
+        }
 
         playModeBtn = findViewById(R.id.play_control_playmode_button)
         playModeBtn.setOnClickListener{
             changePlayModeBtn()
+            CurrentSongAndPlaylistConfigSaver.savePlayList(this)
         }
 
         findViewById<MaterialButton>(R.id.play_control_next_button).setOnClickListener{
@@ -60,8 +66,12 @@ class PlayControlView : AppCompatActivity() {
 
     }
 
+    private fun showSongs() {
+        ListItemListDialogFragment().show(supportFragmentManager, "dialog")
+    }
+
     private fun changeSongImg() {
-        img.setImageResource(R.mipmap.ic_launcher)
+        img.setImageResource(R.drawable.ic_music_note)
         findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(defaultBGColor)
         CoroutineScope(Dispatchers.Default).launch {
             val currentSong = player.getCurrentSong()
@@ -94,6 +104,12 @@ class PlayControlView : AppCompatActivity() {
         }
     }
 
+    override fun updateUISongFinished(){
+        updateUI()
+        playButton.background = getDrawable(R.drawable.ic_pause)
+        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
+    }
+
     private fun updateUI(){
         val currentSong = player.getCurrentSong()
         title.text = currentSong?.title
@@ -113,6 +129,7 @@ class PlayControlView : AppCompatActivity() {
             }
         }
         updateUI()
+        SongFinishedNotifier.setCurrentActivity(this)
     }
 
     private fun changePlayModeBtnImg() {
@@ -123,6 +140,8 @@ class PlayControlView : AppCompatActivity() {
         }else{
             playModeBtn.background = getDrawable(R.drawable.ic_random_mode)
         }
+
+        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
     }
 
     private fun changePlayButton(){

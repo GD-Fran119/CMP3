@@ -1,16 +1,14 @@
 package com.example.cmp3
 
+import CurrentSongAndPlaylistConfigSaver
 import ImageFinderAndSetter
 import Player
-import android.annotation.SuppressLint
+import SongFinishedNotifier
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.button.MaterialButton
@@ -18,12 +16,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), UpdateUI{
 
     private val adapter =  MainViewFragmentAdapter(supportFragmentManager, lifecycle)
     private lateinit var viewPager : ViewPager2
@@ -31,6 +26,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var nextButton : MaterialButton
     private lateinit var imageView: ImageView
     private val player = Player.instance
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +46,6 @@ class MainActivity : AppCompatActivity(){
             player.next()
             setUpCurrentSongContainer()
             playButton.background = getDrawable(R.drawable.ic_pause)
-        }
-
-        supportFragmentManager.setFragmentResultListener(SongListView.resultKey, this) { _, _ ->
-            setUpCurrentSongContainer()
         }
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
@@ -81,11 +73,11 @@ class MainActivity : AppCompatActivity(){
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
-
     }
 
     override fun onStart() {
         super.onStart()
+        SongFinishedNotifier.setCurrentActivity(this)
 
         setUpCurrentSongContainer()
     }
@@ -108,18 +100,27 @@ class MainActivity : AppCompatActivity(){
             player.play()
             changePlayButton()
         }
+
+        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
     }
 
     private fun setUpCurrentSongContainer(){
-        imageView.setImageResource(R.mipmap.ic_launcher)
+        imageView.setImageResource(R.drawable.ic_music_note)
         val currentSong = Player.instance.getCurrentSong()
         if(currentSong != null){
             findViewById<TextView>(R.id.main_current_song_title).text = currentSong.title
-            findViewById<TextView>(R.id.main_current_song_desc).text = currentSong.artist
+            findViewById<TextView>(R.id.main_current_song_desc).text = if (currentSong.artist == "<unknown>") "Unknown" else currentSong.artist
 
             ImageFinderAndSetter.setImage(imageView, currentSong.path)
 
         }
         changePlayButton()
     }
+
+    override fun updateUISongFinished() {
+        setUpCurrentSongContainer()
+        playButton.background = if (Player.instance.isPlayingSong()) getDrawable(R.drawable.ic_pause) else getDrawable(R.drawable.ic_play)
+        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
+    }
 }
+

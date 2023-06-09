@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class MainViewFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle)
 {
-    private val fragments = arrayOf<Fragment>(SongListView.newInstance(), PlaylistListView.newInstance())
+    private val fragments = arrayOf(SongListView.newInstance(), PlaylistListView.newInstance())
     override fun getItemCount(): Int {
         return fragments.size
     }
