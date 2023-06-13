@@ -11,6 +11,8 @@ class Player private constructor(){
     private var mediaPLayer : MediaPlayer = MediaPlayer()
     private var isPlaying = false
 
+    private var isPlayerAvailable = false
+
     init{
         mediaPLayer.reset()
     }
@@ -55,30 +57,43 @@ class Player private constructor(){
 
         return songList!!.getListSize()}
     fun setList(newList: SongList){
+        isPlayerAvailable = false
         songList = newList
         mediaPLayer.reset()
         currentPos = 0.toUInt()
         currentSong = songList!!.getSong(currentPos)
+        isPlayerAvailable = true
     }
 
     fun getList() = songList
     fun next(){
+        isPlayerAvailable = false
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos + 1.toUInt()) % songList!!.getListSize())
             PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
             PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(songList!!.getListSize()))
         }
+        isPlayerAvailable = true
     }
     fun previous(){
+        isPlayerAvailable = false
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos - 1.toUInt()) % songList!!.getListSize())
             PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
             PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(0.toUInt(), songList!!.getListSize()))
         }
+        isPlayerAvailable = true
     }
-    fun setTime(time: UInt){}
+    fun setTime(time: UInt){
+        try{
+            mediaPLayer.seekTo(time.toInt())
+            play()
+        }catch (_:Exception){}
+    }
 
     fun setCurrentSong(pos: UInt){
+
+        isPlayerAvailable = false
 
         if (pos < songList!!.getListSize() && pos != currentPos) {
             currentSong = songList!!.getSong(pos)
@@ -87,27 +102,43 @@ class Player private constructor(){
             mediaPLayer.reset()
             mediaPLayer.setDataSource(currentSong!!.path)
             mediaPLayer.prepareAsync()
+            mediaPLayer.setOnCompletionListener {
+                next()
+                SongFinishedNotifier.notifySongChanged()
+            }
 
         }
 
+        isPlayerAvailable = true
+
     }
+
+    fun isAvailableProgress() = isPlayerAvailable
 
     fun getCurrentPos() = currentPos
     fun setCurrentSongAndPLay(pos: UInt){
+        isPlayerAvailable = false
         setCurrentSong(pos)
         if(currentSong != null) {
             mediaPLayer.setOnPreparedListener {
                 mediaPLayer.start()
                 isPlaying = true
             }
-            mediaPLayer.setOnCompletionListener {
-                next()
-                SongFinishedNotifier.notifySongChanged()
-            }
         }
         SongFinishedNotifier.notifySongChanged()
+        isPlayerAvailable = true
     }
 
     fun getCurrentSong(): Song?{return currentSong}
+
+    fun getCurrentSongDuration() = currentSong!!.duration
+
+    fun getCurrentSongProgress(): Int{
+        return try {
+            mediaPLayer.currentPosition
+        }catch (_: Exception){
+            0
+        }
+    }
 
 }

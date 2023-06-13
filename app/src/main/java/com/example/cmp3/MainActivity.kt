@@ -7,6 +7,7 @@ import SongFinishedNotifier
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +17,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), UpdateUI{
@@ -26,6 +29,8 @@ class MainActivity : AppCompatActivity(), UpdateUI{
     private lateinit var nextButton : MaterialButton
     private lateinit var imageView: ImageView
     private val player = Player.instance
+    private lateinit var progressBar: ProgressBar
+    private lateinit var progressbarJob: Job
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,13 +78,36 @@ class MainActivity : AppCompatActivity(), UpdateUI{
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
+
+        progressBar = findViewById(R.id.main_current_song_progressbar)
+        if(player.isAvailableProgress()){
+            progressBar.max = Player.instance.getCurrentSongDuration().toInt()
+            progressBar.progress = Player.instance.getCurrentSongProgress()
+        }
+
     }
 
+    override fun onPause() {
+        super.onPause()
+        try{
+            progressbarJob.cancel()
+        }catch (_: Exception){}
+    }
     override fun onStart() {
         super.onStart()
         SongFinishedNotifier.setCurrentActivity(this)
-
         setUpCurrentSongContainer()
+
+        progressbarJob = CoroutineScope(Dispatchers.Main).launch {
+            while(true){
+                delay(500)
+                if(Player.instance.isAvailableProgress()){
+                    progressBar.max = Player.instance.getCurrentSongDuration().toInt()
+                    progressBar.progress = Player.instance.getCurrentSongProgress()
+                }
+            }
+        }
+
     }
 
     private fun changePlayButton(){
@@ -122,5 +150,6 @@ class MainActivity : AppCompatActivity(), UpdateUI{
         playButton.background = if (Player.instance.isPlayingSong()) getDrawable(R.drawable.ic_pause) else getDrawable(R.drawable.ic_play)
         CurrentSongAndPlaylistConfigSaver.savePlayList(this)
     }
+
 }
 

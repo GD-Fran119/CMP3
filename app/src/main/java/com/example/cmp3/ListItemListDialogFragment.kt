@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogItemBinding
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.lang.Exception
 
 /**
@@ -73,7 +72,9 @@ class ListItemListDialogFragment : BottomSheetDialogFragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val currentSong = Player.instance.getList()?.getSong(position.toUInt())
             holder.title.text = currentSong?.title ?: "Unknown"
-            holder.desc.text = "${currentSong?.artist ?: "Unknown"} - ${currentSong?.album ?: "Unknown"}"
+            val artist =  if (currentSong?.artist == "<unknown>") "Unknown" else currentSong?.artist
+            val album = if (currentSong?.artist == "<unknown>") "Unknown" else currentSong?.artist
+            holder.desc.text = "${artist} - ${album}"
             holder.itemView.setOnClickListener {
                 //New intent to play control view with song playing
                 try {

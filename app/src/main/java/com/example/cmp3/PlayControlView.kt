@@ -8,12 +8,15 @@ import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.palette.graphics.Palette
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,6 +30,9 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
     private lateinit var listButton: MaterialButton
     private val player = Player.instance
     private var defaultBGColor: Int = 0
+
+    private lateinit var seekBar: SeekBar
+    private lateinit var seekbarJob: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +68,12 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
             player.previous()
             updateUI()
             playButton.background = getDrawable(R.drawable.ic_pause)
+        }
+
+        seekBar = findViewById(R.id.play_control_seekbar)
+        if(Player.instance.isAvailableProgress()){
+            seekBar.max = Player.instance.getCurrentSongDuration().toInt()
+            seekBar.progress = Player.instance.getCurrentSongProgress()
         }
 
     }
@@ -120,6 +132,13 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        try{
+            seekbarJob.cancel()
+        }catch (_: Exception){}
+
+    }
     override fun onStart() {
         super.onStart()
         CoroutineScope(Dispatchers.Default).launch {
@@ -128,6 +147,38 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
                 changePlayButton()
             }
         }
+
+        seekbarJob = CoroutineScope(Dispatchers.Main).launch {
+            var playerTouched = false
+            seekBar.setOnSeekBarChangeListener(object: OnSeekBarChangeListener{
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    seekBar?.progress = progress
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    playerTouched = true
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    playerTouched = false
+                    if(seekBar != null) {
+                        Player.instance.setTime(seekBar.progress.toUInt())
+                        changePlayButton()
+                    }
+                }
+
+            })
+
+            while(true){
+
+                delay(500)
+                if(!playerTouched && Player.instance.isAvailableProgress()){
+                    seekBar.max = Player.instance.getCurrentSongDuration().toInt()
+                    seekBar.progress = Player.instance.getCurrentSongProgress()
+                }
+            }
+        }
+
         updateUI()
         SongFinishedNotifier.setCurrentActivity(this)
     }
