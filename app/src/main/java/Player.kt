@@ -87,7 +87,6 @@ class Player private constructor(){
     fun setTime(time: UInt){
         try{
             mediaPLayer.seekTo(time.toInt())
-            play()
         }catch (_:Exception){}
     }
 

@@ -100,11 +100,11 @@ class MainActivity : AppCompatActivity(), UpdateUI{
 
         progressbarJob = CoroutineScope(Dispatchers.Main).launch {
             while(true){
-                delay(500)
                 if(Player.instance.isAvailableProgress()){
                     progressBar.max = Player.instance.getCurrentSongDuration().toInt()
                     progressBar.progress = Player.instance.getCurrentSongProgress()
                 }
+                delay(500)
             }
         }
 

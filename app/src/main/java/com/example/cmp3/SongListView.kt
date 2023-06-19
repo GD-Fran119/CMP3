@@ -8,6 +8,7 @@ import SongList
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
@@ -17,14 +18,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MimeTypes
-import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.Exception
+import kotlin.random.Random
+import kotlin.random.nextUInt
 
 
 class SongListView : Fragment() {
@@ -36,6 +39,7 @@ class SongListView : Fragment() {
             if (isGranted) {
                 createListView()
                 deleteExplanationText()
+                enablePlayAllSongsClickAndSetSongsCount()
             } else {
                 showPermissionExplanation()
             }
@@ -69,7 +73,7 @@ class SongListView : Fragment() {
                 try {
                     createListView()
                     deleteExplanationText()
-
+                    enablePlayAllSongsClickAndSetSongsCount()
                 }catch (e: Exception){
                     Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 }
@@ -94,6 +98,19 @@ class SongListView : Fragment() {
 
     private fun deleteExplanationText(){
         view?.findViewById<TextView>(R.id.textoPrimeraTab)?.visibility = View.GONE
+    }
+
+    private fun enablePlayAllSongsClickAndSetSongsCount(){
+        view?.findViewById<LinearLayout>(R.id.play_all_songs_container)?.setOnClickListener{
+            val pos = Random.nextUInt(mainSongList.getListSize())
+            Player.instance.setList(mainSongList)
+            Player.instance.setCurrentSongAndPLay(pos)
+            val intent = Intent(activity, PlayControlView::class.java)
+            activity?.startActivity(intent)
+        }
+
+        view?.findViewById<TextView>(R.id.play_all_songs_number)?.text = "${mainSongList.getListSize()} songs"
+
     }
     private fun createListView(){
 

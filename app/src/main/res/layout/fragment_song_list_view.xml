@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+<LinearLayout
+    android:id="@+id/play_all_songs_container"
+    android:layout_width="match_parent"
+    android:layout_height="50sp"
+    android:paddingHorizontal="10sp"
+    android:layout_alignParentTop="true">
+
+    <ImageView
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_gravity="center"
+        android:src="@drawable/round_play_circle"
+        app:tint="#FF0000"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:layout_marginHorizontal="10sp"
+        android:textStyle="bold"
+        android:text="Play all songs"
+        android:textColor="#FF0000"/>
+
+    <TextView
+        android:id="@+id/play_all_songs_number"
+        android:layout_width="wrap_content"
+        android:layout_height="50sp"
+        android:gravity="center"
+        android:text="0 songs"
+        android:textColor="#B37E7E7E"/>
+
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
+
+
+    <RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,8 +67,11 @@
         android:id="@+id/mainSongListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="10sp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="10sp"
+        android:layout_alignParentBottom="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-
 </RelativeLayout>
+
+</LinearLayout>

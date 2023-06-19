@@ -45,6 +45,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".ListItemListDialogFragment"
         tools:listitem="@layout/fragment_item_list_dialog_list_dialog_item"
-        android:layout_marginHorizontal="30sp"/>
+        android:paddingHorizontal="30sp"/>
 
 </LinearLayout>

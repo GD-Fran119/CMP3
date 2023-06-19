@@ -1,16 +1,17 @@
 package com.example.cmp3
 
+import CurrentSongAndPlaylistConfigSaver
 import ImageFadeInAnimation
 import Player
 import SongFinishedNotifier
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.palette.graphics.Palette
 import com.google.android.material.button.MaterialButton
@@ -21,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class PlayControlView : AppCompatActivity(), UpdateUI {
     private lateinit var title: TextView
     private lateinit var desc: TextView
@@ -30,6 +32,7 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
     private lateinit var listButton: MaterialButton
     private val player = Player.instance
     private var defaultBGColor: Int = 0
+    private var currentColor: Int = 0
 
     private lateinit var seekBar: SeekBar
     private lateinit var seekbarJob: Job
@@ -99,9 +102,9 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
                     Palette.from(bitmap).generate{palette ->
                         if(palette != null) {
                             val defaultColor = getColor(R.color.light_blue_400)
-                            val color = palette.getDarkMutedColor(defaultColor)
-                            if(color != defaultColor)
-                                findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(color)
+                            currentColor = palette.getDarkMutedColor(defaultColor)
+                            if(currentColor != defaultColor)
+                                findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(currentColor)
                             else
                                 findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(palette.getDarkVibrantColor(defaultColor))
                         }
@@ -170,12 +173,11 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
             })
 
             while(true){
-
-                delay(500)
                 if(!playerTouched && Player.instance.isAvailableProgress()){
                     seekBar.max = Player.instance.getCurrentSongDuration().toInt()
                     seekBar.progress = Player.instance.getCurrentSongProgress()
                 }
+                delay(500)
             }
         }
 
