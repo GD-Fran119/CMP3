@@ -94,7 +94,7 @@ class Player private constructor(){
 
         isPlayerAvailable = false
 
-        if (pos < songList!!.getListSize() && pos != currentPos) {
+        if (pos < songList!!.getListSize()) {
             currentSong = songList!!.getSong(pos)
             currentPos = pos
 
