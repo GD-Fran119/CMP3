@@ -44,7 +44,6 @@
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".ListItemListDialogFragment"
-        tools:listitem="@layout/fragment_item_list_dialog_list_dialog_item"
-        android:paddingHorizontal="30sp"/>
+        tools:listitem="@layout/fragment_item_list_dialog_list_dialog_item" />
 
 </LinearLayout>

@@ -22,6 +22,8 @@ class SongList(val title: String, private var songs: MutableList<Song>, val crea
         return songs[pos.toInt()]
     }
 
+    fun getList() = songs.toList()
+
     fun getListSize(): UInt{
         return songs.size.toUInt()
     }

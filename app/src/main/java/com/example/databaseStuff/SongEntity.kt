@@ -1,15 +1,16 @@
 package com.example.databaseStuff
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "songs")
+@Entity(indices = [Index(value = ["path"])])
 data class SongEntity(
-    @PrimaryKey val path: String,
-    val title: String,
-    val artist: String,
-    val album: String,
-    val duration: UInt,
-    val size: Int,
-    val lyricsPath: String?
+    @PrimaryKey var path: String,
+    var title: String,
+    var artist: String,
+    var album: String,
+    var duration: Int,
+    var size: Int,
+    var lyricsPath: String?
 )

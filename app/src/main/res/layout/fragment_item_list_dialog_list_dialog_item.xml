@@ -4,7 +4,11 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:layout_marginVertical="10sp">
+    android:paddingVertical="10sp"
+    android:paddingHorizontal="30sp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/titleBottomBox"

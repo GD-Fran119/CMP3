@@ -78,7 +78,11 @@ class Player private constructor(){
     fun previous(){
         isPlayerAvailable = false
         when(playMode){
-            PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos - 1.toUInt()) % songList!!.getListSize())
+            PlayMode.LIST_LOOP -> setCurrentSongAndPLay(if(currentPos > 0.toUInt()) {
+                                                            currentPos - 1.toUInt()
+                                                        } else {
+                                                            songList!!.getListSize()-1.toUInt()
+                                                        })
             PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
             PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(0.toUInt(), songList!!.getListSize()))
         }
