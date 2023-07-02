@@ -27,6 +27,9 @@ import androidx.media3.common.MimeTypes
 import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databaseStuff.AppDatabase
+import com.example.databaseStuff.PlaylistEntity
+import com.example.databaseStuff.SongEntity
+import com.example.databaseStuff.SongPlaylistRelation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +88,7 @@ class SongListView : Fragment() {
                 Toast.makeText(activity, "Some songs have been deleted from device", Toast.LENGTH_SHORT).show()
             }
         }
+
         }catch (e: Exception){
             withContext(Dispatchers.Main) {
                 Toast.makeText(activity, e.message, Toast.LENGTH_LONG).show()
