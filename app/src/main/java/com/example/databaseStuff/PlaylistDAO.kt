@@ -21,32 +21,31 @@ interface PlaylistDAO {
 
     //Deletes also all entities in relationship with PlaylistEntity due to onDelete = CASCADE
     @Query("DELETE FROM songentity where path in (:path)")
-    fun deleteSongs(vararg path: String)
+    fun deleteSongs(vararg path: String) : Int
 
     /*********************/
     /* Playlists methods */
     /*********************/
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertPlaylist(playlist: PlaylistEntity)
+    fun insertPlaylist(playlist: PlaylistEntity) : Long
 
     @Query("UPDATE playlistentity set name = :newName where id = :id")
-    fun updatePlaylistName(id: Int, newName: String)
+    fun updatePlaylistName(id: Int, newName: String) : Int
 
     //Deletes also all entities in relationship with SongEntity due to onDelete = CASCADE
     @Query("DELETE FROM playlistentity where id in (:id)")
-    fun deletePlaylist(vararg id: Int)
+    fun deletePlaylist(vararg id: Int) : Int
 
     /********************/
     /* Relation methods */
     /********************/
 
-
-    @Query("INSERT INTO songplaylistrelation values(:song, :playlist)")
-    fun insertSongInPlaylist(song: String, playlist: Int)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertSongInPlaylist(relation: SongPlaylistRelation) : Long
 
     @Delete
-    fun deleteSongFromPlaylist(relation: SongPlaylistRelation)
+    fun deleteSongFromPlaylist(relation: SongPlaylistRelation): Int
 
     @Transaction
     @Query("SELECT * FROM playlistentity")

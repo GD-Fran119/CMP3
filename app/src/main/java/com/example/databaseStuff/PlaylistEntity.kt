@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["id"])])
 data class PlaylistEntity(
-    @PrimaryKey(autoGenerate=true) var id : Int,
     var name: String,
     var date: String
-)
+){
+    @PrimaryKey(autoGenerate=true) var id : Int = 0
+}
