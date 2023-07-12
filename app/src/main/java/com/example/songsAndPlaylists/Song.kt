@@ -1,3 +1,5 @@
+package com.example.songsAndPlaylists
+
 import com.example.databaseStuff.SongEntity
 import java.math.RoundingMode
 import java.text.DecimalFormat

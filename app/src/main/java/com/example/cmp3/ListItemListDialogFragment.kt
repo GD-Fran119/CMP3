@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogItemBinding
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogBinding
+import com.example.playerStuff.Player
 import java.lang.Exception
 
 /**

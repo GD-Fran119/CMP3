@@ -1,10 +1,10 @@
 package com.example.cmp3
 
-import CurrentSongAndPlaylistConfigSaver
-import MainListHolder
-import Song
-import SongArrayAdapter
-import SongList
+import com.example.config.CurrentSongAndPlaylistConfigSaver
+import com.example.songsAndPlaylists.MainListHolder
+import com.example.songsAndPlaylists.Song
+import com.example.recyclerviewAdapters.SongArrayAdapter
+import com.example.songsAndPlaylists.SongList
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -24,12 +24,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MimeTypes
-import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databaseStuff.AppDatabase
-import com.example.databaseStuff.PlaylistEntity
-import com.example.databaseStuff.SongEntity
-import com.example.databaseStuff.SongPlaylistRelation
+import com.example.playerStuff.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -103,7 +100,7 @@ class SongListView : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
+        // Inflate the create_playlist_dialog_view for this fragment
         return inflater.inflate(R.layout.fragment_song_list_view, container, false)
     }
 

@@ -1,8 +1,8 @@
 package com.example.cmp3
 
-import CurrentSongAndPlaylistConfigSaver
-import ImageFadeInAnimation
-import Player
+import com.example.config.CurrentSongAndPlaylistConfigSaver
+import com.example.animations.ImageFadeInAnimation
+import com.example.playerStuff.Player
 import SongFinishedNotifier
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
@@ -34,6 +34,8 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
     private var defaultBGColor: Int = 0
     private var currentColor: Int = 0
 
+    private val listItems = ListItemListDialogFragment()
+
     private lateinit var seekBar: SeekBar
     private lateinit var seekbarJob: Job
 
@@ -64,13 +66,13 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
         findViewById<MaterialButton>(R.id.play_control_next_button).setOnClickListener{
             player.next()
             updateUI()
-            playButton.background = getDrawable(R.drawable.ic_pause)
+            playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
         findViewById<MaterialButton>(R.id.play_control_previous_button).setOnClickListener{
             player.previous()
             updateUI()
-            playButton.background = getDrawable(R.drawable.ic_pause)
+            playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
         seekBar = findViewById(R.id.play_control_seekbar)
@@ -82,7 +84,8 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
     }
 
     private fun showSongs() {
-        ListItemListDialogFragment().show(supportFragmentManager, "dialog")
+        listItems.show(supportFragmentManager, "dialog")
+
     }
 
     private fun changeSongImg() {
@@ -121,7 +124,7 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
 
     override fun updateUISongFinished(){
         updateUI()
-        playButton.background = getDrawable(R.drawable.ic_pause)
+        playButton.foreground = getDrawable(R.drawable.ic_pause)
         CurrentSongAndPlaylistConfigSaver.savePlayList(this)
     }
 
@@ -199,10 +202,10 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
 
     private fun changePlayButton(){
         if(player.isPlayingSong()){
-            playButton.background = getDrawable(R.drawable.ic_pause)
+            playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
         else{
-            playButton.background = getDrawable(R.drawable.ic_play)
+            playButton.foreground = getDrawable(R.drawable.ic_play)
         }
     }
 

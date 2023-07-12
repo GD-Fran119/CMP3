@@ -45,6 +45,8 @@
                 android:id="@+id/albumNArtist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:text="description"
                 android:justificationMode="inter_word"
                 android:textSize="12sp"/>
@@ -58,7 +60,8 @@
         android:id="@+id/mainViewSongButton"
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:background="@drawable/ic_options"
-        android:backgroundTint="@color/white"
+        android:foreground="@drawable/ic_options"
+        android:foregroundTint="@color/light_blue_600"
+        android:backgroundTint="@android:color/transparent"
         />
 </LinearLayout>

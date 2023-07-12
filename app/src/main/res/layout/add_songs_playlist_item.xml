@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="10sp"
+    android:paddingVertical="5sp">
+
+    <LinearLayout
+        android:id="@+id/add_song_playlist_item_info_container"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="10sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_song_playlist_item_image">
+
+        <TextView
+            android:id="@+id/add_song_playlist_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+        <TextView
+            android:id="@+id/add_song_playlist_item_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/add_song_playlist_item_image"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:src="@drawable/ic_playlist_add"
+        app:tint="@color/light_blue_600"
+        android:backgroundTint="#00000000"
+        app:layout_constraintStart_toEndOf="@id/add_song_playlist_item_info_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

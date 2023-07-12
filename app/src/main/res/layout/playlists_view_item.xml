@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="10sp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10sp">
+        <ImageView
+            android:id="@+id/playlist_icon"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/ic_launcher"/>
+
+
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10sp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/playlist_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/playlist_songs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="description"
+            android:justificationMode="inter_word"
+            android:textSize="12sp"/>
+    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="15dp"
+        android:id="@+id/playlist_button"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:foreground="@drawable/ic_right_arrow"
+        android:foregroundTint="@color/light_blue_600"
+        android:backgroundTint="@android:color/transparent"
+        />
+</LinearLayout>

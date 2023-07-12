@@ -1,3 +1,10 @@
+package com.example.recyclerviewAdapters
+
+import com.example.animations.ImageFadeInAnimation
+import com.example.songsAndPlaylists.MainListHolder
+import com.example.playerStuff.Player
+import com.example.songsAndPlaylists.Song
+import com.example.songsAndPlaylists.SongList
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -23,7 +30,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
     RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder>() {
 
     companion object{
-        fun create(c : Context, s: SongList): SongArrayAdapter{
+        fun create(c : Context, s: SongList): SongArrayAdapter {
             return SongArrayAdapter(c, s)
         }
     }
@@ -63,9 +70,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
                 Toast.makeText(activity, song.getSizeMB().toString(), Toast.LENGTH_SHORT).show()
             }
 
-            if(job != null)
-                job?.cancel()
-
+            job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch(Dispatchers.Default) {
 
                 val mediaRetriever = MediaMetadataRetriever()

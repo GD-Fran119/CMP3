@@ -1,6 +1,7 @@
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.widget.ImageView
+import com.example.animations.ImageFadeInAnimation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

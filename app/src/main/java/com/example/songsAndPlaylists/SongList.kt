@@ -1,3 +1,5 @@
+package com.example.songsAndPlaylists
+
 class SongList(val title: String, private var songs: MutableList<Song>, val creationDate: String) {
 
     val DEFAULT_DATE = "1970-01-01"
@@ -18,7 +20,7 @@ class SongList(val title: String, private var songs: MutableList<Song>, val crea
         songs += newSong
     }
 
-    fun getSong(pos: UInt): Song{
+    fun getSong(pos: UInt): Song {
         return songs[pos.toInt()]
     }
 

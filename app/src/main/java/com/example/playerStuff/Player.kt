@@ -1,4 +1,7 @@
-
+package com.example.playerStuff
+import com.example.songsAndPlaylists.Song
+import SongFinishedNotifier
+import com.example.songsAndPlaylists.SongList
 import android.media.MediaPlayer
 import kotlin.random.Random
 import kotlin.random.nextUInt

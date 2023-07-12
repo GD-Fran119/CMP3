@@ -1,8 +1,8 @@
 package com.example.cmp3
 
-import CurrentSongAndPlaylistConfigSaver
+import com.example.config.CurrentSongAndPlaylistConfigSaver
 import ImageFinderAndSetter
-import Player
+import com.example.playerStuff.Player
 import SongFinishedNotifier
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
+import MainViewFragmentAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), UpdateUI{
 
-    private val adapter =  MainViewFragmentAdapter(supportFragmentManager, lifecycle)
+    private val adapter = MainViewFragmentAdapter(supportFragmentManager, lifecycle)
     private lateinit var viewPager : ViewPager2
     private lateinit var playButton : MaterialButton
     private lateinit var nextButton : MaterialButton
