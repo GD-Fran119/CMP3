@@ -16,7 +16,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bottomSheets.SongInfoDialogFragment
 import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
 import kotlinx.coroutines.CoroutineScope
@@ -26,12 +28,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class SongArrayAdapter private constructor(private var context: Context, private var songs: SongList) :
+class SongArrayAdapter private constructor(private var context: Context, private var songs: SongList, private val fragmentManager: FragmentManager) :
     RecyclerView.Adapter<SongArrayAdapter.SongListViewHolder>() {
 
     companion object{
-        fun create(c : Context, s: SongList): SongArrayAdapter {
-            return SongArrayAdapter(c, s)
+        fun create(c : Context, s: SongList, fragmentManager: FragmentManager): SongArrayAdapter {
+            return SongArrayAdapter(c, s, fragmentManager)
         }
     }
 
@@ -44,7 +46,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
         private var job : Job? = null
         private lateinit var song: Song
 
-        fun bind(song: Song, pos: UInt) {
+        fun bind(song: Song, pos: UInt, fragmentManager: FragmentManager) {
 
             this.song = song
             titleText.text = song.title
@@ -56,7 +58,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
             view.setOnClickListener {
                 //New intent to play control view with song playing
                 try {
-                    Player.instance.setList(MainListHolder.getMainList()!!)
+                    Player.instance.setList(MainListHolder.getMainList())
                     Player.instance.setCurrentSongAndPLay(pos)
                 }catch (e: Exception){
                     Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show()
@@ -67,7 +69,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
             }
 
             button.setOnClickListener {
-                Toast.makeText(activity, song.getSizeMB().toString(), Toast.LENGTH_SHORT).show()
+                SongInfoDialogFragment(song).show(fragmentManager, "Song info")
             }
 
             job?.cancel()
@@ -100,7 +102,7 @@ class SongArrayAdapter private constructor(private var context: Context, private
 
     override fun onBindViewHolder(holder: SongListViewHolder, position: Int) {
         val song = songs.getSong(position.toUInt())
-        holder.bind(song, position.toUInt())
+        holder.bind(song, position.toUInt(), fragmentManager)
     }
 
     override fun getItemCount(): Int {

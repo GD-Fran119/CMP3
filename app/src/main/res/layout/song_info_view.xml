@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="100sp"
+        android:layout_height="30sp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_horizontal_line"
+        android:layout_gravity="center"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/title_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/title_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/artist_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_artist"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/artist_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/artist_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/artist_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/album_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_album"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/album_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/album_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/album_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/duration_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_duration"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/duration_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/duration_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/duration_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/size_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_size"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/size_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/size_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/size_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp">
+
+        <ImageView
+            android:id="@+id/path_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_path"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/path_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/path_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/path_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Texto de placeholder"
+            android:layout_marginStart="10sp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <view class="com.google.android.material.divider.MaterialDivider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/add_to_playlist_icon"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/ic_playlist_add"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/add_to_playlist_text"
+            android:layout_marginEnd="10sp"/>
+
+        <TextView
+            android:id="@+id/add_to_playlist_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:alpha="0.7"
+            app:layout_constraintStart_toEndOf="@id/add_to_playlist_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Add to playlist"
+            android:layout_marginStart="10sp"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

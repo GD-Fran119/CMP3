@@ -37,24 +37,26 @@ class PlaylistArrayAdapter private constructor(private var context: Context, pri
             view.findViewById<TextView>(R.id.playlist_songs).text = playlist.songs.size.toString() + " songs"
             job?.cancel()
             imageView.setImageResource(R.drawable.ic_music_note)
-            job = CoroutineScope(Dispatchers.Main)
-                .launch {
-                    val mediaRetriever = MediaMetadataRetriever()
-                    val firstSong = playlist.songs[0]
-                    mediaRetriever.setDataSource(firstSong.path)
+            if(playlist.songs.isNotEmpty()) {
+                job = CoroutineScope(Dispatchers.Main)
+                    .launch {
+                        val mediaRetriever = MediaMetadataRetriever()
+                        val firstSong = playlist.songs[0]
+                        mediaRetriever.setDataSource(firstSong.path)
 
-                    val data = mediaRetriever.embeddedPicture
-                    mediaRetriever.release()
+                        val data = mediaRetriever.embeddedPicture
+                        mediaRetriever.release()
 
-                    if(data != null) {
-                        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                        if (data != null) {
+                            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
-                        withContext(Dispatchers.Main) {
-                            imageView.setImageBitmap(bitmap)
-                            imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+                            withContext(Dispatchers.Main) {
+                                imageView.setImageBitmap(bitmap)
+                                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+                            }
                         }
                     }
-                }
+            }
         }
 
     }

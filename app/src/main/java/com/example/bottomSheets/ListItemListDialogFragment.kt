@@ -1,4 +1,4 @@
-package com.example.cmp3
+package com.example.bottomSheets
 
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import com.example.cmp3.R
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogItemBinding
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogBinding
 import com.example.playerStuff.Player

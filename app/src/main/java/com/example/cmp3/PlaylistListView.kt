@@ -29,7 +29,6 @@ class PlaylistListView : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the create_playlist_dialog_view for this fragment
         return inflater.inflate(R.layout.fragment_playlist_list_view, container, false)
     }
 

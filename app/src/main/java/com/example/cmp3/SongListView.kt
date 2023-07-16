@@ -159,6 +159,7 @@ class SongListView : Fragment() {
             Player.instance.setCurrentSongAndPLay(pos)
             val intent = Intent(activity, PlayControlView::class.java)
             activity?.startActivity(intent)
+
         }
 
         view?.findViewById<TextView>(R.id.play_all_songs_number)?.text = "${mainSongList.getListSize()} songs"
@@ -174,7 +175,7 @@ class SongListView : Fragment() {
 
         CurrentSongAndPlaylistConfigSaver.loadPlayList(activity as Context)
 
-        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList)
+        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList, childFragmentManager)
 
         listView?.adapter = adapter
     }
