@@ -1,6 +1,5 @@
 package com.example.playerStuff
 import com.example.songsAndPlaylists.Song
-import SongFinishedNotifier
 import com.example.songsAndPlaylists.SongList
 import android.media.MediaPlayer
 import kotlin.random.Random
@@ -13,6 +12,11 @@ class Player private constructor(){
     private var currentPos : UInt = 0.toUInt()
     private var mediaPLayer : MediaPlayer = MediaPlayer()
     private var isPlaying = false
+    var onSongChangedListener : OnSongChangedListener? = null
+        set(value){
+            field = value
+            field?.listen()
+        }
 
     private var isPlayerAvailable = false
 
@@ -66,6 +70,9 @@ class Player private constructor(){
         currentPos = 0.toUInt()
         currentSong = songList!!.getSong(currentPos)
         isPlayerAvailable = true
+
+        //Notify change
+        onSongChangedListener?.listen()
     }
 
     fun getList() = songList
@@ -110,12 +117,14 @@ class Player private constructor(){
             mediaPLayer.prepareAsync()
             mediaPLayer.setOnCompletionListener {
                 next()
-                SongFinishedNotifier.notifySongChanged()
             }
 
         }
 
         isPlayerAvailable = true
+
+        //Notify change
+        onSongChangedListener?.listen()
 
     }
 
@@ -131,7 +140,7 @@ class Player private constructor(){
                 isPlaying = true
             }
         }
-        SongFinishedNotifier.notifySongChanged()
+
         isPlayerAvailable = true
     }
 
@@ -145,6 +154,10 @@ class Player private constructor(){
         }catch (_: Exception){
             0
         }
+    }
+
+    interface OnSongChangedListener{
+        fun listen()
     }
 
 }

@@ -51,6 +51,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:'
     implementation 'androidx.media3:media3-test-utils:1.0.2'
 
+
     implementation "androidx.test:core:1.5.0"
 
     testImplementation 'junit:junit:4.13.2'

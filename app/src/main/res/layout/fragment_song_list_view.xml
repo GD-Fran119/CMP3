@@ -55,11 +55,10 @@
     android:tag="Songs">
 
     <TextView
-        android:id="@+id/textoPrimeraTab"
+        android:id="@+id/explanation_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Primera tab"
         android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView

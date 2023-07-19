@@ -149,7 +149,7 @@ class SongListView : Fragment() {
     }
 
     private fun deleteExplanationText(){
-        view?.findViewById<TextView>(R.id.textoPrimeraTab)?.visibility = View.GONE
+        view?.findViewById<TextView>(R.id.explanation_text)?.visibility = View.GONE
     }
 
     private fun enablePlayAllSongsClickAndSetSongsCount(){
@@ -241,7 +241,7 @@ class SongListView : Fragment() {
     }
 
     private fun showPermissionExplanation(){
-        view?.findViewById<TextView>(R.id.textoPrimeraTab)?.text = "Permisos no garantizados"
+        view?.findViewById<TextView>(R.id.explanation_text)?.text = "Permisos no garantizados"
     }
 
     companion object {
@@ -250,7 +250,5 @@ class SongListView : Fragment() {
             SongListView()
     }
 
-    override fun toString(): String {
-        return title
-    }
+    override fun toString(): String = title
 }

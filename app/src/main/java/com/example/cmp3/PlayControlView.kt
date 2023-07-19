@@ -3,7 +3,6 @@ package com.example.cmp3
 import com.example.config.CurrentSongAndPlaylistConfigSaver
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
-import SongFinishedNotifier
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class PlayControlView : AppCompatActivity(), UpdateUI {
+class PlayControlView : AppCompatActivity(){
     private lateinit var title: TextView
     private lateinit var desc: TextView
     private lateinit var img: ImageView
@@ -38,7 +37,8 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
     private val listItems = ListItemListDialogFragment()
 
     private lateinit var seekBar: SeekBar
-    private lateinit var seekbarJob: Job
+    private var seekbarJob: Job? = null
+    private var findImageJob : Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +66,11 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
 
         findViewById<MaterialButton>(R.id.play_control_next_button).setOnClickListener{
             player.next()
-            updateUI()
             playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
         findViewById<MaterialButton>(R.id.play_control_previous_button).setOnClickListener{
             player.previous()
-            updateUI()
             playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
@@ -86,13 +84,13 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
 
     private fun showSongs() {
         listItems.show(supportFragmentManager, "dialog")
-
     }
 
     private fun changeSongImg() {
         img.setImageResource(R.drawable.ic_music_note)
         findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(defaultBGColor)
-        CoroutineScope(Dispatchers.Default).launch {
+        findImageJob?.cancel()
+        findImageJob = CoroutineScope(Dispatchers.Default).launch {
             val currentSong = player.getCurrentSong()
             if(currentSong != null){
                 val mediaRetriever = MediaMetadataRetriever()
@@ -123,35 +121,25 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
         }
     }
 
-    override fun updateUISongFinished(){
-        updateUI()
-        playButton.foreground = getDrawable(R.drawable.ic_pause)
-        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
-    }
-
-    private fun updateUI(){
-        val currentSong = player.getCurrentSong()
-        title.text = currentSong?.title
-        desc.text = if (currentSong?.artist == "<unknown>") "Unknown" else currentSong?.artist
-        changeSongImg()
-        changePlayButton()
-        changePlayModeBtnImg()
-
-    }
-
     override fun onPause() {
         super.onPause()
         try{
-            seekbarJob.cancel()
+            seekbarJob?.cancel()
+            player.onSongChangedListener = null
         }catch (_: Exception){}
 
     }
     override fun onStart() {
         super.onStart()
-        CoroutineScope(Dispatchers.Default).launch {
-            delay(100)
-            withContext(Dispatchers.Main) {
-                changePlayButton()
+        player.onSongChangedListener = object: Player.OnSongChangedListener{
+            override fun listen() {
+                val song = player.getCurrentSong() ?: return
+                title.text = song.title
+                desc.text = if(song.artist == "<unknown>") "Unknown"
+                else song.artist
+
+                img.setImageResource(R.drawable.ic_music_note)
+                changeSongImg()
             }
         }
 
@@ -185,8 +173,6 @@ class PlayControlView : AppCompatActivity(), UpdateUI {
             }
         }
 
-        updateUI()
-        SongFinishedNotifier.setCurrentActivity(this)
     }
 
     private fun changePlayModeBtnImg() {

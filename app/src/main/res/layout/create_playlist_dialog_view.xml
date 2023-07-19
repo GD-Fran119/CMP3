@@ -8,7 +8,7 @@
         android:id="@+id/newPlaylistNameRequiredInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
+        android:layout_marginHorizontal="15sp"
         android:textColor="#FF0000"
         android:text="* Fill the playlist name input"
         android:visibility="invisible"/>

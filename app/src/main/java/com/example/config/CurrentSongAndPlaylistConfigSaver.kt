@@ -1,7 +1,6 @@
 package com.example.config
 
 import com.example.songsAndPlaylists.MainListHolder
-import SongFinishedNotifier
 import com.example.songsAndPlaylists.SongList
 import android.content.Context
 import com.example.cmp3.R
@@ -63,21 +62,20 @@ class CurrentSongAndPlaylistConfigSaver private constructor() {
                 setupList(context, listname, mode, songPath!!)
             }
 
-            SongFinishedNotifier.notifySongChanged()
 
         }
 
-        private fun setupList(context: Context, listname: String, mode: Int, path: String){
-            if(listname == context.getString(R.string.main_song_list)){
-                val songlist = MainListHolder.getMainList()!!
-                Player.instance.setList(songlist)
+        private fun setupList(context: Context, listName: String, mode: Int, path: String){
+            if(listName == context.getString(R.string.main_song_list)){
+                val songList = MainListHolder.getMainList()
+                Player.instance.setList(songList)
                 when(mode){
                     mode_c_song -> while(!Player.instance.isSongLoop()) Player.instance.changePlayMode()
                     mode_rand -> while(!Player.instance.isRandomLoop()) Player.instance.changePlayMode()
                     //else -> default settings are mode == list loop
                 }
 
-                Player.instance.setCurrentSong(findIndexCurrentSongInList(songlist, path) ?: 0.toUInt())
+                Player.instance.setCurrentSong(findIndexCurrentSongInList(songList, path) ?: 0.toUInt())
             }
             else{
                 //TODO
@@ -86,7 +84,7 @@ class CurrentSongAndPlaylistConfigSaver private constructor() {
         }
 
         private fun loadDefaultList(){
-            Player.instance.setList(MainListHolder.getMainList()!!)
+            Player.instance.setList(MainListHolder.getMainList())
             Player.instance.setCurrentSong(0.toUInt())
         }
         

@@ -70,7 +70,6 @@ class PlaylistListView : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(activity, "Resume", Toast.LENGTH_SHORT).show()
         //TODO
         //Update view
         infoUpdateJob = CoroutineScope(Dispatchers.Default).launch {
@@ -80,9 +79,6 @@ class PlaylistListView : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(activity, "Pause", Toast.LENGTH_SHORT).show()
-        //TODO
-        //Stop retrieving data
         infoUpdateJob?.cancel()
     }
 
