@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,9 +52,35 @@ class SongArrayAdapter private constructor(private var context: Context, private
             this.song = song
             titleText.text = song.title
             val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
-            subtitleText.text = "${artist} - ${song.album}"
+            subtitleText.text = "$artist - ${song.album}"
 
+            job?.cancel()
             imageView.setImageResource(R.drawable.ic_music_note)
+            Log.i("Song adapter", "Bind calling detected")
+
+            //TODO
+            //Fix infinite binding
+            job = CoroutineScope(Dispatchers.Default).launch {
+
+                val mediaRetriever = MediaMetadataRetriever()
+                mediaRetriever.setDataSource(song.path)
+
+                val data = mediaRetriever.embeddedPicture
+                mediaRetriever.release()
+
+                if (data != null) {
+
+                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+
+                    withContext(Dispatchers.Main) {
+
+                        //imageView.setImageBitmap(bitmap)
+                        imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+
+                    }
+                }
+
+            }
 
             view.setOnClickListener {
                 //New intent to play control view with song playing
@@ -69,27 +96,27 @@ class SongArrayAdapter private constructor(private var context: Context, private
             }
 
             button.setOnClickListener {
-                SongInfoDialogFragment(song).show(fragmentManager, "Song info")
-            }
 
-            job?.cancel()
-            job = CoroutineScope(Dispatchers.Main).launch(Dispatchers.Default) {
+                val dialog = SongInfoDialogFragment(song)
 
-                val mediaRetriever = MediaMetadataRetriever()
-                mediaRetriever.setDataSource(song.path)
+                val action = object : SongInfoDialogFragment.SongInfoDialogAction{
+                    override var actionIcon: Int = R.drawable.ic_playlist_add
 
-                val data = mediaRetriever.embeddedPicture
-                mediaRetriever.release()
+                    override var actionText: String = "Add to playlist"
 
-                if(data != null) {
-                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-                    withContext(Dispatchers.Main) {
-                        imageView.setImageBitmap(bitmap)
-                        imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+                    override fun onAction() {
+                        //TODO
+                        //Show playlists bottom sheet dialog
+                        Toast.makeText(activity, "Song added", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
                     }
+
                 }
+
+                dialog.action = action
+                dialog.show(fragmentManager, "Song info")
             }
+
         }
     }
 

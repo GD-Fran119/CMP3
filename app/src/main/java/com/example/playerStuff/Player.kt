@@ -62,21 +62,18 @@ class Player private constructor(){
     fun listSize(): UInt{
         if(songList == null) return 0.toUInt()
 
-        return songList!!.getListSize()}
+        return songList!!.getListSize()
+    }
     fun setList(newList: SongList){
         isPlayerAvailable = false
         songList = newList
         mediaPLayer.reset()
-        currentPos = 0.toUInt()
-        currentSong = songList!!.getSong(currentPos)
+        setCurrentSong(0.toUInt())
         isPlayerAvailable = true
-
-        //Notify change
-        onSongChangedListener?.listen()
     }
 
     fun getList() = songList
-    fun next(){
+    fun playNext(){
         isPlayerAvailable = false
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos + 1.toUInt()) % songList!!.getListSize())
@@ -85,7 +82,7 @@ class Player private constructor(){
         }
         isPlayerAvailable = true
     }
-    fun previous(){
+    fun playPrevious(){
         isPlayerAvailable = false
         when(playMode){
             PlayMode.LIST_LOOP -> setCurrentSongAndPLay(if(currentPos > 0.toUInt()) {
@@ -115,16 +112,15 @@ class Player private constructor(){
             mediaPLayer.reset()
             mediaPLayer.setDataSource(currentSong!!.path)
             mediaPLayer.prepareAsync()
-            mediaPLayer.setOnCompletionListener {
-                next()
+            mediaPLayer.setOnPreparedListener{
+                //Notify change
+                onSongChangedListener?.listen()
+                isPlayerAvailable = true
             }
-
+            mediaPLayer.setOnCompletionListener {
+                playNext()
+            }
         }
-
-        isPlayerAvailable = true
-
-        //Notify change
-        onSongChangedListener?.listen()
 
     }
 
@@ -137,14 +133,15 @@ class Player private constructor(){
         if(currentSong != null) {
             mediaPLayer.setOnPreparedListener {
                 mediaPLayer.start()
+                //Notify change
+                onSongChangedListener?.listen()
+                isPlayerAvailable = true
                 isPlaying = true
             }
         }
-
-        isPlayerAvailable = true
     }
 
-    fun getCurrentSong(): Song?{return currentSong}
+    fun getCurrentSong(): Song? = currentSong
 
     fun getCurrentSongDuration() = currentSong!!.duration
 

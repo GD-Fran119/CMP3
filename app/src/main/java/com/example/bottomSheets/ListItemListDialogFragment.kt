@@ -44,7 +44,9 @@ class ListItemListDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val currentList = Player.instance.getList()
         view.findViewById<TextView>(R.id.bottom_box_list_name)?.text = currentList?.title ?: "Unknown"
-        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  "${currentList?.getListSize().toString()} songs"
+
+        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  if(currentList?.getListSize() != 1.toUInt()) "${currentList?.getListSize()} songs"
+                                                                            else "1 song"
         val list = view.findViewById<RecyclerView>(R.id.bottom_box_list)
         list?.adapter = ListItemAdapter(Player.instance.listSize().toInt())
     }
@@ -75,7 +77,7 @@ class ListItemListDialogFragment : BottomSheetDialogFragment() {
             val currentSong = Player.instance.getList()?.getSong(position.toUInt())
             holder.title.text = currentSong?.title ?: "Unknown"
             val artist =  if (currentSong?.artist == "<unknown>") "Unknown" else currentSong?.artist
-            val album = if (currentSong?.artist == "<unknown>") "Unknown" else currentSong?.artist
+            val album = if (currentSong?.album == "<unknown>") "Unknown" else currentSong?.album
             holder.desc.text = "${artist} - ${album}"
             holder.itemView.setOnClickListener {
                 //New intent to play control view with song playing

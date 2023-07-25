@@ -1,6 +1,5 @@
 package com.example.cmp3
 
-import com.example.config.CurrentSongAndPlaylistConfigSaver
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
@@ -40,11 +39,29 @@ class PlayControlView : AppCompatActivity(){
     private var seekbarJob: Job? = null
     private var findImageJob : Job? = null
 
+    private val listener = object: Player.OnSongChangedListener{
+        override fun listen() {
+            val song = player.getCurrentSong() ?: return
+
+            title.text = song.title
+            desc.text = if(song.artist == "<unknown>") "Unknown"
+                        else song.artist
+
+            changeSongImg()
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(100)
+                changePlayButton()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play_control_view)
 
         title = findViewById(R.id.play_control_title)
+        //Start marquee animation
+        title.isSelected = true
         desc = findViewById(R.id.play_control_desc)
         img = findViewById(R.id.play_control_img)
         defaultBGColor = findViewById<ConstraintLayout>(R.id.play_control_main_container).solidColor
@@ -61,16 +78,16 @@ class PlayControlView : AppCompatActivity(){
         playModeBtn = findViewById(R.id.play_control_playmode_button)
         playModeBtn.setOnClickListener{
             changePlayModeBtn()
-            CurrentSongAndPlaylistConfigSaver.savePlayList(this)
         }
+        changePlayModeBtnImg()
 
         findViewById<MaterialButton>(R.id.play_control_next_button).setOnClickListener{
-            player.next()
+            player.playNext()
             playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
         findViewById<MaterialButton>(R.id.play_control_previous_button).setOnClickListener{
-            player.previous()
+            player.playPrevious()
             playButton.foreground = getDrawable(R.drawable.ic_pause)
         }
 
@@ -131,17 +148,7 @@ class PlayControlView : AppCompatActivity(){
     }
     override fun onStart() {
         super.onStart()
-        player.onSongChangedListener = object: Player.OnSongChangedListener{
-            override fun listen() {
-                val song = player.getCurrentSong() ?: return
-                title.text = song.title
-                desc.text = if(song.artist == "<unknown>") "Unknown"
-                else song.artist
-
-                img.setImageResource(R.drawable.ic_music_note)
-                changeSongImg()
-            }
-        }
+        player.onSongChangedListener = listener
 
         seekbarJob = CoroutineScope(Dispatchers.Main).launch {
             var playerTouched = false
@@ -184,7 +191,6 @@ class PlayControlView : AppCompatActivity(){
             playModeBtn.background = getDrawable(R.drawable.ic_random_mode)
         }
 
-        CurrentSongAndPlaylistConfigSaver.savePlayList(this)
     }
 
     private fun changePlayButton(){

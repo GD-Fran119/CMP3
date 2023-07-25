@@ -1,7 +1,6 @@
 package com.example.recyclerviewAdapters
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animations.ImageFadeInAnimation
 import com.example.cmp3.PlaylistView
@@ -38,10 +36,9 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
 
         fun bind(playlist: SongPlaylistRelationData){
             view.findViewById<TextView>(R.id.playlist_name).text = playlist.playlist.name
-            view.findViewById<TextView>(R.id.playlist_songs).text = "${playlist.songs.size} songs"
+            view.findViewById<TextView>(R.id.playlist_songs).text = if(playlist.songs.size != 1) "${playlist.songs.size} songs"
+                                                                    else "1 song"
             view.setOnClickListener{
-                //TODO
-                //Send to playlist show activity
                 val intent = Intent(activity, PlaylistView::class.java)
                 intent.putExtra("playlist", playlist)
                 activity.startActivity(intent)
@@ -78,7 +75,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
     ): PlaylistViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.playlists_view_item, parent, false)
+            .inflate(R.layout.playlists_item_view, parent, false)
         return PlaylistViewHolder(view, context)
     }
 

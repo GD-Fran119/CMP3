@@ -38,8 +38,7 @@
                 android:textSize="15sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textStyle="bold"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/albumNArtist"

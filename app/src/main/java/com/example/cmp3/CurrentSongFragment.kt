@@ -34,6 +34,36 @@ class CurrentSongFragment : Fragment() {
     private var findImageJob : Job? = null
     private var progressJob : Job? = null
 
+    private val listener = object: Player.OnSongChangedListener{
+        override fun listen() {
+
+            val song = player.getCurrentSong() ?: return
+            title.text = song.title
+            desc.text = if(song.artist == "<unknown>") "Unknown"
+            else song.artist
+
+            image.setImageResource(R.drawable.ic_music_note)
+
+            findImageJob?.cancel()
+            findImageJob = CoroutineScope(Dispatchers.Default).launch {
+                val mediaRetriever = MediaMetadataRetriever()
+                mediaRetriever.setDataSource(song.path)
+
+                val data = mediaRetriever.embeddedPicture
+                mediaRetriever.release()
+
+                if(data != null) {
+                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+
+                    withContext(Dispatchers.Main) {
+                        image.setImageBitmap(bitmap)
+                        image.startAnimation(ImageFadeInAnimation(0f, 1f))
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -68,7 +98,7 @@ class CurrentSongFragment : Fragment() {
         }
 
         view.findViewById<MaterialButton>(R.id.current_song_next_song)?.setOnClickListener{
-            player.next()
+            player.playNext()
             playButton.setBackgroundResource(R.drawable.ic_pause)
         }
 
@@ -76,13 +106,10 @@ class CurrentSongFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         if(player.isPlayingSong()) playButton.setBackgroundResource(R.drawable.ic_pause)
         else playButton.setBackgroundResource(R.drawable.ic_play)
 
-        if(player.isAvailableProgress()){
-            progressBar.max = player.getCurrentSongDuration().toInt()
-            progressBar.progress = player.getCurrentSongProgress()
-        }
         progressJob?.cancel()
         progressJob = CoroutineScope(Dispatchers.Default).launch {
             while(true){
@@ -95,35 +122,7 @@ class CurrentSongFragment : Fragment() {
 
         }
 
-        player.onSongChangedListener = object: Player.OnSongChangedListener{
-            override fun listen() {
-
-                val song = player.getCurrentSong() ?: return
-                title.text = song.title
-                desc.text = if(song.artist == "<unknown>") "Unknown"
-                            else song.artist
-
-                image.setImageResource(R.drawable.ic_music_note)
-
-                findImageJob?.cancel()
-                findImageJob = CoroutineScope(Dispatchers.Default).launch {
-                    val mediaRetriever = MediaMetadataRetriever()
-                    mediaRetriever.setDataSource(song.path)
-
-                    val data = mediaRetriever.embeddedPicture
-                    mediaRetriever.release()
-
-                    if(data != null) {
-                        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-                        withContext(Dispatchers.Main) {
-                            image.setImageBitmap(bitmap)
-                            image.startAnimation(ImageFadeInAnimation(0f, 1f))
-                        }
-                    }
-                }
-            }
-        }
+        player.onSongChangedListener = listener
     }
 
     override fun onPause() {

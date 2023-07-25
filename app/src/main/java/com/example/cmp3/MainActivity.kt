@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import MainViewFragmentAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import com.example.songsAndPlaylists.MainListHolder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity(){
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
+
     }
 }
 

@@ -1,6 +1,5 @@
 package com.example.cmp3
 
-import com.example.config.CurrentSongAndPlaylistConfigSaver
 import com.example.songsAndPlaylists.MainListHolder
 import com.example.songsAndPlaylists.Song
 import com.example.recyclerviewAdapters.SongArrayAdapter
@@ -23,6 +22,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentTransaction
 import androidx.media3.common.MimeTypes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databaseStuff.AppDatabase
@@ -45,7 +46,6 @@ class SongListView : Fragment() {
             if (isGranted) {
                 createListView()
                 deleteExplanationText()
-                enablePlayAllSongsClickAndSetSongsCount()
 
                 CoroutineScope(Dispatchers.Default).launch {
                     checkSongsIntegrityDB()
@@ -121,7 +121,6 @@ class SongListView : Fragment() {
                 try {
                     createListView()
                     deleteExplanationText()
-                    enablePlayAllSongsClickAndSetSongsCount()
 
                     CoroutineScope(Dispatchers.Default).launch {
                         checkSongsIntegrityDB()
@@ -152,19 +151,6 @@ class SongListView : Fragment() {
         view?.findViewById<TextView>(R.id.explanation_text)?.visibility = View.GONE
     }
 
-    private fun enablePlayAllSongsClickAndSetSongsCount(){
-        view?.findViewById<LinearLayout>(R.id.play_all_songs_container)?.setOnClickListener{
-            val pos = Random.nextUInt(mainSongList.getListSize())
-            Player.instance.setList(mainSongList)
-            Player.instance.setCurrentSongAndPLay(pos)
-            val intent = Intent(activity, PlayControlView::class.java)
-            activity?.startActivity(intent)
-
-        }
-
-        view?.findViewById<TextView>(R.id.play_all_songs_number)?.text = "${mainSongList.getListSize()} songs"
-
-    }
     private fun createListView(){
 
         val listView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
@@ -173,7 +159,12 @@ class SongListView : Fragment() {
         findMusic()
         MainListHolder.setMainList(mainSongList)
 
-        CurrentSongAndPlaylistConfigSaver.loadPlayList(activity as Context)
+        //TODO
+        //Replace with config
+        Player.instance.setList(mainSongList)
+        //
+
+        view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)
 
         val adapter = SongArrayAdapter.create(activity as Activity, mainSongList, childFragmentManager)
 

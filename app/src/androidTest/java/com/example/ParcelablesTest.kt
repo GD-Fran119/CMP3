@@ -5,6 +5,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.databaseStuff.PlaylistEntity
 import com.example.databaseStuff.SongEntity
 import com.example.databaseStuff.SongPlaylistRelationData
+import com.example.songsAndPlaylists.Song
+import com.example.songsAndPlaylists.SongList
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ParcelablesTest {
 
-    private val names = listOf<String>("A", "B", "C", "D", "E")
+    private val names = listOf("A", "B", "C", "D", "E")
     private val songs = mutableListOf<SongEntity>()
     private var playlist : PlaylistEntity? = null
     private var playlistData : SongPlaylistRelationData? = null
@@ -40,7 +42,7 @@ class ParcelablesTest {
 
     @Test
     @Throws(Exception::class)
-    fun createSongFromParcelable(){
+    fun createSongEntityFromParcelable(){
 
         val parcel = Parcel.obtain()
         val song = songs[0]
@@ -77,4 +79,33 @@ class ParcelablesTest {
 
     }
 
+
+    @Test
+    @Throws(Exception::class)
+    fun createSongFromParcelable(){
+        val parcel = Parcel.obtain()
+
+        val song = Song(songs[0])
+
+        song.writeToParcel(parcel, 0)
+        parcel.setDataPosition(0)
+
+        val checkData = Song(parcel)
+        assert(checkData == song)
+
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun createSongListFromParcelable(){
+        val parcel = Parcel.obtain()
+
+        val list = SongList(playlistData!!)
+
+        list.writeToParcel(parcel, 0)
+        parcel.setDataPosition(0)
+
+        val checkData = SongList(parcel)
+        assert(checkData == list)
+    }
 }

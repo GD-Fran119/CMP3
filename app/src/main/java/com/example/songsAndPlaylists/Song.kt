@@ -1,6 +1,7 @@
 package com.example.songsAndPlaylists
 
-import android.util.Log
+import android.os.Parcel
+import android.os.Parcelable
 import com.example.databaseStuff.SongEntity
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -9,7 +10,19 @@ class Song(
     val title: String, val artist: String,
     val album: String, val duration: UInt,
     val path: String, private val fileSize: Int,
-    val lyricsPath: String?) {
+    val lyricsPath: String?): Parcelable {
+
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readInt().toUInt(),
+        parcel.readString()!!,
+        parcel.readInt(),
+        parcel.readString()
+    ) {
+    }
 
     constructor(song: SongEntity) : this(song.title, song.artist, song.album, song.duration.toUInt(),
                                          song.path, song.size, song.lyricsPath)
@@ -24,27 +37,43 @@ class Song(
         return df.format(fileSize.toFloat() / TAMANO_MB).toFloat()
     }
 
-    private class DurationFormatter{
-        companion object{
-            fun format(time: Long): String{
-                val sec = (time / 1000) % 60
-                val min = (time / 60000) % 60
-                val hour = time / 3600000
-
-                var formatted = if(sec < 10) ":0$sec" else sec.toString()
-                formatted = (if(min < 10) "0$min" else min.toString()) + formatted
-                formatted = when{
-                    hour == 0L -> formatted
-                    hour < 10L -> "0$hour:$formatted"
-                    else -> "$hour:$formatted"
-                }
-
-                return formatted
-            }
-        }
-    }
 
     fun getDuration(): String = DurationFormatter.format(duration.toLong())
 
     fun toSongEntity() = SongEntity(path, title, artist, album, duration.toInt(), fileSize, lyricsPath)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeString(artist)
+        parcel.writeString(album)
+        parcel.writeInt(duration.toInt())
+        parcel.writeString(path)
+        parcel.writeInt(fileSize)
+        parcel.writeString(lyricsPath)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Song> {
+        override fun createFromParcel(parcel: Parcel): Song {
+            return Song(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Song?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+    override fun equals(other: Any?): Boolean{
+        if(other !is Song) return false
+        return title == other.title &&
+                artist == other.artist &&
+                album == other.album &&
+                duration == other.duration &&
+                path == other.path &&
+                fileSize == other.fileSize &&
+                lyricsPath == other.lyricsPath
+    }
+
 }

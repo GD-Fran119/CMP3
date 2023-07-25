@@ -23,12 +23,17 @@ class AddSongAdapter private constructor(private var context: Context, private v
 
     companion object{
         fun create(c : Context, s: SongList, id: Int): AddSongAdapter {
+            //Reset songs added
+            AddSongViewHolder.addedSongs.clear()
             return AddSongAdapter(c, s, id)
         }
     }
 
     class AddSongViewHolder(private val view: View, private val activity: Context, private val id: Int) : RecyclerView.ViewHolder(view) {
 
+        companion object{
+            var addedSongs = mutableSetOf<UInt>()
+        }
         private val titleText: TextView = view.findViewById(R.id.add_song_playlist_item_title)
         private val subtitleText: TextView = view.findViewById(R.id.add_song_playlist_item_desc)
         private val img : ImageView = view.findViewById(R.id.add_song_playlist_item_image)
@@ -41,11 +46,16 @@ class AddSongAdapter private constructor(private var context: Context, private v
             val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
             subtitleText.text = "${artist} - ${song.album}"
 
+            val image = if(pos in addedSongs) R.drawable.ic_item_added_to_list
+                        else R.drawable.ic_playlist_add
+            img.setImageResource(image)
+
             view.setOnClickListener {
                 //Add song to playlist
                 //If it is already added, notify user
                 img.setImageResource(R.drawable.ic_item_added_to_list)
                 CoroutineScope(Dispatchers.Default).launch {
+                    addedSongs += pos
                     val dao = AppDatabase.getInstance(activity).playlistDao()
                     val insertion = dao.insertSongInPlaylist(SongPlaylistRelation(song.path, id))
                     withContext(Dispatchers.Main){

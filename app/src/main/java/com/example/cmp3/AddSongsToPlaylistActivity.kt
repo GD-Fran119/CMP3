@@ -19,6 +19,5 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.add_playlist_recyclerview)
 
         recyclerView.adapter = AddSongAdapter.create(this, songs, id)
-
     }
 }

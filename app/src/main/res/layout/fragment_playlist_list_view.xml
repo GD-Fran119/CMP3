@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        tools:listitem="@layout/playlists_view_item"
+        tools:listitem="@layout/playlists_item_view"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
 
