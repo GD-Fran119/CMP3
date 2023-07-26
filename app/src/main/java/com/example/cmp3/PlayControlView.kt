@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.palette.graphics.Palette
-import com.example.bottomSheets.ListItemListDialogFragment
+import com.example.bottomSheets.SongListItemsDialogFragment
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +33,7 @@ class PlayControlView : AppCompatActivity(){
     private var defaultBGColor: Int = 0
     private var currentColor: Int = 0
 
-    private val listItems = ListItemListDialogFragment()
+    private val listItems = SongListItemsDialogFragment()
 
     private lateinit var seekBar: SeekBar
     private var seekbarJob: Job? = null

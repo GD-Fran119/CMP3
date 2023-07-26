@@ -37,6 +37,9 @@ interface PlaylistDAO {
     @Query("DELETE FROM playlistentity where id in (:id)")
     fun deletePlaylist(vararg id: Int) : Int
 
+    @Query("Select * from playlistentity")
+    fun getPlaylistsInfo() : List<PlaylistEntity>
+
     /********************/
     /* Relation methods */
     /********************/

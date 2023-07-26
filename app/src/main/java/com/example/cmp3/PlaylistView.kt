@@ -4,13 +4,6 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.View.OnClickListener
-import android.view.View.VISIBLE
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -25,12 +18,10 @@ import com.example.databaseStuff.SongPlaylistRelationData
 import com.example.dialogs.PlaylistRenameDialog
 import com.example.recyclerviewAdapters.PlaylistSongAdapter
 import com.example.songsAndPlaylists.SongList
-import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.concurrent.fixedRateTimer
 
 
 class PlaylistView : AppCompatActivity() {
@@ -39,19 +30,20 @@ class PlaylistView : AppCompatActivity() {
     private lateinit var dateTextView: TextView
     private lateinit var durationTextView: TextView
     private lateinit var playlistImageView: ImageView
+    private lateinit var recyclerView: RecyclerView
     private var playAllTextSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist_view)
 
-        nameTextView = findViewById(R.id.playlist_name)
-        //Start marquee animation
-        nameTextView.isSelected = true
-        dateTextView = findViewById(R.id.playlist_date)
-        durationTextView = findViewById(R.id.playlist_duration)
-        playlistImageView = findViewById(R.id.playlist_image)
+        setUpViewVariables()
+        retrievePlaylist()
+        setUpButtons()
+        setUpRecyclerView()
+    }
 
+    private fun retrievePlaylist() {
         try {
             playlist = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra("playlist", SongPlaylistRelationData::class.java)!!
@@ -62,7 +54,18 @@ class PlaylistView : AppCompatActivity() {
         }catch (_: Exception){
             Toast.makeText(this, "Failure when retrieving song data", Toast.LENGTH_SHORT).show()
         }
+    }
 
+    private fun setUpViewVariables() {
+        nameTextView = findViewById(R.id.playlist_name)
+        //Start marquee animation
+        nameTextView.isSelected = true
+        dateTextView = findViewById(R.id.playlist_date)
+        durationTextView = findViewById(R.id.playlist_duration)
+        playlistImageView = findViewById(R.id.playlist_image)
+    }
+
+    private fun setUpButtons() {
         findViewById<Button>(R.id.playlist_back_button).setOnClickListener{
             onBackPressed()
         }
@@ -91,14 +94,30 @@ class PlaylistView : AppCompatActivity() {
                     R.id.playlist_rename -> renamePlaylist()
 
                     R.id.playlist_delete -> deletePlaylist()
-
                 }
                 true
             }
         }
+    }
 
-        findViewById<RecyclerView>(R.id.playlist_songs_recyclerview).adapter = PlaylistSongAdapter(this, SongList(playlist), supportFragmentManager)
-
+    private fun setUpRecyclerView() {
+        val adapter = PlaylistSongAdapter(this, SongList(playlist), supportFragmentManager)
+        adapter.onItemRemoved = object: PlaylistSongAdapter.OnItemRemoved{
+            override fun notifyItemRemoved(pos: Int) {
+                val newList = playlist.songs.toMutableList()
+                newList.removeAt(pos)
+                playlist.songs = newList.toList()
+                val songlist = SongList(playlist)
+                findViewById<FragmentContainerView>(R.id.playlist_play_all_fragment).getFragment<PlayAllSongsFragment>()
+                    .setList(songlist)
+                adapter.playlist = songlist
+                adapter.notifyItemRemoved(pos)
+                adapter.notifyItemRangeChanged(pos, newList.size)
+                loadPlaylist()
+            }
+        }
+        recyclerView = findViewById(R.id.playlist_songs_recyclerview)
+        recyclerView.adapter = adapter
     }
 
     private fun renamePlaylist() {

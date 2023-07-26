@@ -58,33 +58,31 @@ class SongListView : Fragment() {
     private suspend fun checkSongsIntegrityDB() {
         try {
 
-        val db = AppDatabase.getInstance(activity as Context)
+            val dao = AppDatabase.getInstance(activity as Context).playlistDao()
 
-        val dao = db.playlistDao()
+            //Insert new songs in phone
+            val songEntityArray = mainSongList.getList().map{it.toSongEntity()}.toTypedArray()
+            //Update db with songs in device
+            dao.insertSongs(*(songEntityArray))
 
-        //Insert new songs in phone
-        val songEntityArray = mainSongList.getList().map{it.toSongEntity()}.toTypedArray()
-        //Update db with songs in device
-        dao.insertSongs(*(songEntityArray))
+            //Check songs deleted from phone that are still in db
+            val songs = dao.getSongs()
 
-        //Check songs deleted from phone that are still in db
-        val songs = dao.getSongs()
+            val deletedSongs = songs.filter { it !in songEntityArray }.map{it.path}.toTypedArray()
+            var dbSongsChanged = false
 
-        val deletedSongs = songs.filter { it !in songEntityArray }.map{it.path}.toTypedArray()
-        var dbSongsChanged = false
-
-        //If there are songs in db but not in device, delete them
-        if(deletedSongs.isNotEmpty()){
-            dao.deleteSongs(*deletedSongs)
-            dbSongsChanged = true
-        }
-
-        //Notify user songs have been deleted
-        if(dbSongsChanged){
-            withContext(Dispatchers.Main) {
-                Toast.makeText(activity, "Some songs have been deleted from device", Toast.LENGTH_SHORT).show()
+            //If there are songs in db but not in device, delete them
+            if(deletedSongs.isNotEmpty()){
+                dao.deleteSongs(*deletedSongs)
+                dbSongsChanged = true
             }
-        }
+
+            //Notify user songs have been deleted
+            if(dbSongsChanged){
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(activity, "Some songs are no longer stored in this device", Toast.LENGTH_SHORT).show()
+                }
+            }
 
         }catch (e: Exception){
             withContext(Dispatchers.Main) {

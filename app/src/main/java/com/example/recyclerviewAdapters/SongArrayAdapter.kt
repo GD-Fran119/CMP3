@@ -19,9 +19,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bottomSheets.PlaylistsDialogFragment
 import com.example.bottomSheets.SongInfoDialogFragment
 import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
+import com.example.databaseStuff.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -106,13 +108,14 @@ class SongArrayAdapter private constructor(private var context: Context, private
 
                     override fun onAction() {
                         //TODO
-                        //Show playlists bottom sheet dialog
-                        Toast.makeText(activity, "Song added", Toast.LENGTH_SHORT).show()
+                        CoroutineScope(Dispatchers.Default).launch{
+                            val dao = AppDatabase.getInstance(activity).playlistDao()
+                            val playlists = dao.getPlaylistsInfo()
+                            PlaylistsDialogFragment(playlists, song).show(fragmentManager, "Add to playlist")
+                        }
                         dialog.dismiss()
                     }
-
                 }
-
                 dialog.action = action
                 dialog.show(fragmentManager, "Song info")
             }

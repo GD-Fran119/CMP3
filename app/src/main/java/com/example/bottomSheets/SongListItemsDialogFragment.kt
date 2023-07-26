@@ -23,7 +23,7 @@ import java.lang.Exception
  *    ListItemListDialogFragment.newInstance(30).show(supportFragmentManager, "dialog")
  * </pre>
  */
-class ListItemListDialogFragment : BottomSheetDialogFragment() {
+class SongListItemsDialogFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentItemListDialogListDialogBinding? = null
 

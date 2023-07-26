@@ -50,8 +50,10 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"/>
         <TextView
             android:id="@+id/current_song_desc"
             android:textSize="12sp"

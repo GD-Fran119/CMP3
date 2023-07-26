@@ -4,31 +4,24 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:behavior_peekHeight="300sp"
+    android:layout_gravity="bottom">
 
     <ImageView
         android:layout_width="100sp"
         android:layout_height="30sp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_horizontal_line"/>
+
     <TextView
-        android:id="@+id/bottom_box_list_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:text="List Name"
+        android:text="Add to playlist"
         android:textStyle="bold"
         android:layout_marginHorizontal="30sp"
         android:layout_marginTop="10sp"
-        />
-
-    <TextView
-        android:id="@+id/bottom_box_list_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:text="Songs"
-        android:layout_marginHorizontal="30sp"
         />
 
     <view class="com.google.android.material.divider.MaterialDivider"
@@ -37,13 +30,14 @@
         android:layout_marginTop="10sp"
         android:layout_marginHorizontal="30sp"/>
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/bottom_box_list"
+    <androidx.recyclerview.widget.RecyclerView
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/bottom_box_playlist_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="500sp"
+        android:layout_height="300sp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context="com.example.bottomSheets.SongListItemsDialogFragment"
-        tools:listitem="@layout/fragment_item_list_dialog_list_dialog_item" />
+        tools:listitem="@layout/add_song_botomsheet_item_layout" />
 
 </LinearLayout>

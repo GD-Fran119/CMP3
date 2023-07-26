@@ -78,6 +78,7 @@ class CurrentSongFragment : Fragment() {
         image = view.findViewById(R.id.current_song_img)
         title = view.findViewById(R.id.current_song_title)
         desc = view.findViewById(R.id.current_song_desc)
+        title.isSelected = true
 
         view.findViewById<ConstraintLayout>(R.id.current_song_container)?.setOnClickListener{
             startActivity(Intent(activity, PlayControlView::class.java))
