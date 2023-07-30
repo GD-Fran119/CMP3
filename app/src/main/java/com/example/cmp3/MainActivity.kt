@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import MainViewFragmentAdapter
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
-import com.example.songsAndPlaylists.MainListHolder
+import android.content.Intent
+import android.view.View
+import android.widget.EditText
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -38,6 +39,10 @@ class MainActivity : AppCompatActivity(){
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
+
+        findViewById<MaterialButton>(R.id.main_search_button).setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
 
     }
 }

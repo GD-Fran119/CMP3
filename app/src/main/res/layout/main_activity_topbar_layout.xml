@@ -5,8 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15sp">
 
+
     <Button
-        android:id="@+id/playlist_back_button"
+        android:id="@+id/main_search_button"
         android:layout_width="30sp"
         android:layout_height="30sp"
         app:cornerRadius="15sp"
@@ -14,14 +15,14 @@
         android:insetLeft="0sp"
         android:insetRight="0sp"
         android:insetTop="0sp"
-        android:foreground="@drawable/ic_back"
+        android:foreground="@drawable/ic_search"
         android:background="#00000000"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/main_options_button"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
-        android:id="@+id/playlist_options_button"
+        android:id="@+id/main_options_button"
         android:layout_width="30sp"
         android:layout_height="30sp"
         app:cornerRadius="15sp"

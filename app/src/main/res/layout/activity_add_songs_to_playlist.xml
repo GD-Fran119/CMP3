@@ -7,43 +7,7 @@
     tools:context=".AddSongsToPlaylistActivity"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/add_playlist_search_layout"
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="10sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/add_playlist_search_button"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Buscar"
-            android:textSize="20sp"
-            android:inputType="textCapSentences"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/add_playlist_search_button"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        app:cornerRadius="25sp"
-        android:paddingEnd="10sp"
-        android:foreground="@drawable/ic_search"
-        android:backgroundTint="#00000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_playlist_search_layout"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/search_top_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"

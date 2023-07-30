@@ -164,7 +164,7 @@ class SongListView : Fragment() {
 
         view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)
 
-        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList, childFragmentManager)
+        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager)
 
         listView?.adapter = adapter
     }
