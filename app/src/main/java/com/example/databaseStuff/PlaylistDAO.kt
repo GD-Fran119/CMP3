@@ -56,5 +56,5 @@ interface PlaylistDAO {
 
     @Transaction
     @Query("SELECT * FROM playlistentity where id = :id")
-    fun getPlaylistSongs(id: Int): SongPlaylistRelationData
+    fun getPlaylistSongs(id: Int): SongPlaylistRelationData?
 }

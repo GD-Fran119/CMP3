@@ -1,5 +1,6 @@
 package com.example.cmp3
 
+import android.content.Context
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.palette.graphics.Palette
 import com.example.bottomSheets.SongListItemsDialogFragment
+import com.example.config.PlayerStateSaver
+import com.example.songsAndPlaylists.Song
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,13 +36,14 @@ class PlayControlView : AppCompatActivity(){
     private var defaultBGColor: Int = 0
     private var currentColor: Int = 0
 
-    private val listItems = SongListItemsDialogFragment()
+    private val listItems = SongListItemsDialogFragment(Player.instance.getList())
 
     private lateinit var seekBar: SeekBar
     private var seekbarJob: Job? = null
     private var findImageJob : Job? = null
 
     private val listener = object: Player.OnSongChangedListener{
+        private var saverJob: Job? = null
         override fun listen() {
             val song = player.getCurrentSong() ?: return
 
@@ -51,6 +55,11 @@ class PlayControlView : AppCompatActivity(){
             CoroutineScope(Dispatchers.Main).launch {
                 delay(100)
                 changePlayButton()
+            }
+
+            saverJob?.cancel()
+            saverJob = CoroutineScope(Dispatchers.Default).launch {
+                PlayerStateSaver.saveState(this@PlayControlView)
             }
         }
     }
@@ -142,7 +151,7 @@ class PlayControlView : AppCompatActivity(){
         super.onPause()
         try{
             seekbarJob?.cancel()
-            player.onSongChangedListener = null
+            //player.onSongChangedListener = null
         }catch (_: Exception){}
 
     }
@@ -205,6 +214,9 @@ class PlayControlView : AppCompatActivity(){
     private fun changePlayModeBtn(){
         player.changePlayMode()
         changePlayModeBtnImg()
+        CoroutineScope(Dispatchers.Default).launch {
+            PlayerStateSaver.saveState(this@PlayControlView)
+        }
     }
     private fun playPauseBtn(){
         if(player.isPlayingSong()){

@@ -12,6 +12,8 @@ import com.example.cmp3.R
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogItemBinding
 import com.example.cmp3.databinding.FragmentItemListDialogListDialogBinding
 import com.example.playerStuff.Player
+import com.example.songsAndPlaylists.Song
+import com.example.songsAndPlaylists.SongList
 import java.lang.Exception
 
 /**
@@ -23,7 +25,7 @@ import java.lang.Exception
  *    ListItemListDialogFragment.newInstance(30).show(supportFragmentManager, "dialog")
  * </pre>
  */
-class SongListItemsDialogFragment : BottomSheetDialogFragment() {
+class SongListItemsDialogFragment(private val songlist: SongList?) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentItemListDialogListDialogBinding? = null
 
@@ -42,10 +44,9 @@ class SongListItemsDialogFragment : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val currentList = Player.instance.getList()
-        view.findViewById<TextView>(R.id.bottom_box_list_name)?.text = currentList?.title ?: "Unknown"
+        view.findViewById<TextView>(R.id.bottom_box_list_name)?.text = songlist?.title ?: "Unknown"
 
-        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  if(currentList?.getListSize() != 1.toUInt()) "${currentList?.getListSize()} songs"
+        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  if(songlist?.getListSize() != 1.toUInt()) "${songlist?.getListSize()} songs"
                                                                             else "1 song"
         val list = view.findViewById<RecyclerView>(R.id.bottom_box_list)
         list?.adapter = ListItemAdapter(Player.instance.listSize().toInt())
@@ -80,7 +81,6 @@ class SongListItemsDialogFragment : BottomSheetDialogFragment() {
             val album = if (currentSong?.album == "<unknown>") "Unknown" else currentSong?.album
             holder.desc.text = "${artist} - ${album}"
             holder.itemView.setOnClickListener {
-                //New intent to play control view with song playing
                 try {
                     Player.instance.setCurrentSongAndPLay(position.toUInt())
                 }catch (e: Exception){

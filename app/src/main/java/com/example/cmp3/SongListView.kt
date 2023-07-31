@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentTransaction
 import androidx.media3.common.MimeTypes
 import androidx.recyclerview.widget.RecyclerView
+import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
 import com.example.playerStuff.Player
 import kotlinx.coroutines.CoroutineScope
@@ -157,9 +158,10 @@ class SongListView : Fragment() {
         findMusic()
         MainListHolder.setMainList(mainSongList)
 
-        //TODO
-        //Replace with config
-        Player.instance.setList(mainSongList)
+        //Load saved state
+        CoroutineScope(Dispatchers.Default).launch {
+            PlayerStateSaver.loadState(activity as Context)
+        }
         //
 
         view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)

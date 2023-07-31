@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.animations.ImageFadeInAnimation
+import com.example.config.PlayerStateSaver
 import com.example.playerStuff.Player
 
 import com.google.android.material.button.MaterialButton
@@ -35,6 +36,7 @@ class CurrentSongFragment : Fragment() {
     private var progressJob : Job? = null
 
     private val listener = object: Player.OnSongChangedListener{
+        private var saverJob: Job? = null
         override fun listen() {
 
             val song = player.getCurrentSong() ?: return
@@ -60,6 +62,11 @@ class CurrentSongFragment : Fragment() {
                         image.startAnimation(ImageFadeInAnimation(0f, 1f))
                     }
                 }
+            }
+
+            saverJob?.cancel()
+            saverJob = CoroutineScope(Dispatchers.Default).launch {
+                PlayerStateSaver.saveState(requireContext())
             }
         }
     }
@@ -129,7 +136,7 @@ class CurrentSongFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        player.onSongChangedListener = null
+        //player.onSongChangedListener = null
         findImageJob?.cancel()
         progressJob?.cancel()
     }

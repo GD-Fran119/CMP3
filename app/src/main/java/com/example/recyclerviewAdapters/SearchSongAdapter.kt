@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.example.cmp3.R
 import com.example.songsAndPlaylists.Song
+import java.util.Locale
 
 class SearchSongAdapter(private val context: Context, private val songs: List<Song>, private val fragmentManager: FragmentManager): RecyclerView.Adapter<SongListViewHolder>(){
 
@@ -19,7 +20,7 @@ class SearchSongAdapter(private val context: Context, private val songs: List<So
             else if(o1 == null) return -1
             else if(o2 == null) return 1
 
-            return o1.path.compareTo(o2.path)
+            return o1.title.lowercase(Locale.ROOT).compareTo(o2.title.lowercase(Locale.ROOT))
         }
 
         override fun onInserted(position: Int, count: Int) {
@@ -60,7 +61,7 @@ class SearchSongAdapter(private val context: Context, private val songs: List<So
 
     override fun onBindViewHolder(holder: SongListViewHolder, position: Int) {
         val song = songsDataset[position]
-        holder.bind(song, position.toUInt(), fragmentManager)
+        holder.bind(song, songs.indexOf(song).toUInt(), fragmentManager)
     }
 
     override fun getItemCount(): Int {

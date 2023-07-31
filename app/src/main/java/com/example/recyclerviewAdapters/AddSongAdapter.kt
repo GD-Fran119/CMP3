@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class AddSongAdapter private constructor(private var context: Context, private var songs: List<Song>, private val playlistID: Int) :
     RecyclerView.Adapter<AddSongAdapter.AddSongViewHolder>(){
@@ -29,7 +30,7 @@ class AddSongAdapter private constructor(private var context: Context, private v
             else if(o1 == null) return -1
             else if(o2 == null) return 1
 
-            return o1.path.compareTo(o2.path)
+            return o1.title.lowercase(Locale.ROOT).compareTo(o2.title.lowercase(Locale.ROOT))
         }
 
         override fun onInserted(position: Int, count: Int) {

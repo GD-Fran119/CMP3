@@ -32,17 +32,28 @@ class Player private constructor(){
 
     fun changePlayMode(){
         playMode = when(playMode){
-            PlayMode.RANDOM -> PlayMode.CURRENT_LOOP
-            PlayMode.CURRENT_LOOP -> PlayMode.LIST_LOOP
+            PlayMode.RANDOM -> PlayMode.SONG_LOOP
+            PlayMode.SONG_LOOP -> PlayMode.LIST_LOOP
             PlayMode.LIST_LOOP -> PlayMode.RANDOM
         }
+    }
+    fun setRandomLoop(){
+        playMode = PlayMode.RANDOM
+    }
+
+    fun setListLoop(){
+        playMode = PlayMode.LIST_LOOP
+    }
+
+    fun setSongLoop(){
+        playMode = PlayMode.SONG_LOOP
     }
 
     fun isListLoop(): Boolean{
         return playMode == PlayMode.LIST_LOOP
     }
     fun isSongLoop(): Boolean{
-        return playMode == PlayMode.CURRENT_LOOP
+        return playMode == PlayMode.SONG_LOOP
     }
     fun isRandomLoop(): Boolean{
         return playMode == PlayMode.RANDOM
@@ -75,24 +86,28 @@ class Player private constructor(){
     fun getList() = songList
     fun playNext(){
         isPlayerAvailable = false
-        when(playMode){
-            PlayMode.LIST_LOOP -> setCurrentSongAndPLay((currentPos + 1.toUInt()) % songList!!.getListSize())
-            PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
-            PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(songList!!.getListSize()))
+        val nextSongPos = when(playMode){
+            PlayMode.LIST_LOOP -> (currentPos + 1.toUInt()) % songList!!.getListSize()
+            PlayMode.SONG_LOOP -> currentPos
+            PlayMode.RANDOM -> Random.nextUInt(songList!!.getListSize())
         }
+        setCurrentSongAndPLay(nextSongPos)
         isPlayerAvailable = true
     }
     fun playPrevious(){
         isPlayerAvailable = false
-        when(playMode){
-            PlayMode.LIST_LOOP -> setCurrentSongAndPLay(if(currentPos > 0.toUInt()) {
-                                                            currentPos - 1.toUInt()
-                                                        } else {
-                                                            songList!!.getListSize()-1.toUInt()
-                                                        })
-            PlayMode.CURRENT_LOOP -> setCurrentSongAndPLay(currentPos)
-            PlayMode.RANDOM -> setCurrentSongAndPLay(Random.nextUInt(0.toUInt(), songList!!.getListSize()))
+        val nextSongPos = when(playMode){
+            PlayMode.LIST_LOOP -> {
+                                        if(currentPos > 0.toUInt()) {
+                                            currentPos - 1.toUInt()
+                                        } else {
+                                            songList!!.getListSize() - 1.toUInt()
+                                        }
+                                    }
+            PlayMode.SONG_LOOP -> currentPos
+            PlayMode.RANDOM -> Random.nextUInt(0.toUInt(), songList!!.getListSize())
         }
+        setCurrentSongAndPLay(nextSongPos)
         isPlayerAvailable = true
     }
     fun setTime(time: UInt){
