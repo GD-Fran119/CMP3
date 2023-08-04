@@ -2,7 +2,6 @@ package com.example.recyclerviewAdapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +54,9 @@ class SearchSongAdapter(private val context: Context, private val songs: List<So
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.item_song_list_view, parent, false)
+                //TODO
+                //Change for customization
+            .inflate(R.layout.item_song_list_view3, parent, false)
         return SongListViewHolder(view, context)
     }
 

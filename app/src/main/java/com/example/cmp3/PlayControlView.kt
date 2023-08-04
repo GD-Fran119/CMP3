@@ -1,6 +1,5 @@
 package com.example.cmp3
 
-import android.content.Context
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
@@ -10,12 +9,12 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.palette.graphics.Palette
 import com.example.bottomSheets.SongListItemsDialogFragment
 import com.example.config.PlayerStateSaver
-import com.example.songsAndPlaylists.Song
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +65,10 @@ class PlayControlView : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_play_control_view)
+
+        //TODO
+        //Change with customization
+        setContentView(R.layout.activity_play_control_view3)
 
         title = findViewById(R.id.play_control_title)
         //Start marquee animation
@@ -104,6 +106,14 @@ class PlayControlView : AppCompatActivity(){
         if(Player.instance.isAvailableProgress()){
             seekBar.max = Player.instance.getCurrentSongDuration().toInt()
             seekBar.progress = Player.instance.getCurrentSongProgress()
+        }
+
+        findViewById<MaterialButton>(R.id.topbar_back_button).setOnClickListener {
+            onBackPressed()
+        }
+
+        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
+            Toast.makeText(this, "Options selected", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -193,11 +203,11 @@ class PlayControlView : AppCompatActivity(){
 
     private fun changePlayModeBtnImg() {
         if(Player.instance.isListLoop()){
-            playModeBtn.background = getDrawable(R.drawable.ic_repeat_list)
+            playModeBtn.foreground = getDrawable(R.drawable.ic_repeat_list)
         } else if(Player.instance.isSongLoop()){
-            playModeBtn.background = getDrawable(R.drawable.ic_repeat_current)
+            playModeBtn.foreground = getDrawable(R.drawable.ic_repeat_current)
         }else{
-            playModeBtn.background = getDrawable(R.drawable.ic_random_mode)
+            playModeBtn.foreground = getDrawable(R.drawable.ic_random_mode)
         }
 
     }

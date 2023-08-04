@@ -1,6 +1,5 @@
 package com.example.config
 
-import android.app.Application
 import android.content.Context
 import com.example.databaseStuff.AppDatabase
 import com.example.playerStuff.Player

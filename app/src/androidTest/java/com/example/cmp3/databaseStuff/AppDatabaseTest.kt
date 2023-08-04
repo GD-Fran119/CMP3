@@ -17,12 +17,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
+/**
+ * [AppDatabase] test, checks if some operations over database can be done without errors.
+ * These operations are:
+ * - Insertion of a [SongEntity] in a [PlaylistEntity].
+ * - Deletion of the [SongPlaylistRelation] when the [SongEntity] is removed from database.
+ */
 @RunWith(AndroidJUnit4::class)
 class AppDatabaseTest{
 
     private lateinit var dao: PlaylistDAO
     private lateinit var db: AppDatabase
 
+    /**
+     * Creates database and establish dao for accessing data.
+     */
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -31,12 +40,19 @@ class AppDatabaseTest{
         dao = db.playlistDao()
     }
 
+    /**
+     * Closes database when test is finished.
+     */
     @After
     @Throws(IOException::class)
     fun closeDb() {
         db.close()
     }
 
+    /**
+     * Test for inserting a song in a playlist and check the insertion runs correctly.
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun insertSongInPlaylist() = runBlocking {
@@ -51,11 +67,16 @@ class AppDatabaseTest{
         //Insert relation between song and playlist
         dao.insertSongInPlaylist(SongPlaylistRelation(song.path, playlistSongs.playlist.id))
 
-        val songs = dao.getPlaylistSongs(playlistSongs.playlist.id).songs
+        val songs = dao.getPlaylistSongs(playlistSongs.playlist.id)!!.songs
         //Check relation has been created properly
         assertTrue(songs.contains(song))
     }
 
+    /**
+     * Test for deleting a song from the database and check the deletion erases all the relations
+     * the song had with any playlist.
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun deleteSongRelationshipAfterInsertingSongAndPlaylistAndDeleteSong() = runBlocking {
@@ -64,15 +85,13 @@ class AppDatabaseTest{
         val playlist = PlaylistEntity("a", "a")
         //Insert both song and playlist
         dao.insertSongs(song)
-        dao.insertPlaylist(playlist)
-        //Retrieve inserted playlist with its new id and songs
-        val playlistSongs = dao.getAllPlaylists()[0]
+        val id = dao.insertPlaylist(playlist)
         //Insert relation between song and playlist
-        dao.insertSongInPlaylist(SongPlaylistRelation(song.path, playlistSongs.playlist.id))
+        dao.insertSongInPlaylist(SongPlaylistRelation(song.path, id.toInt()))
         //Delete song
         dao.deleteSongs(song.path)
 
-        val songs = dao.getPlaylistSongs(playlistSongs.playlist.id).songs
+        val songs = dao.getPlaylistSongs(id.toInt())!!.songs
         //Check relation has been deleted too
         assertEquals(songs.size, 0)
     }

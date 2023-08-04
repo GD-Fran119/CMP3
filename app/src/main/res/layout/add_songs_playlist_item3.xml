@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+
+<androidx.cardview.widget.CardView
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginHorizontal="10sp"
+    android:layout_marginVertical="5sp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="10sp"
+    android:layout_width="match_parent"
+    android:layout_height="60sp">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:paddingHorizontal="10sp"
-    android:paddingVertical="5sp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:paddingVertical="5sp">
 
     <LinearLayout
         android:id="@+id/add_song_playlist_item_info_container"
@@ -22,27 +33,28 @@
             android:id="@+id/add_song_playlist_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Title"
             android:maxLines="1"
             android:ellipsize="end"/>
         <TextView
             android:id="@+id/add_song_playlist_item_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Album - Artist"
             android:maxLines="1"
             android:ellipsize="end"/>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/add_song_playlist_item_image"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
         android:src="@drawable/ic_playlist_add"
         app:tint="@color/light_blue_600"
         android:backgroundTint="#00000000"
-        app:layout_constraintStart_toEndOf="@id/add_song_playlist_item_info_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

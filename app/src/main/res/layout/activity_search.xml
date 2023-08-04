@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-    <include layout="@layout/search_top_bar_layout"
+
+    <include layout="@layout/search_topbar_layout"
         android:id="@+id/search_top_bar"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/search_recyclerview"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recyclerview"
@@ -22,8 +24,7 @@
         app:layout_constraintBottom_toTopOf="@id/search_current_song_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_song_list_view"/>
+        tools:listitem="@layout/item_song_list_view1"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:name="com.example.cmp3.CurrentSongFragment"

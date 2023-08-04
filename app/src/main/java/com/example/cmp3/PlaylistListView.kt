@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dialogs.PlaylistCreationDialog
 import com.example.databaseStuff.AppDatabase
+import com.example.databaseStuff.SongPlaylistRelationData
 import com.example.recyclerviewAdapters.PlaylistArrayAdapter
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
@@ -62,10 +65,18 @@ class PlaylistListView : Fragment() {
                 recyclerView.adapter = null
             } else {
                 view?.findViewById<TextView>(R.id.nullPlaylistInfo)?.text = ""
-                recyclerView.adapter = PlaylistArrayAdapter.create(requireActivity(), playlists)
+                setRecyclerViewLayout(playlists)
             }
         }
 
+    }
+
+    private fun setRecyclerViewLayout(playlists: List<SongPlaylistRelationData>) {
+        val adapter = PlaylistArrayAdapter.create(requireActivity(), playlists)
+        val manager = GridLayoutManager(activity, 2)
+        recyclerView.adapter = adapter
+        //val manager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = manager
     }
 
     override fun onResume() {

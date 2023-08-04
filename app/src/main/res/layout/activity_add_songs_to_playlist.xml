@@ -7,7 +7,8 @@
     tools:context=".AddSongsToPlaylistActivity"
     android:orientation="vertical">
 
-    <include layout="@layout/search_top_bar_layout" />
+
+    <include layout="@layout/search_topbar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/add_songs_playlist_item"/>
+            tools:listitem="@layout/add_songs_playlist_item1"/>
     </RelativeLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

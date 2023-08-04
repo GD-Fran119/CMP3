@@ -5,6 +5,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.cmp3.PlaylistListView
 import com.example.cmp3.SongListView
 
+/**
+ * Adapter for view pager in Main Activity
+ * @param fragmentManager manager required by [FragmentStateAdapter]
+ * @param lifecycle required by [FragmentStateAdapter]
+ */
 class MainViewFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle)
 {
     private val fragments = arrayOf(SongListView.newInstance(), PlaylistListView.newInstance())

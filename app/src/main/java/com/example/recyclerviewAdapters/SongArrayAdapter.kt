@@ -20,7 +20,9 @@ open class SongArrayAdapter constructor(private var context: Context, private va
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.item_song_list_view, parent, false)
+                //TODO
+                //Change song list item layout
+            .inflate(R.layout.item_song_list_view2, parent, false)
         return SongListViewHolder(view, context)
     }
 

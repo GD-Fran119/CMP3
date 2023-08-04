@@ -46,9 +46,6 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
         job?.cancel()
         imageView.setImageResource(R.drawable.ic_music_note)
 
-        //TODO
-        //Fix infinite binding
-
         job = CoroutineScope(Dispatchers.Default).launch {
 
             val mediaRetriever = MediaMetadataRetriever()
@@ -100,7 +97,16 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
                     CoroutineScope(Dispatchers.Default).launch{
                         val dao = AppDatabase.getInstance(activity).playlistDao()
                         val playlists = dao.getPlaylistsInfo()
-                        PlaylistsDialogFragment(playlists, song).show(fragmentManager, "Add to playlist")
+                        if(playlists.isEmpty()){
+                            withContext(Dispatchers.Main){
+                                Toast.makeText(activity, "No playlists created", Toast.LENGTH_SHORT).show()
+                            }
+                        }else {
+                            PlaylistsDialogFragment(playlists, song).show(
+                                fragmentManager,
+                                "Add to playlist"
+                            )
+                        }
                     }
                     dialog.dismiss()
                 }

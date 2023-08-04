@@ -26,7 +26,7 @@ class Song(
 
     constructor(song: SongEntity) : this(song.title, song.artist, song.album, song.duration.toUInt(),
                                          song.path, song.size, song.lyricsPath)
-    fun getSizeMB(): Float{
+    fun getSizeMB(): String {
         //1024 * 1024 = 1048567
         val TAMANO_MB = 1048567.0f
 
@@ -34,7 +34,7 @@ class Song(
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.HALF_EVEN
 
-        return df.format(fileSize.toFloat() / TAMANO_MB).toFloat()
+        return df.format(fileSize.toFloat() / TAMANO_MB)
     }
 
 

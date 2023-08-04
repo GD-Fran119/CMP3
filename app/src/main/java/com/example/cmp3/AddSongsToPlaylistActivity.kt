@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerviewAdapters.AddSongAdapter
 import com.google.android.material.button.MaterialButton
@@ -40,8 +41,12 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        findViewById<MaterialButton>(R.id.search_back_button).setOnClickListener {
+        findViewById<MaterialButton>(R.id.topbar_back_button).setOnClickListener {
             onBackPressed()
+        }
+
+        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
+            Toast.makeText(this@AddSongsToPlaylistActivity, "Options selected", Toast.LENGTH_SHORT).show()
         }
 
         findViewById<Button>(R.id.search_clear_button).setOnClickListener {

@@ -35,7 +35,9 @@ class PlaylistView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_playlist_view)
+        //TODO
+        //Change for customization
+        setContentView(R.layout.activity_playlist_view2)
 
         setUpViewVariables()
         retrievePlaylist()
@@ -66,11 +68,11 @@ class PlaylistView : AppCompatActivity() {
     }
 
     private fun setUpButtons() {
-        findViewById<Button>(R.id.playlist_back_button).setOnClickListener{
+        findViewById<Button>(R.id.topbar_back_button).setOnClickListener{
             onBackPressed()
         }
 
-        findViewById<Button>(R.id.playlist_options_button).setOnClickListener {
+        findViewById<Button>(R.id.topbar_options_button).setOnClickListener {
             //TODO
             //Show menu
             val popup = PopupMenu(this, it)
@@ -135,14 +137,32 @@ class PlaylistView : AppCompatActivity() {
     }
 
     private fun deletePlaylist() {
-        CoroutineScope(Dispatchers.Default).launch {
-            val dao = AppDatabase.getInstance(this@PlaylistView).playlistDao()
-            dao.deletePlaylist(playlist.playlist.id)
-            withContext(Dispatchers.Main){
-                Toast.makeText(this@PlaylistView, "${playlist.playlist.name} deleted", Toast.LENGTH_SHORT).show()
-                onBackPressed()
+
+        val confirmationDialog = android.app.AlertDialog.Builder(this)
+                                .setTitle("Delete playlist")
+            .setMessage("Are you sure you want to delete ${playlist.playlist.name}?")
+            .setIcon(R.drawable.ic_delete)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete"
+            ) { dialog, _ ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    val dao = AppDatabase.getInstance(this@PlaylistView).playlistDao()
+                    dao.deletePlaylist(playlist.playlist.id)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@PlaylistView,
+                            "${playlist.playlist.name} deleted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onBackPressed()
+                    }
+                }
+                dialog.dismiss()
             }
-        }
+            .create()
+
+        confirmationDialog.show()
+
     }
 
     override fun onStart() {

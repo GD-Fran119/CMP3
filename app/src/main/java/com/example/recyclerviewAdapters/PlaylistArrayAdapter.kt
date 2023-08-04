@@ -38,15 +38,23 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
             view.findViewById<TextView>(R.id.playlist_name).text = playlist.playlist.name
             view.findViewById<TextView>(R.id.playlist_songs).text = if(playlist.songs.size != 1) "${playlist.songs.size} songs"
                                                                     else "1 song"
+
             view.setOnClickListener{
                 val intent = Intent(activity, PlaylistView::class.java)
                 intent.putExtra("playlist", playlist)
                 activity.startActivity(intent)
             }
+
+            view.setOnClickListener{
+                val intent = Intent(activity, PlaylistView::class.java)
+                intent.putExtra("playlist", playlist)
+                activity.startActivity(intent)
+            }
+
             job?.cancel()
             imageView.setImageResource(R.drawable.ic_music_note)
             if(playlist.songs.isNotEmpty()) {
-                job = CoroutineScope(Dispatchers.Main)
+                job = CoroutineScope(Dispatchers.Default)
                     .launch {
                         val mediaRetriever = MediaMetadataRetriever()
                         val firstSong = playlist.songs[0]
@@ -75,7 +83,9 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
     ): PlaylistViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.playlists_item_view, parent, false)
+                //TODO
+                //Change playlist item layout
+            .inflate(R.layout.playlists_item_view2, parent, false)
         return PlaylistViewHolder(view, context)
     }
 

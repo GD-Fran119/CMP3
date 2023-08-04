@@ -7,7 +7,7 @@
     tools:context=".PlaylistView">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/playlist_35_percent_guideline"
+        android:id="@+id/playlist_45_percent_guideline"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:orientation="horizontal"
@@ -15,7 +15,7 @@
 
     <include
         android:id="@+id/playlist_topbar"
-        layout="@layout/playlist_topbar_layout"
+        layout="@layout/general_topbar_layout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -112,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="com.example.cmp3.PlayAllSongsFragment"
-        app:layout_constraintBottom_toTopOf="@id/playlist_35_percent_guideline"
+        app:layout_constraintBottom_toTopOf="@id/playlist_45_percent_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -124,7 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/playlist_songs_recyclerview"
-        app:layout_constraintTop_toBottomOf="@id/playlist_35_percent_guideline"/>
+        app:layout_constraintTop_toBottomOf="@id/playlist_45_percent_guideline"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlist_songs_recyclerview"

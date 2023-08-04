@@ -13,7 +13,6 @@ import com.example.cmp3.R
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelation
 import com.example.songsAndPlaylists.Song
-import com.example.songsAndPlaylists.SongList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,7 +111,9 @@ class AddSongAdapter private constructor(private var context: Context, private v
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddSongViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.add_songs_playlist_item, parent, false)
+                //TODO
+                //Change for customization
+            .inflate(R.layout.add_songs_playlist_item3, parent, false)
         return AddSongViewHolder(view, context, playlistID)
     }
 

@@ -6,7 +6,7 @@
     android:padding="15sp">
 
     <Button
-        android:id="@+id/playlist_back_button"
+        android:id="@+id/topbar_back_button"
         android:layout_width="30sp"
         android:layout_height="30sp"
         app:cornerRadius="15sp"
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
-        android:id="@+id/playlist_options_button"
+        android:id="@+id/topbar_options_button"
         android:layout_width="30sp"
         android:layout_height="30sp"
         app:cornerRadius="15sp"

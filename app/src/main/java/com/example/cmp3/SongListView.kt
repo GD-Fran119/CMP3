@@ -7,7 +7,6 @@ import com.example.songsAndPlaylists.SongList
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
@@ -17,25 +16,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentTransaction
 import androidx.media3.common.MimeTypes
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
-import com.example.playerStuff.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
-import kotlin.random.Random
-import kotlin.random.nextUInt
 
 
 class SongListView : Fragment() {
@@ -152,8 +148,8 @@ class SongListView : Fragment() {
 
     private fun createListView(){
 
-        val listView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
-        listView?.setHasFixedSize(true)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
+        recyclerView?.setHasFixedSize(true)
 
         findMusic()
         MainListHolder.setMainList(mainSongList)
@@ -168,7 +164,12 @@ class SongListView : Fragment() {
 
         val adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager)
 
-        listView?.adapter = adapter
+        //Interface layout customization
+        //val manager = GridLayoutManager(activity, 2)
+        //manager.orientation = GridLayoutManager.VERTICAL
+        val manager = LinearLayoutManager(activity)
+        recyclerView?.layoutManager = manager
+        recyclerView?.adapter = adapter
     }
 
     private fun findMusic(){

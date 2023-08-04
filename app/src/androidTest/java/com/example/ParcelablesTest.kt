@@ -11,7 +11,14 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import android.os.Parcelable
 
+
+/**
+ * Parcelables test, it checks if the [Parcelable] implementation
+ * of [SongEntity], [PlaylistEntity], [SongPlaylistRelationData],
+ * [Song] and [SongList] works properly.
+ */
 @RunWith(AndroidJUnit4::class)
 class ParcelablesTest {
 
@@ -20,6 +27,10 @@ class ParcelablesTest {
     private var playlist : PlaylistEntity? = null
     private var playlistData : SongPlaylistRelationData? = null
 
+    /**
+     * Sets up the initial variables so the test can be run properly.
+     * Creates 5 [SongEntity] and 1 [PlaylistEntity], and it inserts all songs in the playlist [SongPlaylistRelationData].
+     */
     @Before
     fun setUpData(){
 
@@ -40,6 +51,10 @@ class ParcelablesTest {
         assert(playlistData != null)
     }
 
+    /**
+     * Test for checking that a [SongEntity] object can be created from a [Parcelable].
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun createSongEntityFromParcelable(){
@@ -54,6 +69,10 @@ class ParcelablesTest {
         assert(checkSong == song)
     }
 
+    /**
+     * Test for checking that a [PlaylistEntity] object can be created from a [Parcelable].
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun createPlaylistEntityFromParcelable(){
@@ -66,6 +85,10 @@ class ParcelablesTest {
         assert(checkPlaylist == playlist!!)
     }
 
+    /**
+     * Test for checking that a [SongPlaylistRelationData] object can be created from a [Parcelable].
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun createPlaylistRelationDataFromParcelable(){
@@ -79,7 +102,10 @@ class ParcelablesTest {
 
     }
 
-
+    /**
+     * Test for checking that a [Song] object can be created from a [Parcelable]
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun createSongFromParcelable(){
@@ -95,6 +121,10 @@ class ParcelablesTest {
 
     }
 
+    /**
+     * Test for checking that a [SongList] object can be created from a [Parcelable]
+     * @throws Exception
+     */
     @Test
     @Throws(Exception::class)
     fun createSongListFromParcelable(){
