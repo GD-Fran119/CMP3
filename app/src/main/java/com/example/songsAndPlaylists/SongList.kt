@@ -2,7 +2,6 @@ package com.example.songsAndPlaylists
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.example.databaseStuff.PlaylistEntity
 import com.example.databaseStuff.SongPlaylistRelationData
 
 class SongList(val title: String, private var songs: MutableList<Song>, val creationDate: String): Parcelable {
@@ -14,6 +13,9 @@ class SongList(val title: String, private var songs: MutableList<Song>, val crea
         private set
 
     fun getDuration(): String = DurationFormatter.format(duration.toLong())
+
+    fun isNotEmpty() = songs.isNotEmpty()
+    fun isEmpty() = songs.isEmpty()
 
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,

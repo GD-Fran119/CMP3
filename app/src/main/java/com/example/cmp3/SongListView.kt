@@ -25,6 +25,8 @@ import androidx.media3.common.MimeTypes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.example.config.MainActivityPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,8 @@ import java.lang.Exception
 
 
 class SongListView : Fragment() {
+
+    private var currentLayout = -1
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -146,13 +150,13 @@ class SongListView : Fragment() {
         view?.findViewById<TextView>(R.id.explanation_text)?.visibility = View.GONE
     }
 
+    private var listCreated = false
     private fun createListView(){
-
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
-        recyclerView?.setHasFixedSize(true)
 
         findMusic()
         MainListHolder.setMainList(mainSongList)
+        listCreated = true
+        checkLayoutAndSetUpRecyclerView()
 
         //Load saved state
         CoroutineScope(Dispatchers.Default).launch {
@@ -162,14 +166,67 @@ class SongListView : Fragment() {
 
         view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)
 
-        val adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager)
+    }
 
-        //Interface layout customization
-        //val manager = GridLayoutManager(activity, 2)
-        //manager.orientation = GridLayoutManager.VERTICAL
-        val manager = LinearLayoutManager(activity)
-        recyclerView?.layoutManager = manager
-        recyclerView?.adapter = adapter
+    private fun checkLayoutAndSetUpRecyclerView(){
+
+        val prefs = activity?.getSharedPreferences(ChangeLayoutActivity.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, -1)
+
+        //No config
+        if(savedLayout == -1) {
+            prefs?.edit().apply {
+                this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, 1)
+            }?.apply()
+
+            savedLayout = 1
+        }
+
+        if(currentLayout != savedLayout){
+            currentLayout = if(savedLayout !in 1..3) 1
+                            else savedLayout!!
+
+            prefs?.edit().apply {
+                this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+            }?.apply()
+
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
+            recyclerView?.setHasFixedSize(true)
+            val adapter : SongArrayAdapter
+
+            val manager: LayoutManager
+            when(currentLayout){
+                FULL_WIDTH_LAYOUT -> {
+                    manager = LinearLayoutManager(activity)
+                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view1)
+                }
+                HORIZONTAL_CARD_LAYOUT -> {
+                    manager = LinearLayoutManager(activity)
+                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view2)
+                }
+                VERTICAL_CARD_LAYOUT -> {
+                    manager = GridLayoutManager(activity, 2)
+                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view3)
+                }
+                else -> {
+                    manager = LinearLayoutManager(activity)
+                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view1)
+                    currentLayout = 1
+                    prefs?.edit().apply {
+                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                    }?.apply()
+                }
+            }
+
+            recyclerView?.layoutManager = manager
+            recyclerView?.adapter = adapter
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(listCreated)
+            checkLayoutAndSetUpRecyclerView()
     }
 
     private fun findMusic(){
@@ -240,6 +297,11 @@ class SongListView : Fragment() {
         @JvmStatic
         fun newInstance() =
             SongListView()
+
+        private const val FULL_WIDTH_LAYOUT = 1
+        private const val HORIZONTAL_CARD_LAYOUT = 2
+        private const val VERTICAL_CARD_LAYOUT = 3
+
     }
 
     override fun toString(): String = title

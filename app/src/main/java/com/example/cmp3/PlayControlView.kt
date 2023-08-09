@@ -1,19 +1,26 @@
 package com.example.cmp3
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.os.Bundle
+import android.media.ThumbnailUtils
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.palette.graphics.Palette
 import com.example.bottomSheets.SongListItemsDialogFragment
+import com.example.config.GlobalPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +32,13 @@ import kotlinx.coroutines.withContext
 
 
 class PlayControlView : AppCompatActivity(){
+
+    companion object{
+        private const val SQUARE_IMAGE_LAYOUT = 1
+        private const val ROUND_IMAGE_LAYOUT = 2
+        private const val WIDE_IMAGE_LAYOUT = 3
+    }
+
     private lateinit var title: TextView
     private lateinit var desc: TextView
     private lateinit var img: ImageView
@@ -34,6 +48,7 @@ class PlayControlView : AppCompatActivity(){
     private val player = Player.instance
     private var defaultBGColor: Int = 0
     private var currentColor: Int = 0
+    private var currentLayout = -1
 
     private val listItems = SongListItemsDialogFragment(Player.instance.getList())
 
@@ -41,41 +56,136 @@ class PlayControlView : AppCompatActivity(){
     private var seekbarJob: Job? = null
     private var findImageJob : Job? = null
 
-    private val listener = object: Player.OnSongChangedListener{
-        private var saverJob: Job? = null
-        override fun listen() {
-            val song = player.getCurrentSong() ?: return
+    private var listener : Player.OnSongChangedListener? = null
 
-            title.text = song.title
-            desc.text = if(song.artist == "<unknown>") "Unknown"
-                        else song.artist
+    override fun onStart() {
+        super.onStart()
 
-            changeSongImg()
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(100)
-                changePlayButton()
+        checkAndSetUpLayout()
+
+        setUpVariablesAndButtons()
+
+        setUpListener()
+
+        seekbarJob = CoroutineScope(Dispatchers.Main).launch {
+            var playerTouched = false
+            seekBar.setOnSeekBarChangeListener(object: OnSeekBarChangeListener{
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    seekBar?.progress = progress
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    playerTouched = true
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    playerTouched = false
+                    if(seekBar != null) {
+                        Player.instance.setTime(seekBar.progress.toUInt())
+                        changePlayButton()
+                    }
+                }
+
+            })
+
+            while(true){
+                if(!playerTouched && Player.instance.isAvailableProgress()){
+                    seekBar.max = Player.instance.getCurrentSongDuration().toInt()
+                    seekBar.progress = Player.instance.getCurrentSongProgress()
+                }
+                delay(500)
             }
+        }
 
-            saverJob?.cancel()
-            saverJob = CoroutineScope(Dispatchers.Default).launch {
-                PlayerStateSaver.saveState(this@PlayControlView)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        try{
+            seekbarJob?.cancel()
+        }catch (_: Exception){}
+
+    }
+
+    private fun setUpListener(){
+        listener = object: Player.OnSongChangedListener{
+            override fun listen() {
+                updateUI()
+            }
+        }
+        player.onSongChangedListener = listener
+    }
+
+    private var saverJob: Job? = null
+    private fun updateUI(){
+        val song = player.getCurrentSong() ?: return
+
+        title.text = song.title
+        desc.text = if(song.artist == "<unknown>") "Unknown"
+        else song.artist
+
+        changeSongImg()
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(100)
+            changePlayButton()
+        }
+
+        saverJob?.cancel()
+        saverJob = CoroutineScope(Dispatchers.Default).launch {
+            PlayerStateSaver.saveState(this@PlayControlView)
+        }
+    }
+
+    private fun checkAndSetUpLayout(){
+        val prefs = getSharedPreferences(ChangeLayoutActivity.PLAY_CONTROL_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        var layoutSaved = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
+
+        //No config
+        if(layoutSaved == -1) {
+            prefs.edit().apply {
+                putInt(GlobalPreferencesConstants.LAYOUT_KEY, 1)
+            }.apply()
+
+            layoutSaved = 1
+        }
+
+        //Layout changed
+        if(currentLayout != layoutSaved){
+            //Update layout so it matches config
+            currentLayout = layoutSaved
+
+            when(prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, 1)){
+                SQUARE_IMAGE_LAYOUT -> {
+                    setContentView(R.layout.activity_play_control_view1)
+                }
+                ROUND_IMAGE_LAYOUT -> {
+                    setContentView(R.layout.activity_play_control_view2)
+                }
+                WIDE_IMAGE_LAYOUT -> {
+                    setContentView(R.layout.activity_play_control_view3)
+                }
+                else -> {
+                    prefs.edit().apply {
+                        putInt(GlobalPreferencesConstants.LAYOUT_KEY, 1)
+                    }.apply()
+                    setContentView(R.layout.activity_play_control_view1)
+                }
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun showSongs() {
+        listItems.show(supportFragmentManager, "dialog")
+    }
 
-        //TODO
-        //Change with customization
-        setContentView(R.layout.activity_play_control_view3)
-
+    private fun setUpVariablesAndButtons(){
         title = findViewById(R.id.play_control_title)
-        //Start marquee animation
-        title.isSelected = true
         desc = findViewById(R.id.play_control_desc)
         img = findViewById(R.id.play_control_img)
-        defaultBGColor = findViewById<ConstraintLayout>(R.id.play_control_main_container).solidColor
+
+        title.isSelected = true
+
+        seekBar = findViewById(R.id.play_control_seekbar)
 
         playButton = findViewById(R.id.play_control_play_button)
         playButton.setOnClickListener{
@@ -112,18 +222,35 @@ class PlayControlView : AppCompatActivity(){
             onBackPressed()
         }
 
-        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
-            Toast.makeText(this, "Options selected", Toast.LENGTH_SHORT).show()
+        findViewById<Button>(R.id.topbar_options_button).setOnClickListener {
+            val popup = PopupMenu(this, it)
+            popup.menuInflater.inflate(R.menu.customization_menu, popup.menu)
+            popup.show()
+
+            popup.setOnMenuItemClickListener { item ->
+                when (item?.itemId) {
+                    R.id.playlist_change_layout -> {
+                        val intent = Intent(this@PlayControlView, ChangeLayoutActivity::class.java)
+                        intent.putExtra(ChangeLayoutActivity.ACTIVITY_LAYOUT_CHANGE, ChangeLayoutActivity.PLAY_CONTROL_ACTIVITY_LAYOUT)
+                        startActivity(intent)
+                    }
+
+                    R.id.playlist_change_style -> Toast.makeText(
+                        this@PlayControlView,
+                        "Change style",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+                true
+            }
         }
-
-    }
-
-    private fun showSongs() {
-        listItems.show(supportFragmentManager, "dialog")
     }
 
     private fun changeSongImg() {
         img.setImageResource(R.drawable.ic_music_note)
+        img.foreground = null
+
         findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(defaultBGColor)
         findImageJob?.cancel()
         findImageJob = CoroutineScope(Dispatchers.Default).launch {
@@ -135,8 +262,15 @@ class PlayControlView : AppCompatActivity(){
                 val data = mediaRetriever.embeddedPicture
                 mediaRetriever.release()
 
+
                 if(data != null) {
                     val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+
+                    when(currentLayout){
+                        ROUND_IMAGE_LAYOUT -> setRoundedBitmapToImageView(bitmap)
+                        else -> setBitmapToImageView(bitmap)
+                    }
+
                     Palette.from(bitmap).generate{palette ->
                         if(palette != null) {
                             val defaultColor = getColor(R.color.light_blue_400)
@@ -147,58 +281,33 @@ class PlayControlView : AppCompatActivity(){
                                 findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(palette.getDarkVibrantColor(defaultColor))
                         }
                     }
-
-                    withContext(Dispatchers.Main) {
-                        img.setImageBitmap(bitmap)
-                        img.startAnimation(ImageFadeInAnimation(0f, 1f))
-                    }
                 }
             }
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        try{
-            seekbarJob?.cancel()
-            //player.onSongChangedListener = null
-        }catch (_: Exception){}
+    private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
+        val height = bitmap.height
+        val width = bitmap.width
+        val dim = Integer.max(height, width)
+        val croppedBitmap = ThumbnailUtils.extractThumbnail(bitmap, dim, dim)
+        val roundedBitmapDrawable=
+            RoundedBitmapDrawableFactory.create(resources, croppedBitmap)
 
-    }
-    override fun onStart() {
-        super.onStart()
-        player.onSongChangedListener = listener
+        roundedBitmapDrawable.isCircular = true
 
-        seekbarJob = CoroutineScope(Dispatchers.Main).launch {
-            var playerTouched = false
-            seekBar.setOnSeekBarChangeListener(object: OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    seekBar?.progress = progress
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    playerTouched = true
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    playerTouched = false
-                    if(seekBar != null) {
-                        Player.instance.setTime(seekBar.progress.toUInt())
-                        changePlayButton()
-                    }
-                }
-
-            })
-
-            while(true){
-                if(!playerTouched && Player.instance.isAvailableProgress()){
-                    seekBar.max = Player.instance.getCurrentSongDuration().toInt()
-                    seekBar.progress = Player.instance.getCurrentSongProgress()
-                }
-                delay(500)
-            }
+        withContext(Dispatchers.Main) {
+            img.foreground = getDrawable(R.drawable.circle_album_foreground)
+            img.setImageDrawable(roundedBitmapDrawable)
+            img.startAnimation(ImageFadeInAnimation(0f, 1f))
         }
+    }
 
+    private suspend fun setBitmapToImageView(bitmap: Bitmap){
+        withContext(Dispatchers.Main) {
+            img.setImageBitmap(bitmap)
+            img.startAnimation(ImageFadeInAnimation(0f, 1f))
+        }
     }
 
     private fun changePlayModeBtnImg() {

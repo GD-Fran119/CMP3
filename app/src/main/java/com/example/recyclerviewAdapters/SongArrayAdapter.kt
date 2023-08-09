@@ -8,21 +8,19 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cmp3.R
 
-open class SongArrayAdapter constructor(private var context: Context, private var songs: List<Song>, private val fragmentManager: FragmentManager) :
+open class SongArrayAdapter constructor(private var context: Context, private var songs: List<Song>, private val fragmentManager: FragmentManager, private val viewLayoutRes: Int) :
     RecyclerView.Adapter<SongListViewHolder>() {
 
     companion object{
-        fun create(c : Context, s: List<Song>, fragmentManager: FragmentManager): SongArrayAdapter {
-            return SongArrayAdapter(c, s, fragmentManager)
+        fun create(c : Context, s: List<Song>, fragmentManager: FragmentManager, viewLayoutRes: Int): SongArrayAdapter {
+            return SongArrayAdapter(c, s, fragmentManager, viewLayoutRes)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-                //TODO
-                //Change song list item layout
-            .inflate(R.layout.item_song_list_view2, parent, false)
+            .inflate(viewLayoutRes, parent, false)
         return SongListViewHolder(view, context)
     }
 

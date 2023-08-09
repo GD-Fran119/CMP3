@@ -7,6 +7,7 @@
     tools:context=".ChangeLayoutActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/change_layout_confirmation_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +41,46 @@
             app:layout_constraintStart_toEndOf="@id/change_layout_cancel_button"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_layout_button1"
+        android:layout_width="wrap_content"
+        android:layout_height="50sp"
+        android:text="Button 1"
+        app:cornerRadius="0sp"
+        android:backgroundTint="#0046BF"
+        app:layout_constraintTop_toBottomOf="@id/change_layout_confirmation_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/change_layout_button2"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_layout_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="50sp"
+        android:text="Button 2"
+        app:cornerRadius="0sp"
+        android:backgroundTint="#0046BF"
+        app:layout_constraintTop_toBottomOf="@id/change_layout_confirmation_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/change_layout_button1"
+        app:layout_constraintEnd_toStartOf="@id/change_layout_button3"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_layout_button3"
+        android:layout_width="wrap_content"
+        android:layout_height="50sp"
+        android:text="Button 3"
+        app:cornerRadius="0sp"
+        android:backgroundTint="#0046BF"
+        app:layout_constraintTop_toBottomOf="@id/change_layout_confirmation_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/change_layout_button2"
+
+        />
 
 
 

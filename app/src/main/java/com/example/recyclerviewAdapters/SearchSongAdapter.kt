@@ -10,7 +10,7 @@ import com.example.cmp3.R
 import com.example.songsAndPlaylists.Song
 import java.util.Locale
 
-class SearchSongAdapter(private val context: Context, private val songs: List<Song>, private val fragmentManager: FragmentManager): RecyclerView.Adapter<SongListViewHolder>(){
+class SearchSongAdapter(private val context: Context, private val songs: List<Song>, private val fragmentManager: FragmentManager, private val viewLayoutRes: Int): RecyclerView.Adapter<SongListViewHolder>(){
 
     private var songsDataset : SortedList<Song> = SortedList(Song::class.java, object:SortedList.Callback<Song>(){
         override fun compare(o1: Song?, o2: Song?): Int {
@@ -54,9 +54,7 @@ class SearchSongAdapter(private val context: Context, private val songs: List<So
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-                //TODO
-                //Change for customization
-            .inflate(R.layout.item_song_list_view3, parent, false)
+            .inflate(viewLayoutRes, parent, false)
         return SongListViewHolder(view, context)
     }
 

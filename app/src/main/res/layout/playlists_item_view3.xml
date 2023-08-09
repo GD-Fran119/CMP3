@@ -23,6 +23,7 @@
             app:layout_constraintDimensionRatio="1:1"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/ic_music_note"
+            android:layout_margin="20sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

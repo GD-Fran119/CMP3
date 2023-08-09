@@ -1,5 +1,6 @@
 package com.example.cmp3
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.config.MainActivityPreferencesConstants
 import com.example.dialogs.PlaylistCreationDialog
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelationData
@@ -28,6 +29,9 @@ class PlaylistListView : Fragment() {
     private val title = "Playlists"
     private var infoUpdateJob : Job? = null
     private lateinit var recyclerView: RecyclerView
+    private var currentLayout = -1
+    private lateinit var adapter: PlaylistArrayAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -72,11 +76,77 @@ class PlaylistListView : Fragment() {
     }
 
     private fun setRecyclerViewLayout(playlists: List<SongPlaylistRelationData>) {
-        val adapter = PlaylistArrayAdapter.create(requireActivity(), playlists)
-        val manager = GridLayoutManager(activity, 2)
-        recyclerView.adapter = adapter
-        //val manager = LinearLayoutManager(activity)
-        recyclerView.layoutManager = manager
+        val prefs = activity?.getSharedPreferences(ChangeLayoutActivity.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, -1)
+
+        //No config
+        if(savedLayout == -1) {
+            prefs?.edit().apply {
+                this!!.putInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
+            }?.apply()
+
+            savedLayout = 1
+        }
+
+        if(currentLayout != savedLayout){
+            currentLayout = if(savedLayout !in 1..3) 1
+                            else savedLayout!!
+
+            prefs?.edit().apply {
+                this!!.putInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, currentLayout)
+            }?.apply()
+
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.playlistListView)
+            recyclerView?.setHasFixedSize(true)
+
+            val manager: RecyclerView.LayoutManager
+            when(currentLayout){
+                FULL_WIDTH_LAYOUT -> {
+                    manager = LinearLayoutManager(activity)
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
+                }
+                CARD_LAYOUT -> {
+                    manager = GridLayoutManager(activity, 2)
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view2)
+                }
+                ROUNDED_CARD_LAYOUT -> {
+                    manager = GridLayoutManager(activity, 2)
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view3)
+                }
+                else -> {
+                    manager = LinearLayoutManager(activity)
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
+                    currentLayout = 1
+                    prefs?.edit().apply {
+                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                    }?.apply()
+                }
+            }
+
+            recyclerView?.layoutManager = manager
+            recyclerView?.adapter = adapter
+        }
+        else{
+            when(currentLayout){
+                FULL_WIDTH_LAYOUT -> {
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
+                }
+                CARD_LAYOUT -> {
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view2)
+                }
+                ROUNDED_CARD_LAYOUT -> {
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view3)
+                }
+                else -> {
+                    adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
+                    currentLayout = 1
+                    prefs?.edit().apply {
+                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                    }?.apply()
+                }
+            }
+            recyclerView.adapter = adapter
+        }
     }
 
     override fun onResume() {
@@ -103,6 +173,10 @@ class PlaylistListView : Fragment() {
         @JvmStatic
         fun newInstance() =
             PlaylistListView()
+
+        private const val FULL_WIDTH_LAYOUT = 1
+        private const val CARD_LAYOUT = 2
+        private const val ROUNDED_CARD_LAYOUT = 3
     }
 
     override fun toString(): String {

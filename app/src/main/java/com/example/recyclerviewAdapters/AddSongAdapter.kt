@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class AddSongAdapter private constructor(private var context: Context, private var songs: List<Song>, private val playlistID: Int) :
+class AddSongAdapter private constructor(private var context: Context, private var songs: List<Song>, private val playlistID: Int, private val viewLayoutRes: Int) :
     RecyclerView.Adapter<AddSongAdapter.AddSongViewHolder>(){
 
     private var songsDataset : SortedList<Song> = SortedList(Song::class.java, object: SortedList.Callback<Song>(){
@@ -62,10 +62,10 @@ class AddSongAdapter private constructor(private var context: Context, private v
     }
 
     companion object{
-        fun create(c : Context, s: List<Song>, id: Int): AddSongAdapter {
+        fun create(c : Context, s: List<Song>, id: Int, songsAddedSet: MutableSet<String> = mutableSetOf(), viewLayoutRes: Int): AddSongAdapter {
             //Reset songs added
-            AddSongViewHolder.addedSongs.clear()
-            return AddSongAdapter(c, s, id)
+            AddSongViewHolder.addedSongs = songsAddedSet
+            return AddSongAdapter(c, s, id, viewLayoutRes)
         }
     }
 
@@ -111,9 +111,7 @@ class AddSongAdapter private constructor(private var context: Context, private v
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddSongViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-                //TODO
-                //Change for customization
-            .inflate(R.layout.add_songs_playlist_item3, parent, false)
+            .inflate(viewLayoutRes, parent, false)
         return AddSongViewHolder(view, context, playlistID)
     }
 

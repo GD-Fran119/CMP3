@@ -2,16 +2,20 @@ package com.example.recyclerviewAdapters
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animations.ImageFadeInAnimation
-import com.example.cmp3.PlaylistView
+import com.example.cmp3.playlistView.PlaylistView
 import com.example.cmp3.R
 import com.example.databaseStuff.SongPlaylistRelationData
 import kotlinx.coroutines.CoroutineScope
@@ -20,12 +24,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlaylistArrayAdapter private constructor(private var context: Activity, private var playlists: List<SongPlaylistRelationData>) :
+class PlaylistArrayAdapter private constructor(private var context: Activity, private var playlists: List<SongPlaylistRelationData>, private val viewLayoutRes: Int) :
     RecyclerView.Adapter<PlaylistArrayAdapter.PlaylistViewHolder>() {
 
     companion object{
-        fun create(c : Activity, playlists: List<SongPlaylistRelationData>): PlaylistArrayAdapter {
-            return PlaylistArrayAdapter(c, playlists)
+        fun create(c : Activity, playlists: List<SongPlaylistRelationData>, viewLayoutRes: Int): PlaylistArrayAdapter {
+            return PlaylistArrayAdapter(c, playlists, viewLayoutRes)
         }
     }
 
@@ -34,7 +38,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
         private var job : Job? = null
         private val imageView = view.findViewById<ImageView>(R.id.playlist_icon)
 
-        fun bind(playlist: SongPlaylistRelationData){
+        fun bind(playlist: SongPlaylistRelationData, roundedImage: Boolean){
             view.findViewById<TextView>(R.id.playlist_name).text = playlist.playlist.name
             view.findViewById<TextView>(R.id.playlist_songs).text = if(playlist.songs.size != 1) "${playlist.songs.size} songs"
                                                                     else "1 song"
@@ -45,14 +49,9 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
                 activity.startActivity(intent)
             }
 
-            view.setOnClickListener{
-                val intent = Intent(activity, PlaylistView::class.java)
-                intent.putExtra("playlist", playlist)
-                activity.startActivity(intent)
-            }
-
             job?.cancel()
             imageView.setImageResource(R.drawable.ic_music_note)
+            imageView.foreground = null
             if(playlist.songs.isNotEmpty()) {
                 job = CoroutineScope(Dispatchers.Default)
                     .launch {
@@ -65,13 +64,36 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
 
                         if (data != null) {
                             val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-                            withContext(Dispatchers.Main) {
-                                imageView.setImageBitmap(bitmap)
-                                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
-                            }
+                            if(roundedImage)
+                                setRoundedBitmapToImageView(bitmap)
+                            else
+                                setBitmapToImageView(bitmap)
                         }
                     }
+            }
+        }
+        private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
+            val height = bitmap.height
+            val width = bitmap.width
+            val dim = Integer.max(height, width)
+            val croppedBitmap = ThumbnailUtils.extractThumbnail(bitmap, dim, dim)
+            val roundedBitmapDrawable=
+                RoundedBitmapDrawableFactory.create(activity.resources, croppedBitmap)
+
+            roundedBitmapDrawable.isCircular = true
+
+            withContext(Dispatchers.Main) {
+
+                imageView.foreground = getDrawable(activity, R.drawable.circle_album_foreground)
+                imageView.setImageDrawable(roundedBitmapDrawable)
+                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+            }
+        }
+
+        private suspend fun setBitmapToImageView(bitmap: Bitmap){
+            withContext(Dispatchers.Main) {
+                imageView.setImageBitmap(bitmap)
+                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
             }
         }
 
@@ -83,15 +105,13 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
     ): PlaylistViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-                //TODO
-                //Change playlist item layout
-            .inflate(R.layout.playlists_item_view2, parent, false)
+            .inflate(viewLayoutRes, parent, false)
         return PlaylistViewHolder(view, context)
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, pos: Int) {
         val playlist = playlists[pos]
-        holder.bind(playlist)
+        holder.bind(playlist, viewLayoutRes == R.layout.playlists_item_view3)
     }
 
     override fun getItemCount(): Int {

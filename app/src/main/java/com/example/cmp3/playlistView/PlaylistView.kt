@@ -1,18 +1,20 @@
-package com.example.cmp3
+package com.example.cmp3.playlistView
 
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.animations.ImageFadeInAnimation
+import com.example.cmp3.ChangeLayoutActivity
+import com.example.cmp3.PlayAllSongsFragment
+import com.example.cmp3.R
+import com.example.config.GlobalPreferencesConstants
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelationData
 import com.example.dialogs.PlaylistRenameDialog
@@ -25,46 +27,104 @@ import kotlinx.coroutines.withContext
 
 
 class PlaylistView : AppCompatActivity() {
+
+    companion object{
+        private const val SQUARE_IMAGE_LAYOUT = 1
+        private const val WIDE_IMAGE_LAYOUT = 2
+        private const val ROUND_IMAGE_LAYOUT = 3
+    }
+
+    private var currentLayout = -1
+
     private lateinit var playlist: SongPlaylistRelationData
-    private lateinit var nameTextView: TextView
-    private lateinit var dateTextView: TextView
-    private lateinit var durationTextView: TextView
-    private lateinit var playlistImageView: ImageView
     private lateinit var recyclerView: RecyclerView
+    private lateinit var fragmentContainerView: FragmentContainerView
     private var playAllTextSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO
-        //Change for customization
-        setContentView(R.layout.activity_playlist_view2)
+        setContentView(R.layout.playlist_info_activity)
 
-        setUpViewVariables()
+        fragmentContainerView = findViewById(R.id.playlist_info_container)
+
         retrievePlaylist()
         setUpButtons()
         setUpRecyclerView()
     }
 
-    private fun retrievePlaylist() {
-        try {
-            playlist = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra("playlist", SongPlaylistRelationData::class.java)!!
-            } else{
-                intent.getParcelableExtra("playlist")!!
-            }
-            loadPlaylist()
-        }catch (_: Exception){
-            Toast.makeText(this, "Failure when retrieving song data", Toast.LENGTH_SHORT).show()
+    override fun onStart() {
+        super.onStart()
+
+        checkAndSetUpInfoFragment()
+
+        if(!playAllTextSet) {
+            setUpPlayAllSongs()
+            playAllTextSet = true
         }
     }
 
-    private fun setUpViewVariables() {
-        nameTextView = findViewById(R.id.playlist_name)
-        //Start marquee animation
-        nameTextView.isSelected = true
-        dateTextView = findViewById(R.id.playlist_date)
-        durationTextView = findViewById(R.id.playlist_duration)
-        playlistImageView = findViewById(R.id.playlist_image)
+    private fun checkAndSetUpInfoFragment(){
+        val prefs = getSharedPreferences(ChangeLayoutActivity.PLAYLIST_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        var layoutSaved = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
+
+        //No config
+        if(layoutSaved == -1) {
+            prefs.edit().apply {
+                putInt(GlobalPreferencesConstants.LAYOUT_KEY, 1)
+            }.apply()
+
+            layoutSaved = 1
+        }
+
+        //Layout changed
+        if(currentLayout != layoutSaved){
+            //Update layout so it matches config
+            currentLayout = layoutSaved
+            val transaction = supportFragmentManager.beginTransaction().setReorderingAllowed(true)
+
+            when(currentLayout){
+                ROUND_IMAGE_LAYOUT -> {
+                    transaction.replace(R.id.playlist_info_container, PlaylistInfoFragment3())
+                    findViewById<Guideline>(R.id.playlist_info_guideline).setGuidelinePercent(0.35f)
+                }
+                SQUARE_IMAGE_LAYOUT ->{
+                    transaction.replace(R.id.playlist_info_container, PlaylistInfoFragment1())
+                    findViewById<Guideline>(R.id.playlist_info_guideline).setGuidelinePercent(0.35f)
+                }
+                WIDE_IMAGE_LAYOUT -> {
+                    transaction.replace(R.id.playlist_info_container, PlaylistInfoFragment2())
+                    findViewById<Guideline>(R.id.playlist_info_guideline).setGuidelinePercent(0.45f)
+                }
+                else -> {//Integrity error E.g.: currentLayout == 8
+                    transaction.replace(R.id.playlist_info_container, PlaylistInfoFragment1())
+                    findViewById<Guideline>(R.id.playlist_info_guideline).setGuidelinePercent(0.35f)
+                    currentLayout = 1
+                    prefs.edit().apply {
+                        putInt(GlobalPreferencesConstants.LAYOUT_KEY, 1)
+                    }.apply()
+                }
+            }
+
+            transaction.runOnCommit {
+                loadPlaylist()
+            }
+
+            transaction.commit()
+
+        }
+    }
+
+
+    private fun retrievePlaylist() {
+        try {
+            playlist = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            intent.getParcelableExtra("playlist", SongPlaylistRelationData::class.java)!!
+                        } else{
+                            intent.getParcelableExtra("playlist")!!
+                        }
+        }catch (_: Exception){
+            Toast.makeText(this, "Failure when retrieving song data", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setUpButtons() {
@@ -81,11 +141,11 @@ class PlaylistView : AppCompatActivity() {
 
             popup.setOnMenuItemClickListener { item ->
                 when (item?.itemId) {
-                    R.id.playlist_change_layout -> Toast.makeText(
-                        this@PlaylistView,
-                        "Change layout",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_layout -> {
+                        val intent = Intent(this@PlaylistView, ChangeLayoutActivity::class.java)
+                        intent.putExtra(ChangeLayoutActivity.ACTIVITY_LAYOUT_CHANGE, ChangeLayoutActivity.PLAYLIST_ACTIVITY_LAYOUT)
+                        startActivity(intent)
+                    }
 
                     R.id.playlist_change_style -> Toast.makeText(
                         this@PlaylistView,
@@ -109,10 +169,10 @@ class PlaylistView : AppCompatActivity() {
                 val newList = playlist.songs.toMutableList()
                 newList.removeAt(pos)
                 playlist.songs = newList.toList()
-                val songlist = SongList(playlist)
+                val songList = SongList(playlist)
                 findViewById<FragmentContainerView>(R.id.playlist_play_all_fragment).getFragment<PlayAllSongsFragment>()
-                    .setList(songlist)
-                adapter.playlist = songlist
+                    .setList(songList)
+                adapter.playlist = songList
                 adapter.notifyItemRemoved(pos)
                 adapter.notifyItemRangeChanged(pos, newList.size)
                 loadPlaylist()
@@ -128,7 +188,8 @@ class PlaylistView : AppCompatActivity() {
         val listener = object: PlaylistRenameDialog.OnConfirmListener {
             override fun notifyConfirmation() {
                 playlist.playlist.name = dialog.getInput()
-                nameTextView.text = playlist.playlist.name
+                loadPlaylist()
+                setUpPlayAllSongs()
             }
         }
         dialog.onConfirmationListener = listener
@@ -162,49 +223,16 @@ class PlaylistView : AppCompatActivity() {
             .create()
 
         confirmationDialog.show()
-
     }
 
-    override fun onStart() {
-        super.onStart()
 
-        if(!playAllTextSet) {
-            val songlist = SongList(playlist)
-            findViewById<FragmentContainerView>(R.id.playlist_play_all_fragment).getFragment<PlayAllSongsFragment>()
-                .setList(songlist)
-            playAllTextSet = true
-        }
+    private fun setUpPlayAllSongs(){
+        val songList = SongList(playlist)
+        findViewById<FragmentContainerView>(R.id.playlist_play_all_fragment).getFragment<PlayAllSongsFragment>()
+            .setList(songList)
     }
 
     private fun loadPlaylist() {
-
-        nameTextView.text = playlist.playlist.name
-        dateTextView.text = "Created: ${playlist.playlist.date}"
-        durationTextView.text = SongList(playlist).getDuration()
-
-        playlistImageView.setImageResource(R.drawable.ic_music_note)
-
-        if(playlist.songs.isNotEmpty()) {
-            CoroutineScope(Dispatchers.Main)
-                .launch {
-                    val mediaRetriever = MediaMetadataRetriever()
-                    val firstSong = playlist.songs[0]
-                    mediaRetriever.setDataSource(firstSong.path)
-
-                    val data = mediaRetriever.embeddedPicture
-                    mediaRetriever.release()
-
-                    if (data != null) {
-                        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-                        withContext(Dispatchers.Main) {
-                            playlistImageView.setImageBitmap(bitmap)
-                            playlistImageView.startAnimation(ImageFadeInAnimation(0f, 1f))
-                        }
-                    }
-                }
-        }
-
+        fragmentContainerView.getFragment<PlaylistInfoFragment>().setlist(SongList(playlist))
     }
-
 }

@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/playlist_change_layout"
+        android:id="@id/playlist_change_layout"
         android:title="Change UI layout"/>
     <item
-        android:id="@+id/playlist_change_style"
+        android:id="@id/playlist_change_style"
         android:title="Change UI style" />
     <item
         android:id="@+id/playlist_rename"

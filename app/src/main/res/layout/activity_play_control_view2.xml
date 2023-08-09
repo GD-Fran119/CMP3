@@ -7,29 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".PlayControlView">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/playlist_topbar_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#80000000"
+    <include
+        android:id="@id/play_control_topbar"
+        layout="@layout/general_topbar_layout"
         app:layout_constraintBottom_toTopOf="@id/play_control_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include
-            android:id="@id/play_control_topbar"
-            layout="@layout/general_topbar_layout"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@id/play_control_img"
-        android:layout_width="match_parent"
+        android:layout_width="0sp"
         android:layout_height="0sp"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@id/playlist_topbar_container"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toBottomOf="@id/play_control_topbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/horizontal_50_percent_guideline"/>
@@ -39,61 +31,17 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/play_control_text_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#80000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/horizontal_50_percent_guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingVertical="20sp"
-        android:paddingHorizontal="30sp">
-
-        <TextView
-            android:id="@id/play_control_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/play_control_desc"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@id/play_control_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/play_control_title" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <SeekBar
-        android:id="@id/play_control_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15sp"
-        android:layout_marginHorizontal="30sp"
-        app:layout_constraintBottom_toTopOf="@id/play_control_buttons_container"
-        app:layout_constraintTop_toBottomOf="@id/play_control_text_container" />
+        app:layout_constraintGuide_percent="0.6"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@id/play_control_buttons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/play_control_seekbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/play_control_seekbar">
+        app:layout_constraintTop_toBottomOf="@id/horizontal_50_percent_guideline">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/play_control_buttons_left_container"
@@ -197,6 +145,49 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <SeekBar
+        android:id="@id/play_control_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30sp"
+        app:layout_constraintBottom_toTopOf="@id/play_control_text_container"
+        app:layout_constraintTop_toBottomOf="@id/play_control_buttons_container" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/play_control_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingVertical="20sp"
+        android:paddingHorizontal="30sp">
+
+        <TextView
+            android:id="@id/play_control_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/play_control_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@id/play_control_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/play_control_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

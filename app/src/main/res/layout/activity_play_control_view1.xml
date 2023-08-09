@@ -61,7 +61,7 @@
         android:layout_margin="20sp"
         app:cardCornerRadius="20sp"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintBottom_toTopOf="@id/horizontal_70_percent_guideline"
+        app:layout_constraintBottom_toTopOf="@id/horizontal_50_percent_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/play_control_top_container">
@@ -74,7 +74,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontal_70_percent_guideline"
+        android:id="@+id/horizontal_50_percent_guideline"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:orientation="horizontal"
@@ -87,7 +87,7 @@
         android:layout_marginTop="15sp"
         android:layout_marginHorizontal="30sp"
         app:layout_constraintBottom_toTopOf="@+id/play_control_buttons_container"
-        app:layout_constraintTop_toBottomOf="@id/horizontal_70_percent_guideline" />
+        app:layout_constraintTop_toBottomOf="@id/horizontal_50_percent_guideline" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/play_control_buttons_container"
