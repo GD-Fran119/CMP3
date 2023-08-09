@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import MainViewFragmentAdapter
 import android.content.Intent
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
 import com.google.android.material.button.MaterialButton

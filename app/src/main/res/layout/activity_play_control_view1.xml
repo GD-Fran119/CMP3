@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:background="#80000000"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/play_control_img_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +83,6 @@
         android:id="@+id/play_control_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15sp"
         android:layout_marginHorizontal="30sp"
         app:layout_constraintBottom_toTopOf="@+id/play_control_buttons_container"
         app:layout_constraintTop_toBottomOf="@id/horizontal_50_percent_guideline" />

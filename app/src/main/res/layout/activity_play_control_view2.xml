@@ -21,6 +21,7 @@
         android:layout_height="0sp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
+        android:layout_margin="20sp"
         app:layout_constraintTop_toBottomOf="@id/play_control_topbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

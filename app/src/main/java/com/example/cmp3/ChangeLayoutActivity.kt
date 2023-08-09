@@ -7,6 +7,7 @@ import com.example.config.GlobalPreferencesConstants
 import com.example.config.MainActivityPreferencesConstants
 import com.google.android.material.button.MaterialButton
 import kotlin.properties.Delegates
+import android.content.Intent
 
 
 class ChangeLayoutActivity : AppCompatActivity() {
@@ -104,7 +105,7 @@ class ChangeLayoutActivity : AppCompatActivity() {
     private lateinit var layoutPreferencesKey: String
 
     private var currentLayout by Delegates.notNull<Int>()
-    private var layoutSelected by Delegates.notNull<Int>()
+    private var layoutSelected = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,11 +136,13 @@ class ChangeLayoutActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.change_layout_save_button).setOnClickListener {
-            Toast.makeText(this@ChangeLayoutActivity, "Changes committed", Toast.LENGTH_SHORT).show()
-            val prefs = getSharedPreferences(activityPreferencesName, MODE_PRIVATE)
-            prefs.edit().apply {
-                putInt(layoutPreferencesKey, layoutSelected)
-            }.apply()
+            if(layoutSelected in 1..3){
+                Toast.makeText(this@ChangeLayoutActivity, "Changes committed", Toast.LENGTH_SHORT).show()
+                val prefs = getSharedPreferences(activityPreferencesName, MODE_PRIVATE)
+                prefs.edit().apply {
+                    putInt(layoutPreferencesKey, layoutSelected)
+                }.apply()
+            }
             onBackPressed()
         }
 
