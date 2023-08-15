@@ -6,7 +6,10 @@
     android:layout_height="50sp"
     android:paddingHorizontal="10sp"
     android:layout_alignParentTop="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
+    >
 
     <ImageView
         android:id="@+id/play_all_songs_icon"

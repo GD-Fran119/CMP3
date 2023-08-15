@@ -1,5 +1,7 @@
 package com.example.cmp3
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.animations.ImageFadeInAnimation
 import com.example.config.PlayerStateSaver
@@ -88,26 +91,32 @@ class CurrentSongFragment : Fragment() {
         title.isSelected = true
 
         view.findViewById<ConstraintLayout>(R.id.current_song_container)?.setOnClickListener{
+            if(player.getCurrentSong() == null) return@setOnClickListener
+
             startActivity(Intent(activity, PlayControlView::class.java))
         }
 
-        progressBar = view.findViewById<ProgressBar>(R.id.current_song_progressbar)
+        progressBar = view.findViewById(R.id.current_song_progressbar)
 
         playButton = view.findViewById(R.id.current_song_pause_play)
 
         playButton.setOnClickListener{
+            if(player.getCurrentSong() == null) return@setOnClickListener
+
             if(player.isPlayingSong()){
                 player.pause()
-                it.setBackgroundResource(R.drawable.ic_play)
+                it.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_play)
             } else{
                 player.play()
-                it.setBackgroundResource(R.drawable.ic_pause)
+                it.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_pause)
             }
         }
 
         view.findViewById<MaterialButton>(R.id.current_song_next_song)?.setOnClickListener{
+            if(player.getCurrentSong() == null) return@setOnClickListener
+
             player.playNext()
-            playButton.setBackgroundResource(R.drawable.ic_pause)
+            playButton.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_pause)
         }
 
     }
@@ -115,8 +124,8 @@ class CurrentSongFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if(player.isPlayingSong()) playButton.setBackgroundResource(R.drawable.ic_pause)
-        else playButton.setBackgroundResource(R.drawable.ic_play)
+        if(player.isPlayingSong()) playButton.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_pause)
+        else playButton.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_play)
 
         progressJob?.cancel()
         progressJob = CoroutineScope(Dispatchers.Default).launch {

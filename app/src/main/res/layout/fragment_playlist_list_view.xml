@@ -11,6 +11,8 @@
         android:id="@+id/nullPlaylistInfo"
         android:textSize="20sp"
         android:textAlignment="center"
+        android:textColor="#80000000"
+        android:elevation="10sp"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
         tools:listitem="@layout/playlists_item_view1"
         />
 
@@ -30,17 +34,18 @@
         android:id="@+id/playlistsFAB"
         android:layout_width="70sp"
         android:layout_height="70sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20sp"
-        android:layout_marginBottom="20sp"
-        android:backgroundTint="@color/gray_400"
-        android:foreground="@drawable/ic_add"
-        android:foregroundTint="@color/white"
         android:insetLeft="0sp"
         android:insetTop="0sp"
         android:insetRight="0sp"
         android:insetBottom="0sp"
-        app:cornerRadius="35sp" />
+        app:cornerRadius="35sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="20sp"
+        android:foreground="@drawable/ic_add"
+        android:backgroundTint="@color/gray_400"
+        android:foregroundTint="@color/white"
+        />
 
 </RelativeLayout>

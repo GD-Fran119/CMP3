@@ -1,20 +1,23 @@
 package com.example.cmp3
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.config.MainActivityPreferencesConstants
-import com.example.dialogs.PlaylistCreationDialog
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelationData
+import com.example.dialogs.PlaylistCreationDialog
 import com.example.recyclerviewAdapters.PlaylistArrayAdapter
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
@@ -43,8 +46,17 @@ class PlaylistListView : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.playlistListView)
-        view.findViewById<MaterialButton>(R.id.playlistsFAB).setOnClickListener{
-            PlaylistCreationDialog().show(childFragmentManager, "Create playlist")
+
+        val permission = if(Build.VERSION.SDK_INT < 33)
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        else
+                            Manifest.permission.READ_MEDIA_AUDIO
+
+        val res = requireContext().checkCallingOrSelfPermission(permission)
+        if(res == PackageManager.PERMISSION_GRANTED) {
+            view.findViewById<MaterialButton>(R.id.playlistsFAB).setOnClickListener {
+                PlaylistCreationDialog().show(childFragmentManager, "Create playlist")
+            }
         }
     }
 
@@ -63,7 +75,18 @@ class PlaylistListView : Fragment() {
         */
 
         withContext(Dispatchers.Main) {
-            if (playlists.isEmpty()) {
+            val permission = if(Build.VERSION.SDK_INT < 33)
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            else
+                Manifest.permission.READ_MEDIA_AUDIO
+
+            val res = requireContext().checkCallingOrSelfPermission(permission)
+            if(res != PackageManager.PERMISSION_GRANTED) {
+                view?.findViewById<TextView>(R.id.nullPlaylistInfo)?.text =
+                    "No granted permissions"
+                recyclerView.adapter = null
+            }
+            else if (playlists.isEmpty()) {
                 view?.findViewById<TextView>(R.id.nullPlaylistInfo)?.text =
                     "There are no playlists created yet"
                 recyclerView.adapter = null

@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="10sp"
     android:paddingVertical="5sp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <LinearLayout
         android:id="@+id/add_song_playlist_item_info_container"
@@ -22,6 +24,7 @@
             android:id="@+id/add_song_playlist_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:text="Title"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -31,6 +34,7 @@
             android:layout_height="wrap_content"
             android:text="Album - Artist"
             android:maxLines="1"
+            android:textColor="#000000"
             android:ellipsize="end"/>
     </LinearLayout>
 

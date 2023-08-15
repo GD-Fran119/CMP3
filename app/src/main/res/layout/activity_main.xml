@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main_activity_layout"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <include layout="@layout/main_activity_topbar_layout"
         android:id="@+id/main_topbar"
@@ -21,6 +24,10 @@
         app:layout_constraintBottom_toTopOf="@id/view_pager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tabIndicatorColor="#000000"
+        app:tabRippleColor="#000000"
+        app:tabTextColor="#000000"
+        android:background="#00000000"
         android:clickable="true"
         android:focusable="true"
         />

@@ -251,7 +251,7 @@ class PlayControlView : AppCompatActivity(){
         img.setImageResource(R.drawable.ic_music_note)
         img.foreground = null
 
-        findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(defaultBGColor)
+        findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(defaultBGColor)
         findImageJob?.cancel()
         findImageJob = CoroutineScope(Dispatchers.Default).launch {
             val currentSong = player.getCurrentSong()
@@ -276,9 +276,9 @@ class PlayControlView : AppCompatActivity(){
                             val defaultColor = getColor(R.color.light_blue_400)
                             currentColor = palette.getDarkMutedColor(defaultColor)
                             if(currentColor != defaultColor)
-                                findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(currentColor)
+                                findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(currentColor)
                             else
-                                findViewById<ConstraintLayout>(R.id.play_control_main_container).setBackgroundColor(palette.getDarkVibrantColor(defaultColor))
+                                findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(palette.getDarkVibrantColor(defaultColor))
                         }
                     }
                 }

@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import MainViewFragmentAdapter
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Button
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
@@ -20,7 +24,6 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        title = title
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         viewPager = findViewById(R.id.view_pager)
@@ -41,9 +44,18 @@ class MainActivity : AppCompatActivity(){
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
 
-        findViewById<MaterialButton>(R.id.main_search_button).setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
+        val permission = if(Build.VERSION.SDK_INT < 33)
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        else
+            Manifest.permission.READ_MEDIA_AUDIO
+
+        val res = checkCallingOrSelfPermission(permission)
+        if(res == PackageManager.PERMISSION_GRANTED) {
+            findViewById<MaterialButton>(R.id.main_search_button).setOnClickListener {
+                startActivity(Intent(this, SearchActivity::class.java))
+            }
         }
+
 
         findViewById<Button>(R.id.main_options_button).setOnClickListener {
 
@@ -70,11 +82,11 @@ class MainActivity : AppCompatActivity(){
                         startActivity(intent)
                     }
 
-                    R.id.playlist_change_style -> Toast.makeText(
-                        this@MainActivity,
-                        "Change style",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_style -> {
+                        val intent = Intent(this@MainActivity, ChangeStyleActivity::class.java)
+                        //Put arguments
+                        startActivity(intent)
+                    }
 
                 }
                 true

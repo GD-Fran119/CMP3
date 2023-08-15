@@ -8,6 +8,8 @@
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
     app:cardCornerRadius="10sp"
     android:layout_width="match_parent"
     android:layout_height="60sp">
@@ -34,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
+            android:textColor="#000000"
             android:maxLines="1"
             android:ellipsize="end"/>
         <TextView
@@ -41,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Album - Artist"
+            android:textColor="#000000"
             android:maxLines="1"
             android:ellipsize="end"/>
     </LinearLayout>

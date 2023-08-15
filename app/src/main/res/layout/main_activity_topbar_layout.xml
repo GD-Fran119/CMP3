@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15sp">
+    android:padding="15sp"
+    android:foregroundTint="#00000000"
+    android:backgroundTint="#00000000">
 
 
     <Button
@@ -15,8 +17,10 @@
         android:insetLeft="0sp"
         android:insetRight="0sp"
         android:insetTop="0sp"
+        android:layout_marginHorizontal="10sp"
         android:foreground="@drawable/ic_search"
-        android:background="#00000000"
+        android:foregroundTint="#000000"
+        android:backgroundTint="#7700FF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/main_options_button"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -31,7 +35,8 @@
         android:insetRight="0sp"
         android:insetTop="0sp"
         android:foreground="@drawable/ic_options"
-        android:background="#00000000"
+        android:foregroundTint="#000000"
+        android:backgroundTint="#7700FF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

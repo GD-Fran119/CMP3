@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10sp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <LinearLayout
         android:id="@+id/item_info_container"
@@ -21,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="title"
+            android:textColor="#000000"
             android:textSize="15sp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -30,6 +33,7 @@
             android:id="@+id/item_song_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:maxLines="2"
             android:ellipsize="end"
             android:text="description"
@@ -47,7 +51,9 @@
         android:insetLeft="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="25sp"
-        android:background="@drawable/ic_options"
+        android:foreground="@drawable/ic_options"
+        android:foregroundTint="#000000"
+        android:background="#00000000"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

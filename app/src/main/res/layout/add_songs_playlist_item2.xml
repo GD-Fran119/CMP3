@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="10sp"
     android:paddingVertical="5sp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <ImageView
         android:id="@id/add_song_playlist_item_image"
@@ -25,7 +27,7 @@
         android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginEnd="10sp"
+        android:layout_marginStart="10sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:maxLines="1"
+            android:textColor="#000000"
             android:ellipsize="end"/>
         <TextView
             android:id="@id/add_song_playlist_item_desc"
@@ -44,6 +47,7 @@
             android:layout_height="wrap_content"
             android:text="Album - Artist"
             android:maxLines="1"
+            android:textColor="#000000"
             android:ellipsize="end"/>
     </LinearLayout>
 

@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@id/play_control_main_container"
+    android:id="@id/play_control_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayControlView">
+    tools:context=".PlayControlView"
+    android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playlist_topbar_container"
@@ -29,6 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:scaleType="centerCrop"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:foregroundTint="#000000"
         app:layout_constraintTop_toBottomOf="@id/playlist_topbar_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +66,7 @@
             android:singleLine="true"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="#000000"
             app:layout_constraintBottom_toTopOf="@id/play_control_desc"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -71,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/play_control_title" />
 
@@ -82,6 +88,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15sp"
         android:layout_marginHorizontal="30sp"
+        android:progressBackgroundTint="#7700FF"
+        android:progressTint="#7700FF"
+        android:thumbTint="#7700FF"
         app:layout_constraintBottom_toTopOf="@id/play_control_buttons_container"
         app:layout_constraintTop_toBottomOf="@id/play_control_text_container" />
 
@@ -109,6 +118,8 @@
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:foreground="@drawable/ic_random_mode"
+                android:foregroundTint="#000000"
+                android:backgroundTint="#7700FF"
                 android:insetLeft="0dp"
                 android:insetTop="0dp"
                 android:insetRight="0dp"
@@ -126,6 +137,8 @@
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:foreground="@drawable/ic_previous"
+                android:foregroundTint="#000000"
+                android:backgroundTint="#7700FF"
                 android:insetLeft="0dp"
                 android:insetTop="0dp"
                 android:insetRight="0dp"
@@ -144,6 +157,8 @@
             android:layout_width="70sp"
             android:layout_height="70sp"
             android:foreground="@drawable/ic_play"
+            android:foregroundTint="#000000"
+            android:backgroundTint="#7700FF"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
@@ -168,6 +183,8 @@
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:foreground="@drawable/ic_list_items"
+                android:foregroundTint="#000000"
+                android:backgroundTint="#7700FF"
                 android:insetLeft="0dp"
                 android:insetTop="0dp"
                 android:insetRight="0dp"
@@ -184,6 +201,8 @@
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:foreground="@drawable/ic_next"
+                android:foregroundTint="#000000"
+                android:backgroundTint="#7700FF"
                 android:insetLeft="0dp"
                 android:insetTop="0dp"
                 android:insetRight="0dp"

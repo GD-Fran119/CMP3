@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    tools:context=".SearchActivity"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
 
     <include layout="@layout/search_topbar_layout"
@@ -20,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:clipToPadding="false"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/search_top_bar"
         app:layout_constraintBottom_toTopOf="@id/search_current_song_fragment"
         app:layout_constraintEnd_toEndOf="parent"

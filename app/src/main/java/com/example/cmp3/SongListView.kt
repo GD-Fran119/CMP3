@@ -46,7 +46,13 @@ class SongListView : Fragment() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 createListView()
-                deleteExplanationText()
+                if(mainSongList.isEmpty()) {
+                    val textView = view?.findViewById<TextView>(R.id.explanation_text)
+                    textView?.text = "No songs found"
+                    textView?.visibility = View.VISIBLE
+                }
+                else
+                    deleteExplanationText()
 
                 CoroutineScope(Dispatchers.Default).launch {
                     checkSongsIntegrityDB()
@@ -290,7 +296,7 @@ class SongListView : Fragment() {
     }
 
     private fun showPermissionExplanation(){
-        view?.findViewById<TextView>(R.id.explanation_text)?.text = "Permisos no garantizados"
+        view?.findViewById<TextView>(R.id.explanation_text)?.text = "No granted permissions"
     }
 
     companion object {
