@@ -33,6 +33,7 @@
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
         android:foregroundTint="#000000"
+        android:foreground="@drawable/ic_music_note"
         app:layout_constraintTop_toBottomOf="@id/playlist_topbar_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

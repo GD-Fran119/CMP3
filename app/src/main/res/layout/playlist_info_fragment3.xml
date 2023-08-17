@@ -26,10 +26,10 @@
 
         <ImageView
             android:id="@id/playlist_image"
-            android:src="@drawable/ic_music_note"
+            android:foreground="@drawable/ic_music_note"
             android:background="@drawable/circle_background"
             android:backgroundTint="#FFFFFF"
-            app:tint="#000000"
+            android:foregroundTint="#000000"
             android:layout_width="0sp"
             android:layout_height="0sp"
             android:scaleType="centerCrop"

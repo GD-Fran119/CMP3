@@ -41,7 +41,7 @@
 
                         <ImageView
                             android:id="@+id/playlist_image"
-                            android:src="@drawable/ic_music_note"
+                            android:foreground="@drawable/ic_music_note"
                             android:foregroundTint="#000000"
                             android:background="#FFFFFF"
                             android:backgroundTint="#FFFFFF"

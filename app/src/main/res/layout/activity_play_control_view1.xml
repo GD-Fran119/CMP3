@@ -72,6 +72,7 @@
             android:id="@+id/play_control_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:foreground="@drawable/ic_music_note"
             android:background="#FFFFFF"
             android:backgroundTint="#FFFFFF"
             android:foregroundTint="#000000"

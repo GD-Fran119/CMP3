@@ -30,10 +30,10 @@
             android:id="@+id/current_song_img"
             android:layout_width="50sp"
             android:layout_height="50sp"
-            android:src="@drawable/ic_music_note"
+            android:foreground="@drawable/ic_music_note"
             android:background="#FFFFFF"
             android:backgroundTint="#FFFFFF"
-            app:tint="#000000"
+            android:foregroundTint="#000000"
             android:scaleType="centerCrop"/>
     </androidx.cardview.widget.CardView>
 

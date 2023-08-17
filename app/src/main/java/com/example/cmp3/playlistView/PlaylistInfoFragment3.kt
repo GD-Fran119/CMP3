@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.animations.ImageFadeInAnimation
@@ -33,8 +34,8 @@ class PlaylistInfoFragment3 : PlaylistInfoFragment() {
     override fun setlist(newList: SongList){
         super.setlist(newList)
 
-        imageView.setImageResource(R.drawable.ic_music_note)
-        imageView.foreground = null
+        imageView.setImageDrawable(null)
+        imageView.foreground = getDrawable(requireContext(), R.drawable.ic_music_note)
 
         if(list!!.isNotEmpty()) {
             CoroutineScope(Dispatchers.Main)

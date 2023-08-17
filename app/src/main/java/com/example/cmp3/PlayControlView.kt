@@ -2,10 +2,12 @@ package com.example.cmp3
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.widget.Button
@@ -16,6 +18,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.palette.graphics.Palette
@@ -122,7 +125,7 @@ class PlayControlView : AppCompatActivity(){
 
         title.text = song.title
         desc.text = if(song.artist == "<unknown>") "Unknown"
-        else song.artist
+                    else song.artist
 
         changeSongImg()
         CoroutineScope(Dispatchers.Main).launch {
@@ -248,8 +251,8 @@ class PlayControlView : AppCompatActivity(){
     }
 
     private fun changeSongImg() {
-        img.setImageResource(R.drawable.ic_music_note)
-        img.foreground = null
+        img.setImageDrawable(null)
+        img.foreground = AppCompatResources.getDrawable(this, R.drawable.ic_music_note)
 
         findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(defaultBGColor)
         findImageJob?.cancel()
@@ -297,7 +300,7 @@ class PlayControlView : AppCompatActivity(){
         roundedBitmapDrawable.isCircular = true
 
         withContext(Dispatchers.Main) {
-            img.foreground = getDrawable(R.drawable.circle_album_foreground)
+            img.foreground = AppCompatResources.getDrawable(this@PlayControlView, R.drawable.circle_album_foreground)
             img.setImageDrawable(roundedBitmapDrawable)
             img.startAnimation(ImageFadeInAnimation(0f, 1f))
         }
@@ -305,6 +308,7 @@ class PlayControlView : AppCompatActivity(){
 
     private suspend fun setBitmapToImageView(bitmap: Bitmap){
         withContext(Dispatchers.Main) {
+            img.foreground = null
             img.setImageBitmap(bitmap)
             img.startAnimation(ImageFadeInAnimation(0f, 1f))
         }

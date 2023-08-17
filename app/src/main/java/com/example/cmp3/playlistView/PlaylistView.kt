@@ -43,7 +43,7 @@ class PlaylistView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.playlist_info_activity)
+        setContentView(R.layout.activity_playlist_info)
 
         fragmentContainerView = findViewById(R.id.playlist_info_container)
 

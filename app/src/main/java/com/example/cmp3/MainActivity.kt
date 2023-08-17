@@ -7,11 +7,12 @@ import MainViewFragmentAdapter
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.widget.Button
 import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.widget.TooltipCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

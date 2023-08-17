@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.example.animations.ImageFadeInAnimation
 import com.example.cmp3.R
 import com.example.songsAndPlaylists.SongList
@@ -28,8 +29,8 @@ class PlaylistInfoFragment1: PlaylistInfoFragment() {
     override fun setlist(newList: SongList){
         super.setlist(newList)
 
-        imageView.setImageResource(R.drawable.ic_music_note)
-        imageView.foreground = null
+        imageView.setImageDrawable(null)
+        imageView.foreground = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_music_note)
 
         if(list!!.isNotEmpty()) {
             CoroutineScope(Dispatchers.Main)
@@ -44,6 +45,7 @@ class PlaylistInfoFragment1: PlaylistInfoFragment() {
                     if (data != null) {
                         val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
                         withContext(Dispatchers.Main){
+                            imageView.foreground = null
                             imageView.setImageBitmap(bitmap)
                             imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
                         }

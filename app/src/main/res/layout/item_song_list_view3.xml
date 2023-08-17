@@ -14,7 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@id/song_list_item_layout"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF">
@@ -43,9 +43,9 @@
             android:orientation="vertical"
             android:layout_margin= "10sp"
             app:layout_constraintTop_toBottomOf="@id/icon"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/mainViewSongButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/mainViewSongButton">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:id="@id/title"
@@ -72,20 +72,21 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@id/mainViewSongButton"
-            android:layout_width="30sp"
+            android:layout_width="0sp"
             android:layout_height="30sp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetLeft="0dp"
             android:insetBottom="0dp"
-            app:cornerRadius="15sp"
-            android:foreground="@drawable/ic_options"
+            app:cornerRadius="0sp"
+            android:foreground="@drawable/ic_options_horizontal"
+            android:foregroundGravity="center"
             android:foregroundTint="#000000"
-            android:backgroundTint="#00000000"
-            app:layout_constraintTop_toBottomOf="@id/icon"
+            android:backgroundTint="#ACFD7F"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/song_list_text_container"
+            app:layout_constraintStart_toStartOf="parent"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

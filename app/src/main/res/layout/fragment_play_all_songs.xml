@@ -7,8 +7,6 @@
     android:paddingHorizontal="10sp"
     android:layout_alignParentTop="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
     >
 
     <ImageView

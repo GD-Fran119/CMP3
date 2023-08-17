@@ -2,7 +2,9 @@ package com.example.cmp3
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.cmp3.changeStyleFragments.SongListStyleFragment
+import com.example.cmp3.changeStyleFragments.AddSongsStyleFragment
+import com.example.cmp3.changeStyleFragments.PlaylistViewStyleFragment
+import com.example.cmp3.changeStyleFragments.SearchStyleFragment
 import com.example.cmp3.changeStyleFragments.StyleFragmentBase
 import com.google.android.material.button.MaterialButton
 
@@ -19,7 +21,7 @@ class ChangeStyleActivity : AppCompatActivity() {
     private lateinit var fragment: StyleFragmentBase
 
     private fun setUp(){
-        fragment = SongListStyleFragment(R.layout.style_fragment_main_song_list1)
+        fragment = SearchStyleFragment(R.layout.style_fragment_search1)
         supportFragmentManager.beginTransaction()
             .setReorderingAllowed(true)
             .replace(R.id.change_style_fragment_container, fragment)
@@ -29,7 +31,7 @@ class ChangeStyleActivity : AppCompatActivity() {
             when(layout){
                 1 -> {
                     layout = 2
-                    fragment = SongListStyleFragment(R.layout.style_fragment_main_song_list2)
+                    fragment = SearchStyleFragment(R.layout.style_fragment_search2)
                     supportFragmentManager.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.change_style_fragment_container, fragment)
@@ -37,7 +39,7 @@ class ChangeStyleActivity : AppCompatActivity() {
                 }
                 2 -> {
                     layout = 3
-                    fragment = SongListStyleFragment(R.layout.style_fragment_main_song_list3)
+                    fragment = SearchStyleFragment(R.layout.style_fragment_search3)
                     supportFragmentManager.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.change_style_fragment_container, fragment)
@@ -45,7 +47,7 @@ class ChangeStyleActivity : AppCompatActivity() {
                 }
                 3 -> {
                     layout = 1
-                    fragment = SongListStyleFragment(R.layout.style_fragment_main_song_list1)
+                    fragment = SearchStyleFragment(R.layout.style_fragment_search1)
                     supportFragmentManager.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.change_style_fragment_container, fragment)
@@ -53,7 +55,7 @@ class ChangeStyleActivity : AppCompatActivity() {
                 }
                 else -> {
                     layout = 1
-                    fragment = SongListStyleFragment(R.layout.style_fragment_main_song_list1)
+                    fragment = SearchStyleFragment(R.layout.style_fragment_search1)
                     supportFragmentManager.beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.change_style_fragment_container, fragment)

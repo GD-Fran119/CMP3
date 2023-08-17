@@ -3,7 +3,9 @@ package com.example.cmp3
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -47,7 +49,8 @@ class CurrentSongFragment : Fragment() {
             desc.text = if(song.artist == "<unknown>") "Unknown"
             else song.artist
 
-            image.setImageResource(R.drawable.ic_music_note)
+            image.setImageDrawable(null)
+            image.foreground = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_music_note)
 
             findImageJob?.cancel()
             findImageJob = CoroutineScope(Dispatchers.Default).launch {
@@ -61,6 +64,7 @@ class CurrentSongFragment : Fragment() {
                     val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
                     withContext(Dispatchers.Main) {
+                        image.foreground = null
                         image.setImageBitmap(bitmap)
                         image.startAnimation(ImageFadeInAnimation(0f, 1f))
                     }

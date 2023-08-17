@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.cmp3.R
 
-class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
+class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
     override fun saveChanges() {
         TODO("Not yet implemented")
     }
@@ -53,7 +53,7 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
             Toast.makeText(requireContext(), "Item image clicked", Toast.LENGTH_SHORT).show()
         }
 
-        view.findViewById<ImageView>(R.id.change_style_item_options).setOnClickListener {
+        view.findViewById<ImageView>(R.id.change_style_item_options)?.setOnClickListener {
             Toast.makeText(requireContext(), "Item button clicked", Toast.LENGTH_SHORT).show()
         }
 
