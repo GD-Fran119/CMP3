@@ -27,8 +27,8 @@
             android:layout_width="50sp"
             android:layout_height="50sp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_music_note"
-            app:tint="#000000"
+            android:foreground="@drawable/ic_music_note"
+            android:foregroundTint="#000000"
             android:backgroundTint="#FFFFFF"
             android:background="#FFFFFF"/>
 

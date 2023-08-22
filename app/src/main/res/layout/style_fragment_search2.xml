@@ -15,6 +15,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@id/change_style_background_layout"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"
@@ -106,6 +108,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/change_style_list_items_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:layout_width="0sp"
                 android:layout_height="0sp"
                 app:layout_constraintTop_toBottomOf="@id/guideline_h_20"
@@ -133,6 +137,8 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@id/change_style_item_background"
+                        android:background="#FFFFFF"
+                        android:backgroundTint="#FFFFFF"
                         android:clickable="true"
                         android:focusable="true"
                         android:layout_width="match_parent"
@@ -147,7 +153,7 @@
                             android:background="#FFFFFF"
                             android:backgroundTint="#808080"
                             android:foreground="@drawable/ic_music_note"
-                            android:foregroundTint="@color/black"
+                            android:foregroundTint="#000000"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -160,7 +166,7 @@
                             android:layout_marginVertical="5sp"
                             android:layout_marginHorizontal="10sp"
                             android:foreground="#FFFFFF"
-                            android:foregroundTint="@color/black"
+                            android:foregroundTint="#000000"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/change_style_item_desc"
                             app:layout_constraintEnd_toStartOf="@id/change_style_item_options"
@@ -173,7 +179,7 @@
                             android:layout_marginVertical="5sp"
                             android:layout_marginHorizontal="10sp"
                             android:foreground="#FFFFFF"
-                            android:foregroundTint="@color/black"
+                            android:foregroundTint="#000000"
                             app:layout_constraintTop_toBottomOf="@id/change_style_item_title"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/change_style_item_options"
@@ -203,6 +209,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/change_style_current_song_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_width="0sp"
@@ -240,7 +248,7 @@
                         android:background="#FFFFFF"
                         android:backgroundTint="#808080"
                         android:foreground="@drawable/ic_music_note"
-                        android:foregroundTint="@color/black" />
+                        android:foregroundTint="#000000" />
                 </androidx.cardview.widget.CardView>
 
                 <ImageView
@@ -250,7 +258,7 @@
                     android:layout_marginVertical="5sp"
                     android:layout_marginHorizontal="10sp"
                     android:foreground="#FFFFFF"
-                    android:foregroundTint="@color/black"
+                    android:foregroundTint="#000000"
                     app:layout_constraintTop_toBottomOf="@id/change_style_song_progressbar"
                     app:layout_constraintBottom_toTopOf="@id/change_style_song_desc"
                     app:layout_constraintEnd_toStartOf="@id/change_style_play"
@@ -263,7 +271,7 @@
                     android:layout_marginVertical="5sp"
                     android:layout_marginHorizontal="10sp"
                     android:foreground="#FFFFFF"
-                    android:foregroundTint="@color/black"
+                    android:foregroundTint="#000000"
                     app:layout_constraintTop_toBottomOf="@id/change_style_song_title"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/change_style_play"

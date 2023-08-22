@@ -8,13 +8,14 @@
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
     app:cardCornerRadius="10sp"
     android:layout_width="match_parent"
     android:layout_height="60sp">
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@id/add_song_playlist_item_layout"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="10sp"

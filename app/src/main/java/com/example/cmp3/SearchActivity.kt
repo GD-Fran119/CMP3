@@ -55,11 +55,11 @@ class SearchActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                    R.id.playlist_change_style -> Toast.makeText(
-                        this@SearchActivity,
-                        "Change style",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_style -> {
+                        val intent = Intent(this@SearchActivity, ChangeStyleActivity::class.java)
+                        intent.putExtra(ChangeStyleActivity.ACTIVITY_STYLE_CHANGE, ChangeStyleActivity.SEARCH_ACTIVITY)
+                        startActivity(intent)
+                    }
 
                 }
                 true
@@ -90,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun checkAndSetupRecyclerView() {
 
-        val prefs = getSharedPreferences(ChangeLayoutActivity.SEARCH_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var savedLayout = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
 
         //No config

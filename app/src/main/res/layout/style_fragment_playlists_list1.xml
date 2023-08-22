@@ -15,6 +15,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@id/change_style_background_layout"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"
@@ -34,12 +36,6 @@
                 app:layout_constraintGuide_percent="0.2"
                 android:orientation="horizontal"/>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@id/guideline_h_30"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:layout_constraintGuide_percent="0.3"
-                android:orientation="horizontal"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@id/guideline_h_90"
@@ -95,7 +91,7 @@
                     android:orientation="vertical"/>
 
                 <ImageView
-                    android:id="@id/change_style_tab_selected"
+                    android:id="@id/change_style_tab_unselected"
                     android:layout_width="0sp"
                     android:layout_height="0sp"
                     android:layout_margin="10sp"
@@ -118,7 +114,7 @@
                     app:layout_constraintTop_toBottomOf="@id/change_style_tab_selected"/>
 
                 <ImageView
-                    android:id="@id/change_style_tab_unselected"
+                    android:id="@id/change_style_tab_selected"
                     android:layout_width="0sp"
                     android:layout_height="0sp"
                     android:layout_margin="10sp"
@@ -130,81 +126,37 @@
                     app:layout_constraintStart_toEndOf="@id/change_style_tab_guideline"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@id/change_style_play_all_layout"
+                android:id="@id/change_style_list_items_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_width="0sp"
                 android:layout_height="0sp"
                 app:layout_constraintTop_toBottomOf="@id/guideline_h_20"
-                app:layout_constraintBottom_toTopOf="@id/guideline_h_30"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <ImageView
-                    android:id="@id/change_style_play_all_icon"
-                    android:layout_width="0sp"
-                    android:layout_height="0sp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    android:layout_margin="10sp"
-                    android:foreground="@drawable/round_play_circle"
-                    android:foregroundTint="#FF0000"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-                <ImageView
-                    android:id="@id/change_style_play_all_text"
-                    android:layout_width="0sp"
-                    android:layout_height="0sp"
-                    android:layout_marginVertical="20sp"
-                    android:layout_marginHorizontal="10sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:foreground="#FFFFFF"
-                    android:foregroundTint="#FF0000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/change_style_play_all_icon"
-                    app:layout_constraintEnd_toStartOf="@id/change_style_play_all_songs"/>
-
-                <ImageView
-                    android:id="@id/change_style_play_all_songs"
-                    android:layout_width="0sp"
-                    android:layout_height="0sp"
-                    android:layout_marginVertical="20sp"
-                    android:layout_marginHorizontal="10sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:foreground="#FFFFFF"
-                    android:foregroundTint="#808080"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/change_style_play_all_text"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@id/change_style_list_items_container"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_width="0sp"
-                android:layout_height="0sp"
-                app:layout_constraintTop_toBottomOf="@id/guideline_h_30"
                 app:layout_constraintBottom_toTopOf="@id/guideline_h_90"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.constraintlayout.widget.Guideline
-                    android:id="@id/guideline_h_16"
+                    android:id="@id/guideline_h_14_28"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    app:layout_constraintGuide_percent="0.166666"
+                    app:layout_constraintGuide_percent="0.142857"
                     android:orientation="horizontal"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@id/change_style_item_background"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
                     android:clickable="true"
                     android:focusable="true"
                     android:layout_width="0sp"
                     android:layout_height="0sp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/guideline_h_16"
+                    app:layout_constraintBottom_toTopOf="@id/guideline_h_14_28"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
@@ -263,7 +215,6 @@
                         android:layout_margin="10sp"
                         android:background="#00000000"
                         android:foreground="@drawable/ic_right_arrow"
-                        android:backgroundTint="#00FF00"
                         android:foregroundTint="#FF0000"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -271,10 +222,24 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <ImageView
+                    android:id="@+id/change_style_playlist_add_button"
+                    android:layout_width="70sp"
+                    android:layout_height="70sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="20sp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#909090"
+                    android:foreground="@drawable/ic_add"
+                    android:foregroundTint="#FFFFFF"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/change_style_current_song_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_width="0sp"

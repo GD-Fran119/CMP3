@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.config.GlobalPreferencesConstants
 import com.example.config.MainActivityPreferencesConstants
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelationData
@@ -99,7 +100,7 @@ class PlaylistListView : Fragment() {
     }
 
     private fun setRecyclerViewLayout(playlists: List<SongPlaylistRelationData>) {
-        val prefs = activity?.getSharedPreferences(ChangeLayoutActivity.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, -1)
 
         //No config
@@ -176,8 +177,16 @@ class PlaylistListView : Fragment() {
         super.onResume()
         //TODO
         //Update view
-        infoUpdateJob = CoroutineScope(Dispatchers.Default).launch {
-            loadPlaylists()
+        val permission = if(Build.VERSION.SDK_INT < 33)
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        else
+            Manifest.permission.READ_MEDIA_AUDIO
+
+        val res = requireContext().checkCallingOrSelfPermission(permission)
+        if(res == PackageManager.PERMISSION_GRANTED) {
+            infoUpdateJob = CoroutineScope(Dispatchers.Default).launch {
+                loadPlaylists()
+            }
         }
     }
 

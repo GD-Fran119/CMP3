@@ -14,52 +14,6 @@ import android.widget.ImageView
 class ChangeLayoutActivity : AppCompatActivity() {
     companion object{
         /**
-         * Name for SharedPreferences that store layout prefs:
-         * - [MAIN_ACT_PREFERENCES]
-         * - [PLAYLIST_ACT_PREFERENCES]
-         * - [SEARCH_ACT_PREFERENCES]
-         * - [PLAY_CONTROL_ACT_PREFERENCES]
-         * - [ADD_SONGS_ACT_PREFERENCES]
-         */
-        const val MAIN_ACT_PREFERENCES = "main_layout_prefs"
-        /**
-         * Name for SharedPreferences that store layout prefs:
-         * - [MAIN_ACT_PREFERENCES]
-         * - [PLAYLIST_ACT_PREFERENCES]
-         * - [SEARCH_ACT_PREFERENCES]
-         * - [PLAY_CONTROL_ACT_PREFERENCES]
-         * - [ADD_SONGS_ACT_PREFERENCES]
-         */
-        const val PLAYLIST_ACT_PREFERENCES = "playlist_layout_prefs"
-        /**
-         * Name for SharedPreferences that store layout prefs:
-         * - [MAIN_ACT_PREFERENCES]
-         * - [PLAYLIST_ACT_PREFERENCES]
-         * - [SEARCH_ACT_PREFERENCES]
-         * - [PLAY_CONTROL_ACT_PREFERENCES]
-         * - [ADD_SONGS_ACT_PREFERENCES]
-         */
-        const val SEARCH_ACT_PREFERENCES = "search_layout_prefs"
-        /**
-         * Name for SharedPreferences that store layout prefs:
-         * - [MAIN_ACT_PREFERENCES]
-         * - [PLAYLIST_ACT_PREFERENCES]
-         * - [SEARCH_ACT_PREFERENCES]
-         * - [PLAY_CONTROL_ACT_PREFERENCES]
-         * - [ADD_SONGS_ACT_PREFERENCES]
-         */
-        const val PLAY_CONTROL_ACT_PREFERENCES = "play_control_layout_prefs"
-        /**
-         * Name for SharedPreferences that store layout prefs:
-         * - [MAIN_ACT_PREFERENCES]
-         * - [PLAYLIST_ACT_PREFERENCES]
-         * - [SEARCH_ACT_PREFERENCES]
-         * - [PLAY_CONTROL_ACT_PREFERENCES]
-         * - [ADD_SONGS_ACT_PREFERENCES]
-         */
-        const val ADD_SONGS_ACT_PREFERENCES = "add_songs_layout_prefs"
-
-        /**
          * Constant to refer to Activity parameter in the [Intent] received by this Activity
          */
         const val ACTIVITY_LAYOUT_CHANGE = "activity"
@@ -165,7 +119,7 @@ class ChangeLayoutActivity : AppCompatActivity() {
             MAIN_ACTIVITY_LAYOUT -> {
                 when(fragmentLayoutChange){
                     SONGS_FRAGMENT_LAYOUT->{
-                        currentLayout = getSharedPreferences(MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                        currentLayout = getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                             MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, 1)
                         layoutPreferencesKey = MainActivityPreferencesConstants.SONGS_LAYOUT_KEY
 
@@ -174,7 +128,7 @@ class ChangeLayoutActivity : AppCompatActivity() {
                         layoutsResIds[2] = R.drawable.songlist_layout3
                     }
                     PLAYLISTS_FRAGMENT_LAYOUT -> {
-                        currentLayout = getSharedPreferences(MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                        currentLayout = getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                             MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
                         layoutPreferencesKey = MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY
 
@@ -183,18 +137,18 @@ class ChangeLayoutActivity : AppCompatActivity() {
                         layoutsResIds[2] = R.drawable.playlists_list_layout3
                     }
                     else -> {
-                        Toast.makeText(this, "Error: not proper activity to change layout", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Error: fragment needs to be set when Main Activity is selected", Toast.LENGTH_SHORT).show()
                         onBackPressed()
                     }
                 }
 
-                activityPreferencesName = MAIN_ACT_PREFERENCES
+                activityPreferencesName = GlobalPreferencesConstants.MAIN_ACT_PREFERENCES
             }
             PLAYLIST_ACTIVITY_LAYOUT -> {
-                currentLayout = getSharedPreferences(PLAYLIST_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                currentLayout = getSharedPreferences(GlobalPreferencesConstants.PLAYLIST_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                     GlobalPreferencesConstants.LAYOUT_KEY, 1)
 
-                activityPreferencesName = PLAYLIST_ACT_PREFERENCES
+                activityPreferencesName = GlobalPreferencesConstants.PLAYLIST_ACT_PREFERENCES
                 layoutPreferencesKey = GlobalPreferencesConstants.LAYOUT_KEY
 
                 layoutsResIds[0] = R.drawable.playlist_layout1
@@ -202,10 +156,10 @@ class ChangeLayoutActivity : AppCompatActivity() {
                 layoutsResIds[2] = R.drawable.playlist_layout3
             }
             PLAY_CONTROL_ACTIVITY_LAYOUT -> {
-                currentLayout = getSharedPreferences(PLAY_CONTROL_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                currentLayout = getSharedPreferences(GlobalPreferencesConstants.PLAY_CONTROL_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                     GlobalPreferencesConstants.LAYOUT_KEY, 1)
 
-                activityPreferencesName = PLAY_CONTROL_ACT_PREFERENCES
+                activityPreferencesName = GlobalPreferencesConstants.PLAY_CONTROL_ACT_PREFERENCES
                 layoutPreferencesKey = GlobalPreferencesConstants.LAYOUT_KEY
 
                 layoutsResIds[0] = R.drawable.play_control_layout1
@@ -213,10 +167,10 @@ class ChangeLayoutActivity : AppCompatActivity() {
                 layoutsResIds[2] = R.drawable.play_control_layout3
             }
             SEARCH_ACTIVITY_LAYOUT -> {
-                currentLayout = getSharedPreferences(SEARCH_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                currentLayout = getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                     GlobalPreferencesConstants.LAYOUT_KEY, 1)
 
-                activityPreferencesName = SEARCH_ACT_PREFERENCES
+                activityPreferencesName = GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES
                 layoutPreferencesKey = GlobalPreferencesConstants.LAYOUT_KEY
 
                 layoutsResIds[0] = R.drawable.search_layout1
@@ -224,10 +178,10 @@ class ChangeLayoutActivity : AppCompatActivity() {
                 layoutsResIds[2] = R.drawable.search_layout3
             }
             ADD_SONGS_ACTIVITY_LAYOUT -> {
-                currentLayout = getSharedPreferences(ADD_SONGS_ACT_PREFERENCES, MODE_PRIVATE).getInt(
+                currentLayout = getSharedPreferences(GlobalPreferencesConstants.ADD_SONGS_ACT_PREFERENCES, MODE_PRIVATE).getInt(
                     GlobalPreferencesConstants.LAYOUT_KEY, 1)
 
-                activityPreferencesName = ADD_SONGS_ACT_PREFERENCES
+                activityPreferencesName = GlobalPreferencesConstants.ADD_SONGS_ACT_PREFERENCES
                 layoutPreferencesKey = GlobalPreferencesConstants.LAYOUT_KEY
 
                 layoutsResIds[0] = R.drawable.add_songs_layout1

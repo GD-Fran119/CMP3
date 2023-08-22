@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animations.ImageFadeInAnimation
@@ -44,7 +45,8 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
         subtitleText.text = "$artist - ${song.album}"
 
         job?.cancel()
-        imageView.setImageResource(R.drawable.ic_music_note)
+        imageView.setImageDrawable(null)
+        imageView.foreground = AppCompatResources.getDrawable(activity, R.drawable.ic_music_note)
 
         job = CoroutineScope(Dispatchers.Default).launch {
 
@@ -60,6 +62,7 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
 
                 withContext(Dispatchers.Main) {
 
+                    imageView.foreground = null
                     imageView.setImageBitmap(bitmap)
                     imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
 

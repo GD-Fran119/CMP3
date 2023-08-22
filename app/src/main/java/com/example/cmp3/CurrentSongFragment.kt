@@ -1,11 +1,8 @@
 package com.example.cmp3
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import androidx.fragment.app.Fragment

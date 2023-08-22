@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlayControlView"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playlist_topbar_container"
@@ -34,6 +35,7 @@
         android:backgroundTint="#FFFFFF"
         android:foregroundTint="#000000"
         android:foreground="@drawable/ic_music_note"
+        android:foregroundGravity="center"
         app:layout_constraintTop_toBottomOf="@id/playlist_topbar_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

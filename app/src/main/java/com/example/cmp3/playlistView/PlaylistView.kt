@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cmp3.ChangeLayoutActivity
+import com.example.cmp3.ChangeStyleActivity
 import com.example.cmp3.PlayAllSongsFragment
 import com.example.cmp3.R
 import com.example.config.GlobalPreferencesConstants
@@ -64,7 +65,7 @@ class PlaylistView : AppCompatActivity() {
     }
 
     private fun checkAndSetUpInfoFragment(){
-        val prefs = getSharedPreferences(ChangeLayoutActivity.PLAYLIST_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.PLAYLIST_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var layoutSaved = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
 
         //No config
@@ -147,11 +148,11 @@ class PlaylistView : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                    R.id.playlist_change_style -> Toast.makeText(
-                        this@PlaylistView,
-                        "Change style",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_style -> {
+                        val intent = Intent(this@PlaylistView, ChangeStyleActivity::class.java)
+                        intent.putExtra(ChangeStyleActivity.ACTIVITY_STYLE_CHANGE, ChangeStyleActivity.PLAYLIST_ACTIVITY)
+                        startActivity(intent)
+                    }
 
                     R.id.playlist_rename -> renamePlaylist()
 

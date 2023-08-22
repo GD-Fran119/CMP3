@@ -8,6 +8,7 @@ import com.example.animations.ImageFadeInAnimation
 import com.example.playerStuff.Player
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.widget.Button
@@ -62,9 +63,12 @@ class PlayControlView : AppCompatActivity(){
     private var listener : Player.OnSongChangedListener? = null
 
     override fun onStart() {
+
         super.onStart()
 
         checkAndSetUpLayout()
+
+        defaultBGColor = (findViewById<ConstraintLayout>(R.id.play_control_layout).background as ColorDrawable).color
 
         setUpVariablesAndButtons()
 
@@ -140,7 +144,7 @@ class PlayControlView : AppCompatActivity(){
     }
 
     private fun checkAndSetUpLayout(){
-        val prefs = getSharedPreferences(ChangeLayoutActivity.PLAY_CONTROL_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.PLAY_CONTROL_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var layoutSaved = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
 
         //No config
@@ -238,11 +242,11 @@ class PlayControlView : AppCompatActivity(){
                         startActivity(intent)
                     }
 
-                    R.id.playlist_change_style -> Toast.makeText(
-                        this@PlayControlView,
-                        "Change style",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_style -> {
+                        val intent = Intent(this@PlayControlView, ChangeStyleActivity::class.java)
+                        intent.putExtra(ChangeStyleActivity.ACTIVITY_STYLE_CHANGE, ChangeStyleActivity.PLAY_CONTROL_ACTIVITY)
+                        startActivity(intent)
+                    }
 
                 }
                 true
@@ -253,8 +257,11 @@ class PlayControlView : AppCompatActivity(){
     private fun changeSongImg() {
         img.setImageDrawable(null)
         img.foreground = AppCompatResources.getDrawable(this, R.drawable.ic_music_note)
+        //TODO
+        //Set default tint
+        img.foregroundTintList = ColorStateList.valueOf(Color.parseColor("#000000"))
 
-        findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(defaultBGColor)
+        findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList = ColorStateList.valueOf(defaultBGColor)
         findImageJob?.cancel()
         findImageJob = CoroutineScope(Dispatchers.Default).launch {
             val currentSong = player.getCurrentSong()
@@ -276,12 +283,18 @@ class PlayControlView : AppCompatActivity(){
 
                     Palette.from(bitmap).generate{palette ->
                         if(palette != null) {
-                            val defaultColor = getColor(R.color.light_blue_400)
-                            currentColor = palette.getDarkMutedColor(defaultColor)
-                            if(currentColor != defaultColor)
-                                findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(currentColor)
-                            else
-                                findViewById<ConstraintLayout>(R.id.play_control_layout).setBackgroundColor(palette.getDarkVibrantColor(defaultColor))
+                            currentColor = palette.getDarkMutedColor(defaultBGColor)
+                            if(currentColor != defaultBGColor)
+                                findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList = ColorStateList.valueOf(currentColor)
+                            else {
+                                currentColor = palette.getDarkVibrantColor(defaultBGColor)
+                                findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList =
+                                    ColorStateList.valueOf(
+                                        currentColor
+                                    )
+                            }
+                            if(currentLayout == ROUND_IMAGE_LAYOUT)
+                                img.foregroundTintList = ColorStateList.valueOf(currentColor)
                         }
                     }
                 }

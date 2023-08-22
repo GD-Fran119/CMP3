@@ -68,11 +68,11 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                    R.id.playlist_change_style -> Toast.makeText(
-                        this@AddSongsToPlaylistActivity,
-                        "Change style",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    R.id.playlist_change_style -> {
+                        val intent = Intent(this@AddSongsToPlaylistActivity, ChangeStyleActivity::class.java)
+                        intent.putExtra(ChangeStyleActivity.ACTIVITY_STYLE_CHANGE, ChangeStyleActivity.ADD_SONGS_ACTIVITY)
+                        startActivity(intent)
+                    }
 
                 }
                 true
@@ -90,7 +90,7 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
     }
 
     private fun checkAndSetUpLayout(){
-        val prefs = getSharedPreferences(ChangeLayoutActivity.ADD_SONGS_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.ADD_SONGS_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var savedLayout = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
 
         //No config

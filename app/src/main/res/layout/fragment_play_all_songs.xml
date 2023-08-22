@@ -6,7 +6,8 @@
     android:layout_height="50sp"
     android:paddingHorizontal="10sp"
     android:layout_alignParentTop="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:background="?android:attr/selectableItemBackground"
+
     >
 
     <ImageView

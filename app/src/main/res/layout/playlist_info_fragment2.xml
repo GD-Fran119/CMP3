@@ -12,6 +12,7 @@
         <ImageView
             android:id="@id/playlist_image"
             android:foreground="@drawable/ic_music_note"
+            android:foregroundGravity="center"
             android:layout_width="0sp"
             android:layout_height="0sp"
             android:scaleType="centerCrop"

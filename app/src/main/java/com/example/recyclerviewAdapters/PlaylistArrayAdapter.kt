@@ -2,8 +2,10 @@ package com.example.recyclerviewAdapters
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.view.LayoutInflater
@@ -11,7 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animations.ImageFadeInAnimation
@@ -50,8 +54,11 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
             }
 
             job?.cancel()
-            imageView.setImageResource(R.drawable.ic_music_note)
-            imageView.foreground = null
+            imageView.setImageDrawable(null)
+            imageView.foreground = getDrawable(activity, R.drawable.ic_music_note)
+            //TODO
+            //Change with default foreground color
+            imageView.foregroundTintList = ColorStateList.valueOf(Color.parseColor("#000000"))
             if(playlist.songs.isNotEmpty()) {
                 job = CoroutineScope(Dispatchers.Default)
                     .launch {
@@ -85,6 +92,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
             withContext(Dispatchers.Main) {
 
                 imageView.foreground = getDrawable(activity, R.drawable.circle_album_foreground)
+                imageView.foregroundTintList = view.findViewById<ConstraintLayout>(R.id.playlists_item_layout).backgroundTintList
                 imageView.setImageDrawable(roundedBitmapDrawable)
                 imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
             }
@@ -92,6 +100,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
 
         private suspend fun setBitmapToImageView(bitmap: Bitmap){
             withContext(Dispatchers.Main) {
+                imageView.foreground = null
                 imageView.setImageBitmap(bitmap)
                 imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
             }

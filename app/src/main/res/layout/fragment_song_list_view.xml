@@ -23,7 +23,7 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/main_play_all_fragment"
-        app:layout_constraintBottom_toTopOf="@id/mainSongListView"
+        app:layout_constraintBottom_toTopOf="@id/main_song_list_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -42,7 +42,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         tools:listitem="@layout/item_song_list_view1"
-        android:id="@+id/mainSongListView"
+        android:id="@+id/main_song_list_view"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:clipToPadding="false"

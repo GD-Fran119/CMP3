@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10sp"
+    android:id="@+id/playlist_item_layout"
     android:foreground="?android:attr/selectableItemBackground"
     android:background="#FFFFFF"
     android:backgroundTint="#FFFFFF">
@@ -44,14 +45,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/item_song_options"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetLeft="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="25sp"
-        android:layout_marginHorizontal="10sp"
+        android:layout_marginStart="10sp"
         android:foreground="@drawable/ic_options"
         android:foregroundTint="#000000"
         android:backgroundTint="#ACFD7F"

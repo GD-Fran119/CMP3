@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchActivity"
+    android:id="@+id/add_song_playlist_layout"
     android:background="#FFFFFF"
     android:backgroundTint="#FFFFFF">
 

@@ -71,4 +71,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.2"
     kapt "androidx.room:room-compiler:2.5.2"
 
+    //Color picker
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+
 }

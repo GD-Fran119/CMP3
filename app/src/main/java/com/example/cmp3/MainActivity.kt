@@ -85,7 +85,18 @@ class MainActivity : AppCompatActivity(){
 
                     R.id.playlist_change_style -> {
                         val intent = Intent(this@MainActivity, ChangeStyleActivity::class.java)
-                        //Put arguments
+                        intent.putExtra(ChangeStyleActivity.ACTIVITY_STYLE_CHANGE, ChangeStyleActivity.MAIN_ACTIVITY)
+                        when(viewPager.currentItem){
+                            0 -> {
+                                intent.putExtra(ChangeStyleActivity.FRAGMENT_STYLE_CHANGE, ChangeStyleActivity.SONGS_FRAGMENT)
+                            }
+                            1 -> {
+                                intent.putExtra(ChangeStyleActivity.FRAGMENT_STYLE_CHANGE, ChangeStyleActivity.PLAYLISTS_FRAGMENT)
+                            }
+                            else -> {
+                                intent.putExtra(ChangeStyleActivity.FRAGMENT_STYLE_CHANGE, ChangeStyleActivity.SONGS_FRAGMENT)
+                            }
+                        }
                         startActivity(intent)
                     }
 

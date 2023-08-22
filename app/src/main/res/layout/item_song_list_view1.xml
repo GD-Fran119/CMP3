@@ -30,7 +30,7 @@
                 android:foregroundTint="#000000"
                 android:background="#FFFFFF"
                 android:backgroundTint="#FFFFFF"
-                android:src="@drawable/ic_music_note"/>
+                android:foreground="@drawable/ic_music_note"/>
 
 
         </androidx.cardview.widget.CardView>

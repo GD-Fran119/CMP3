@@ -14,6 +14,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@id/change_style_background_layout"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"
@@ -218,6 +220,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/change_style_list_items_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:layout_width="0sp"
                 android:layout_height="0sp"
                 app:layout_constraintTop_toBottomOf="@id/guideline_h_45"
@@ -235,6 +239,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@id/change_style_item_background"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
                     android:layout_width="0sp"
                     android:layout_height="0sp"
                     app:layout_constraintTop_toTopOf="parent"
@@ -290,6 +296,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/change_style_current_song_container"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_width="0sp"

@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.example.config.GlobalPreferencesConstants
 import com.example.config.MainActivityPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
@@ -176,7 +177,7 @@ class SongListView : Fragment() {
 
     private fun checkLayoutAndSetUpRecyclerView(){
 
-        val prefs = activity?.getSharedPreferences(ChangeLayoutActivity.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
+        val prefs = activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, -1)
 
         //No config
@@ -196,7 +197,7 @@ class SongListView : Fragment() {
                 this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
             }?.apply()
 
-            val recyclerView = view?.findViewById<RecyclerView>(R.id.mainSongListView)
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.main_song_list_view)
             recyclerView?.setHasFixedSize(true)
             val adapter : SongArrayAdapter
 

@@ -12,6 +12,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@id/change_style_background_layout"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"

@@ -12,6 +12,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@id/change_style_background_layout"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:clickable="true"
             android:focusable="true"
             android:layout_width="match_parent"
@@ -34,8 +36,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0sp"
                 android:layout_height="0sp"
-                android:background="#FFFFFF"
-                android:backgroundTint="#80000000"
+                android:background="#80000000"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/guideline_h_20"
                 app:layout_constraintStart_toStartOf="parent"
