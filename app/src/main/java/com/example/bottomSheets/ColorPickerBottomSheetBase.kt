@@ -5,10 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.example.cmp3.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+/**
+ * Base class to generate a bottom sheet that ask for colors
+ * @param layoutRes resource layout to inflate the view
+ * @param title title for bottom sheet
+ * @param labels labels that will be shown when displaying the bottom sheet
+ * @param colors colors that will be shown with their corresponding label when displaying the bottom sheet. Must have same size as [labels]
+ */
 abstract class ColorPickerBottomSheetBase(
     private val layoutRes: Int,
     protected val title: String,
@@ -28,6 +34,11 @@ abstract class ColorPickerBottomSheetBase(
         view.findViewById<TextView>(R.id.change_style_picker_title).text = title
     }
 
+    /**
+     * Notifies listener if set
+     * @param itemPosition position of the bottom sheet item that has changed its color
+     * @param color color to which the bottom sheet item has set its value
+     */
     protected fun notifyListener(itemPosition: Int, color: Int){
         listener?.listen(itemPosition, color)
     }
@@ -44,7 +55,15 @@ abstract class ColorPickerBottomSheetBase(
         listener = OnColorSelectedListener(newListener)
     }
 
-    public fun interface OnColorSelectedListener{
+    /**
+     * Interface for OnColorSelected event
+     */
+    fun interface OnColorSelectedListener{
+        /**
+         * Method to invoke when an item has changed its color
+         * @param itemPosition position of the bottom sheet item that has changed its color
+         * @param color color to which the bottom sheet item has set its value
+         */
         fun listen(itemPosition: Int, color: Int)
     }
 

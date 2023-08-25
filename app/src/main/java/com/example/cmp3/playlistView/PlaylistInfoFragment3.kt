@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.animations.ImageFadeInAnimation
@@ -21,7 +19,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlaylistInfoFragment3 : PlaylistInfoFragment() {
+/**
+ * Fragment class to display a playlist's info.
+ * The info is displayed as follows:
+ * - Image of the first song in the playlist is placed on the right as a circle
+ * - Playlist name, creation date and duration are displayed on the left, one on top of each other
+ */
+class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +60,10 @@ class PlaylistInfoFragment3 : PlaylistInfoFragment() {
 
     }
 
+    /**
+     * Establishes the playlist image as circle-shaped
+     * @param bitmap image to display
+     */
     private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
         val height = bitmap.height
         val width = bitmap.width

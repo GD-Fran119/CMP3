@@ -1,17 +1,12 @@
 package com.example.cmp3.playlistView
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.animations.ImageFadeInAnimation
 import com.example.cmp3.R
 import com.example.songsAndPlaylists.SongList
@@ -20,7 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlaylistInfoFragment2 : PlaylistInfoFragment() {
+/**
+ * Fragment class to display a playlist's info.
+ * The info is displayed as follows:
+ * - Image of the first song in the playlist is placed on the top as a full parent-width image
+ * - Playlist name, creation date and duration are displayed beneath the playlist image
+ */
+class PlaylistInfoFragment2 : PlaylistInfoBaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

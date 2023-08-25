@@ -18,6 +18,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Class that shows a bottom sheet with all playlists stored in database and adds a song to the playlist the user chooses.
+ * @param playlists list with all playlists stored in database
+ * @param song song to add to the selected playlist
+ */
 class PlaylistsDialogFragment(private val playlists: List<PlaylistEntity>, private val song: Song): BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

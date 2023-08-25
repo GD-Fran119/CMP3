@@ -4,14 +4,32 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.config.GlobalPreferencesConstants
-import com.example.config.MainActivityPreferencesConstants
 import com.google.android.material.button.MaterialButton
 import kotlin.properties.Delegates
 import android.content.Intent
 import android.widget.ImageView
+import android.content.SharedPreferences
 
 
+/**
+ * Activity to change an activity layout settings. Requires an [Intent] with:
+ * - [ACTIVITY_LAYOUT_CHANGE]
+ * - [FRAGMENT_LAYOUT_CHANGE], if the activity to change is [MainActivity]
+ */
 class ChangeLayoutActivity : AppCompatActivity() {
+
+    /**
+     * Companion object that stores:
+     * - [ACTIVITY_LAYOUT_CHANGE]
+     * - [FRAGMENT_LAYOUT_CHANGE]
+     * - [MAIN_ACTIVITY_LAYOUT]
+     * - [SONGS_FRAGMENT_LAYOUT]
+     * - [PLAYLISTS_FRAGMENT_LAYOUT]
+     * - [PLAYLIST_ACTIVITY_LAYOUT]
+     * - [SEARCH_ACTIVITY_LAYOUT]
+     * - [PLAY_CONTROL_ACTIVITY_LAYOUT]
+     * - [ADD_SONGS_ACTIVITY_LAYOUT]
+     */
     companion object{
         /**
          * Constant to refer to Activity parameter in the [Intent] received by this Activity
@@ -54,14 +72,22 @@ class ChangeLayoutActivity : AppCompatActivity() {
         const val ADD_SONGS_ACTIVITY_LAYOUT = 5
     }
 
+    //Activity to change its layout
     private var activityLayoutChange by Delegates.notNull<Int>()
+    //Fragment to change its layout if MainActivity is sent as parameter
     private var fragmentLayoutChange by Delegates.notNull<Float>()
+    //Preferences to which save changes
     private lateinit var activityPreferencesName: String
+    //Key to use in preferences
     private lateinit var layoutPreferencesKey: String
 
+    //Current layout in use [1, 2, 3]
     private var currentLayout by Delegates.notNull<Int>()
+    //User-selected new layout
     private var layoutSelected = -1
+    //View to show how the layout will look
     private lateinit var imageView: ImageView
+    //Resources ids of all available layouts
     private val layoutsResIds = arrayOf(0, 0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +124,7 @@ class ChangeLayoutActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.change_layout_save_button).setOnClickListener {
+            //If layout has been changed, save settings
             if(currentLayout != layoutSelected){
                 Toast.makeText(this@ChangeLayoutActivity, "Changes committed", Toast.LENGTH_SHORT).show()
                 val prefs = getSharedPreferences(activityPreferencesName, MODE_PRIVATE)
@@ -106,22 +133,31 @@ class ChangeLayoutActivity : AppCompatActivity() {
                 }.apply()
             }
 
+            //Go back
             onBackPressed()
         }
 
+        //Do not save changes and go back
         findViewById<MaterialButton>(R.id.change_layout_cancel_button).setOnClickListener {
             onBackPressed()
         }
     }
 
+    /**
+     * Establishes:
+     * - [SharedPreferences] on which save changes
+     * - Key to use when saving changes
+     * - Layouts that will be displayed when user clicks layout buttons
+     * - Current layout in use for displaying it by default
+     */
     private fun setCurrentLayout() {
         when(activityLayoutChange){
             MAIN_ACTIVITY_LAYOUT -> {
                 when(fragmentLayoutChange){
                     SONGS_FRAGMENT_LAYOUT->{
                         currentLayout = getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
-                            MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, 1)
-                        layoutPreferencesKey = MainActivityPreferencesConstants.SONGS_LAYOUT_KEY
+                            MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, 1)
+                        layoutPreferencesKey = MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY
 
                         layoutsResIds[0] = R.drawable.songlist_layout1
                         layoutsResIds[1] = R.drawable.songlist_layout2
@@ -129,8 +165,8 @@ class ChangeLayoutActivity : AppCompatActivity() {
                     }
                     PLAYLISTS_FRAGMENT_LAYOUT -> {
                         currentLayout = getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, MODE_PRIVATE).getInt(
-                            MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
-                        layoutPreferencesKey = MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY
+                            MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
+                        layoutPreferencesKey = MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY
 
                         layoutsResIds[0] = R.drawable.playlists_list_layout1
                         layoutsResIds[1] = R.drawable.playlists_list_layout2
@@ -200,6 +236,9 @@ class ChangeLayoutActivity : AppCompatActivity() {
         setImageView()
     }
 
+    /**
+     * Changes the layout displayed depending on the selected layout
+     */
     private fun setImageView(){
         when(layoutSelected){
             1 -> {

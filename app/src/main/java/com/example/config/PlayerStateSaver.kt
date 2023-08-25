@@ -6,8 +6,11 @@ import com.example.playerStuff.Player
 import com.example.songsAndPlaylists.MainListHolder
 import com.example.songsAndPlaylists.Song
 import com.example.songsAndPlaylists.SongList
+import  android.content.SharedPreferences
 
-
+/**
+ * Class that manages saving and restoring player state
+ */
 class PlayerStateSaver {
     companion object{
         private const val SAVER_NAME = "PLAYER_STATE"
@@ -18,6 +21,10 @@ class PlayerStateSaver {
         private const val CURRENT_SONG_MODE = 1
         private const val RANDOM_MODE = 2
 
+        /**
+         * Method to save player current state
+         * @param context context to use with [SharedPreferences]
+         */
         suspend fun saveState(context: Context){
             val prefs = context.getSharedPreferences(SAVER_NAME, Context.MODE_PRIVATE)
             prefs.edit().apply {
@@ -31,6 +38,10 @@ class PlayerStateSaver {
             }.apply()
         }
 
+        /**
+         * Method to restore player previous state
+         * @param context context to use with [SharedPreferences]
+         */
         suspend fun loadState(context: Context){
             //Retrieve list
             //When establish main as current playlist:
@@ -78,11 +89,21 @@ class PlayerStateSaver {
             setListAndSongAsCurrent(list, pos)
         }
 
+        /**
+         * Establishes the player's playlist and current song
+         * @param list list to which set the player's list
+         * @param pos song position to which set the player's current song
+         */
         private fun setListAndSongAsCurrent(list: SongList, pos: UInt){
             Player.instance.setList(list)
             Player.instance.setCurrentSong(pos)
         }
 
+        /**
+         * Searches the position of a song in an song list
+         * @param playlist list in which to look for
+         * @param path path of the song to look for
+         */
         private fun findSongInPlaylist(playlist:List<Song>, path: String): UInt{
             var pos = 0u
             for(i in playlist.indices){

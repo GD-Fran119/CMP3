@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.config.GlobalPreferencesConstants
-import com.example.config.MainActivityPreferencesConstants
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelationData
 import com.example.dialogs.PlaylistCreationDialog
@@ -101,12 +100,12 @@ class PlaylistListView : Fragment() {
 
     private fun setRecyclerViewLayout(playlists: List<SongPlaylistRelationData>) {
         val prefs = activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
-        var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, -1)
+        var savedLayout = prefs?.getInt(MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, -1)
 
         //No config
         if(savedLayout == -1) {
             prefs?.edit().apply {
-                this!!.putInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
+                this!!.putInt(MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, 1)
             }?.apply()
 
             savedLayout = 1
@@ -117,7 +116,7 @@ class PlaylistListView : Fragment() {
                             else savedLayout!!
 
             prefs?.edit().apply {
-                this!!.putInt(MainActivityPreferencesConstants.PLAYLISTS_LAYOUT_KEY, currentLayout)
+                this!!.putInt(MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, currentLayout)
             }?.apply()
 
             val recyclerView = view?.findViewById<RecyclerView>(R.id.playlistListView)
@@ -142,7 +141,7 @@ class PlaylistListView : Fragment() {
                     adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
                     currentLayout = 1
                     prefs?.edit().apply {
-                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                        this!!.putInt(MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, currentLayout)
                     }?.apply()
                 }
             }
@@ -165,7 +164,7 @@ class PlaylistListView : Fragment() {
                     adapter = PlaylistArrayAdapter.create(activity as Activity, playlists, R.layout.playlists_item_view1)
                     currentLayout = 1
                     prefs?.edit().apply {
-                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                        this!!.putInt(MainActivity.PreferencesConstants.PLAYLISTS_LAYOUT_KEY, currentLayout)
                     }?.apply()
                 }
             }

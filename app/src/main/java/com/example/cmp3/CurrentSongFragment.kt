@@ -2,6 +2,7 @@ package com.example.cmp3
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
@@ -26,6 +27,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Fragment that displays [Player]'s current song information
+ */
 class CurrentSongFragment : Fragment() {
 
     private val player = Player.instance
@@ -34,13 +38,17 @@ class CurrentSongFragment : Fragment() {
     private lateinit var desc: TextView
     private lateinit var playButton : MaterialButton
     private lateinit var progressBar : ProgressBar
+    //Job that searches and establishes image
     private var findImageJob : Job? = null
+    //Job that tracks the progress of the current song
     private var progressJob : Job? = null
 
+    //Listener for player
     private val listener = object: Player.OnSongChangedListener{
         private var saverJob: Job? = null
         override fun listen() {
 
+            //Update UI
             val song = player.getCurrentSong() ?: return
             title.text = song.title
             desc.text = if(song.artist == "<unknown>") "Unknown"
@@ -68,6 +76,9 @@ class CurrentSongFragment : Fragment() {
                 }
             }
 
+            //End of UI updating
+
+            //Save Player state
             saverJob?.cancel()
             saverJob = CoroutineScope(Dispatchers.Default).launch {
                 PlayerStateSaver.saveState(requireContext())
@@ -86,17 +97,20 @@ class CurrentSongFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Set variables
         image = view.findViewById(R.id.current_song_img)
         title = view.findViewById(R.id.current_song_title)
         desc = view.findViewById(R.id.current_song_desc)
         title.isSelected = true
 
+        //If layout is clicked go to Play Control Activity
         view.findViewById<ConstraintLayout>(R.id.current_song_container)?.setOnClickListener{
             if(player.getCurrentSong() == null) return@setOnClickListener
 
             startActivity(Intent(activity, PlayControlView::class.java))
         }
 
+        //Mode variables setting
         progressBar = view.findViewById(R.id.current_song_progressbar)
 
         playButton = view.findViewById(R.id.current_song_pause_play)
@@ -125,9 +139,11 @@ class CurrentSongFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        //Update play button
         if(player.isPlayingSong()) playButton.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_pause)
         else playButton.foreground = AppCompatResources.getDrawable(activity as Context, R.drawable.ic_play)
 
+        //Set up progress bar job
         progressJob?.cancel()
         progressJob = CoroutineScope(Dispatchers.Default).launch {
             while(true){
@@ -140,13 +156,14 @@ class CurrentSongFragment : Fragment() {
 
         }
 
+        //Add listener to Player
         player.onSongChangedListener = listener
     }
 
     override fun onPause() {
         super.onPause()
 
-        //player.onSongChangedListener = null
+        //Cancel jobs
         findImageJob?.cancel()
         progressJob?.cancel()
     }
@@ -162,5 +179,49 @@ class CurrentSongFragment : Fragment() {
         @JvmStatic
         fun newInstance() =
             CurrentSongFragment()
+    }
+
+    /**
+     * Class that stores keys for [CurrentSongFragment]'s [SharedPreferences]
+     */
+    class PreferencesConstants private constructor(){
+        companion object{
+            /**
+             * Key that refers to Fragment background color
+             */
+            const val FRAGMENT_LAYOUT_KEY = "layout_bg_color"
+            /**
+             * Key that refers to Fragment progress bar color
+             */
+            const val PROGRESS_BAR_KEY = "progress_bar_color"
+            /**
+             * Key that refers to Fragment image foreground color
+             */
+            const val IMAGE_FG_KEY = "image_fg_color"
+            /**
+             * Key that refers to Fragment image background color
+             */
+            const val IMAGE_BG_KEY = "image_bg_color"
+            /**
+             * Key that refers to Fragment text color
+             */
+            const val TEXT_KEY = "text_color"
+            /**
+             * Key that refers to Fragment play button foreground color
+             */
+            const val PLAY_BTN_FG_KEY = "play_button_fg_color"
+            /**
+             * Key that refers to Fragment play button background color
+             */
+            const val PLAY_BTN_BG_KEY = "play_button_bg_color"
+            /**
+             * Key that refers to Fragment next button foreground color
+             */
+            const val NEXT_BTN_FG_KEY = "next_button_fg_color"
+            /**
+             * Key that refers to Fragment next button background color
+             */
+            const val NEXT_BTN_BG_KEY = "next_button_bg_color"
+        }
     }
 }

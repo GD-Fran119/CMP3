@@ -6,6 +6,16 @@ import com.example.databaseStuff.SongEntity
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
+/**
+ * Class that represents a song
+ * @param title song title
+ * @param artist song artist
+ * @param album song album
+ * @param duration song duration in milliseconds
+ * @param path song file path
+ * @param fileSize file size in bytes
+ * @param lyricsPath song lyrics file path
+ */
 class Song(
     val title: String, val artist: String,
     val album: String, val duration: UInt,
@@ -13,6 +23,9 @@ class Song(
     val lyricsPath: String?): Parcelable {
 
 
+    /**
+     * Constructor for [Parcel]
+     */
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,
@@ -24,8 +37,16 @@ class Song(
     ) {
     }
 
+    /**
+     * Constructor for [SongEntity]
+     */
     constructor(song: SongEntity) : this(song.title, song.artist, song.album, song.duration.toUInt(),
                                          song.path, song.size, song.lyricsPath)
+
+    /**
+     * Formats the file size into megabytes
+     * @return file size formatted to megabytes (E.g. "5.6", "10.2")
+     */
     fun getSizeMB(): String {
         //1024 * 1024 = 1048567
         val TAMANO_MB = 1048567.0f
@@ -38,8 +59,16 @@ class Song(
     }
 
 
+    /**
+     * Formats the song duration
+     * @return duration formatted like SSs, MM:SS or HH:MM:SS depending on the [duration]
+     */
     fun getDuration(): String = DurationFormatter.format(duration.toLong())
 
+    /**
+     * Converts a [Song] into [SongEntity]
+     * @return the song as [SongEntity]
+     */
     fun toSongEntity() = SongEntity(path, title, artist, album, duration.toInt(), fileSize, lyricsPath)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)
@@ -74,6 +103,17 @@ class Song(
                 path == other.path &&
                 fileSize == other.fileSize &&
                 lyricsPath == other.lyricsPath
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + artist.hashCode()
+        result = 31 * result + album.hashCode()
+        result = 31 * result + duration.hashCode()
+        result = 31 * result + path.hashCode()
+        result = 31 * result + fileSize
+        result = 31 * result + (lyricsPath?.hashCode() ?: 0)
+        return result
     }
 
 }

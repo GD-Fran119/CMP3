@@ -1,5 +1,7 @@
 package com.example.bottomSheets
 
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +13,13 @@ import com.example.cmp3.R
 import com.example.songsAndPlaylists.Song
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+/**
+ * Class that shows a bottom sheet with a song info. It also allows to set an action
+ * to perform when action item is clicked by the user
+ * @param song song whose info will be displayed
+ */
 class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment() {
+
 
     var action: SongInfoDialogAction? = null
     override fun onCreateView(
@@ -24,6 +32,7 @@ class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Setting info
         view.findViewById<TextView>(R.id.title_text).text = song.title
         view.findViewById<TextView>(R.id.artist_text).text = if (song.artist == "<unknown>") "Unknown" else song.artist
         view.findViewById<TextView>(R.id.album_text).text = if (song.album == "<unknown>") "Unknown" else song.album
@@ -31,6 +40,7 @@ class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment()
         view.findViewById<TextView>(R.id.size_text).text = "${song.getSizeMB()} MB"
         view.findViewById<TextView>(R.id.path_text).text = song.path
 
+        //Setting action to perform
         if(action != null) {
             view.findViewById<ImageView>(R.id.add_to_playlist_icon)
                 .setImageResource(action!!.actionIcon)
@@ -47,9 +57,22 @@ class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment()
         }
     }
 
+    /**
+     * Interface to implement when the user is allowed to perform that action it they click the action item
+     */
     interface SongInfoDialogAction{
+        /**
+         * Resource drawable to display
+         */
         var actionIcon: Int
+        /**
+         * Action explanation text (E.g. "Add to playlist")
+         */
         var actionText : String
+
+        /**
+         * Method to invoke when action item is clicked
+         */
         fun onAction()
     }
 }

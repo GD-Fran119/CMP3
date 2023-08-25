@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.config.GlobalPreferencesConstants
-import com.example.config.MainActivityPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -178,12 +177,12 @@ class SongListView : Fragment() {
     private fun checkLayoutAndSetUpRecyclerView(){
 
         val prefs = activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
-        var savedLayout = prefs?.getInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, -1)
+        var savedLayout = prefs?.getInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, -1)
 
         //No config
         if(savedLayout == -1) {
             prefs?.edit().apply {
-                this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, 1)
+                this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, 1)
             }?.apply()
 
             savedLayout = 1
@@ -194,7 +193,7 @@ class SongListView : Fragment() {
                             else savedLayout!!
 
             prefs?.edit().apply {
-                this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
             }?.apply()
 
             val recyclerView = view?.findViewById<RecyclerView>(R.id.main_song_list_view)
@@ -220,7 +219,7 @@ class SongListView : Fragment() {
                     adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view1)
                     currentLayout = 1
                     prefs?.edit().apply {
-                        this!!.putInt(MainActivityPreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                        this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
                     }?.apply()
                 }
             }

@@ -64,7 +64,7 @@ class PlaylistCreationDialog: DialogFragment() {
                         val id = dao.insertPlaylist(newPlaylist)
 
                         val intent = Intent(activity, AddSongsToPlaylistActivity::class.java)
-                        intent.putExtra("id", id.toInt())
+                        intent.putExtra(AddSongsToPlaylistActivity.PLAYLIST_ID_KEY, id.toInt())
                         startActivity(intent)
 
                         dismiss()

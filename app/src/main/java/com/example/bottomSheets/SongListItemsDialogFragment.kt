@@ -16,15 +16,10 @@ import com.example.songsAndPlaylists.SongList
 import java.lang.Exception
 
 /**
- *
- * A fragment that shows a list of items as a modal bottom sheet.
- *
- * You can show this modal bottom sheet from your activity like this:
- * <pre>
- *    ListItemListDialogFragment.newInstance(30).show(supportFragmentManager, "dialog")
- * </pre>
+ * Class that shows a bottom sheet where a playlist's songs are displayed
+ * @param songList playlist whose songs wil be displayed
  */
-class SongListItemsDialogFragment(private val songlist: SongList?) : BottomSheetDialogFragment() {
+class SongListItemsDialogFragment(private val songList: SongList?) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentItemListDialogListDialogBinding? = null
 
@@ -43,14 +38,17 @@ class SongListItemsDialogFragment(private val songlist: SongList?) : BottomSheet
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.findViewById<TextView>(R.id.bottom_box_list_name)?.text = songlist?.title ?: "Unknown"
+        view.findViewById<TextView>(R.id.bottom_box_list_name)?.text = songList?.title ?: "Unknown"
 
-        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  if(songlist?.getListSize() != 1.toUInt()) "${songlist?.getListSize()} songs"
+        view.findViewById<TextView>(R.id.bottom_box_list_number)?.text =  if(songList?.getListSize() != 1.toUInt()) "${songList?.getListSize()} songs"
                                                                             else "1 song"
         val list = view.findViewById<RecyclerView>(R.id.bottom_box_list)
         list?.adapter = ListItemAdapter(Player.instance.listSize().toInt())
     }
 
+    /**
+     * ViewHolder class for [RecyclerView]
+     */
     private inner class ViewHolder(binding: FragmentItemListDialogListDialogItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -58,6 +56,10 @@ class SongListItemsDialogFragment(private val songlist: SongList?) : BottomSheet
         val desc = binding.root.findViewById<TextView>(R.id.albumNArtistBottomBox)!!
     }
 
+    /**
+     * Adapter class for [RecyclerView]
+     * @param mItemCount number of items to display in [RecyclerView]
+     */
     private inner class ListItemAdapter(private val mItemCount: Int) :
         RecyclerView.Adapter<ViewHolder>() {
 

@@ -2,6 +2,7 @@ package com.example.cmp3
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import com.example.animations.ImageFadeInAnimation
@@ -17,7 +18,6 @@ import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+/**
+ * Activity where the user can control haw a playlist is played
+ */
 class PlayControlView : AppCompatActivity(){
 
     companion object{
@@ -50,10 +52,15 @@ class PlayControlView : AppCompatActivity(){
     private lateinit var playButton: MaterialButton
     private lateinit var listButton: MaterialButton
     private val player = Player.instance
+    //BG color changes with the song image
     private var defaultBGColor: Int = 0
-    private var currentColor: Int = 0
+    //If current song has an embedded image
+    //The BG is changed according to that image
+    private var currentBGColor: Int = 0
+    //Custom layout established
     private var currentLayout = -1
 
+    //Dialog to show if user wants to know the songs in the playlist or wants to set the current song to a specific one
     private val listItems = SongListItemsDialogFragment(Player.instance.getList())
 
     private lateinit var seekBar: SeekBar
@@ -114,6 +121,9 @@ class PlayControlView : AppCompatActivity(){
 
     }
 
+    /**
+     * Establishes the [Player]'s listener to be notified when player state changes
+     */
     private fun setUpListener(){
         listener = object: Player.OnSongChangedListener{
             override fun listen() {
@@ -124,6 +134,10 @@ class PlayControlView : AppCompatActivity(){
     }
 
     private var saverJob: Job? = null
+
+    /**
+     * Updates the UI with the [Player] state info. It also saves the [Player]'s current state
+     */
     private fun updateUI(){
         val song = player.getCurrentSong() ?: return
 
@@ -143,6 +157,9 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Checks whether the current layout has been changed. If so, the new layout is set
+     */
     private fun checkAndSetUpLayout(){
         val prefs = getSharedPreferences(GlobalPreferencesConstants.PLAY_CONTROL_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var layoutSaved = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
@@ -181,10 +198,16 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Shows the songs of the current playlist in a bottom sheet
+     */
     private fun showSongs() {
         listItems.show(supportFragmentManager, "dialog")
     }
 
+    /**
+     * Sets the variables used by the activity
+     */
     private fun setUpVariablesAndButtons(){
         title = findViewById(R.id.play_control_title)
         desc = findViewById(R.id.play_control_desc)
@@ -254,6 +277,10 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * When [Player]'s current song is changed, this method is invoked via listener to change the song image. Depending on the current layout setting,
+     * the image will be displayed as a rounded corners square, a circle or a full-width image
+     */
     private fun changeSongImg() {
         img.setImageDrawable(null)
         img.foreground = AppCompatResources.getDrawable(this, R.drawable.ic_music_note)
@@ -283,18 +310,18 @@ class PlayControlView : AppCompatActivity(){
 
                     Palette.from(bitmap).generate{palette ->
                         if(palette != null) {
-                            currentColor = palette.getDarkMutedColor(defaultBGColor)
-                            if(currentColor != defaultBGColor)
-                                findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList = ColorStateList.valueOf(currentColor)
+                            currentBGColor = palette.getDarkMutedColor(defaultBGColor)
+                            if(currentBGColor != defaultBGColor)
+                                findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList = ColorStateList.valueOf(currentBGColor)
                             else {
-                                currentColor = palette.getDarkVibrantColor(defaultBGColor)
+                                currentBGColor = palette.getDarkVibrantColor(defaultBGColor)
                                 findViewById<ConstraintLayout>(R.id.play_control_layout).backgroundTintList =
                                     ColorStateList.valueOf(
-                                        currentColor
+                                        currentBGColor
                                     )
                             }
                             if(currentLayout == ROUND_IMAGE_LAYOUT)
-                                img.foregroundTintList = ColorStateList.valueOf(currentColor)
+                                img.foregroundTintList = ColorStateList.valueOf(currentBGColor)
                         }
                     }
                 }
@@ -302,6 +329,10 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Establishes the image for the current song being played as circle-shaped
+     * @param bitmap image to set
+     */
     private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
         val height = bitmap.height
         val width = bitmap.width
@@ -319,6 +350,10 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Establishes the image for the current song being played. The way it is displayed depends on the layout settings
+     * @param bitmap image to set
+     */
     private suspend fun setBitmapToImageView(bitmap: Bitmap){
         withContext(Dispatchers.Main) {
             img.foreground = null
@@ -327,6 +362,9 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Changes the foregroound icon of the play mode button according to the [Player]'s state
+     */
     private fun changePlayModeBtnImg() {
         if(Player.instance.isListLoop()){
             playModeBtn.foreground = getDrawable(R.drawable.ic_repeat_list)
@@ -338,6 +376,9 @@ class PlayControlView : AppCompatActivity(){
 
     }
 
+    /**
+     * Swaps the play button icon between paused and playing according to the [Player]'s state
+     */
     private fun changePlayButton(){
         if(player.isPlayingSong()){
             playButton.foreground = getDrawable(R.drawable.ic_pause)
@@ -347,6 +388,9 @@ class PlayControlView : AppCompatActivity(){
         }
     }
 
+    /**
+     * Changes the [Player] play mode and calls [changePlayModeBtnImg] to establish the icon of the button
+     */
     private fun changePlayModeBtn(){
         player.changePlayMode()
         changePlayModeBtnImg()
@@ -354,6 +398,10 @@ class PlayControlView : AppCompatActivity(){
             PlayerStateSaver.saveState(this@PlayControlView)
         }
     }
+
+    /**
+     * Changes [Player]'s play state from playing to paused and vice versa. Then, it calls [changePlayButton] to establish the button icon
+     */
     private fun playPauseBtn(){
         if(player.isPlayingSong()){
             player.pause()
@@ -362,5 +410,107 @@ class PlayControlView : AppCompatActivity(){
             player.play()
         }
         changePlayButton()
+    }
+
+    /**
+     * Class that stores keys for [PlayControlView]'s [SharedPreferences]
+     */
+    class PreferencesConstants private constructor(){
+        companion object{
+            /**
+             * Key that refers to Activity background color
+             */
+            const val GENERAL_LAYOUT_BG_KEY = "general_layout_bg_color"
+
+            /**
+             * Key that refers to Activity back button foreground color
+             */
+            const val BACK_BTN_FG_KEY = "back_button_fg_color"
+
+            /**
+             * Key that refers to Activity back button background color
+             */
+            const val BACK_BTN_BG_KEY = "back_button_bg_color"
+
+            /**
+             * Key that refers to Activity options button foreground color
+             */
+            const val OPTIONS_BTN_FG_KEY = "options_button_fg_color"
+
+            /**
+             * Key that refers to Activity options button background color
+             */
+            const val OPTIONS_BTN_BG_KEY = "options_button_bg_color"
+
+            /**
+             * Key that refers to Activity song info color
+             */
+            const val SONG_TEXT_KEY = "song_text_color"
+
+            /**
+             * Key that refers to Activity song image placeholder foreground color
+             */
+            const val SONG_IMAGE_FG_KEY = "song_image_fg_color"
+
+            /**
+             * Key that refers to Activity song image placeholder background color
+             */
+            const val SONG_IMAGE_BG_KEY = "song_image_bg_color"
+
+            /**
+             * Key that refers to Activity seek bar color
+             */
+            const val SEEK_BAR_KEY = "seek_bar_color"
+
+            /**
+             * Key that refers to Activity play button foreground color
+             */
+            const val PLAY_BTN_FG_KEY = "play_button_fg_color"
+
+            /**
+             * Key that refers to Activity play button background color
+             */
+            const val PLAY_BTN_BG_KEY = "play_button_bg_color"
+
+            /**
+             * Key that refers to Activity list button foreground color
+             */
+            const val LIST_BTN_FG_KEY = "list_button_fg_color"
+
+            /**
+             * Key that refers to Activity list button background color
+             */
+            const val LIST_BTN_BG_KEY = "list_button_bg_color"
+
+            /**
+             * Key that refers to Activity play mode button foreground color
+             */
+            const val PLAY_MODE_BTN_FG_KEY = "play_mode_button_fg_color"
+
+            /**
+             * Key that refers to Activity play mode button background color
+             */
+            const val PLAY_MODE_BTN_BG_KEY = "play_mode_button_bg_color"
+
+            /**
+             * Key that refers to Activity previous button foreground color
+             */
+            const val PREVIOUS_BTN_FG_KEY = "previous_button_fg_color"
+
+            /**
+             * Key that refers to Activity previous button background color
+             */
+            const val PREVIOUS_BTN_BG_KEY = "previous_button_bg_color"
+
+            /**
+             * Key that refers to Activity next button foreground color
+             */
+            const val NEXT_BTN_FG_KEY = "next_button_fg_color"
+
+            /**
+             * Key that refers to Activity next button background color
+             */
+            const val NEXT_BTN_BG_KEY = "next_button_bg_color"
+        }
     }
 }

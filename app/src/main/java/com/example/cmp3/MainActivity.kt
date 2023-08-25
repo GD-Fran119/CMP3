@@ -6,17 +6,19 @@ import androidx.viewpager2.widget.ViewPager2
 import MainViewFragmentAdapter
 import android.Manifest
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.widget.Button
 import android.widget.PopupMenu
-import androidx.appcompat.widget.TooltipCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * Initial Activity the user sees when launching the app. It shows tabs for Songs and playlists,
+ * currents song that is being played and option buttons at the top bar.
+ */
 class MainActivity : AppCompatActivity(){
 
     private val adapter = MainViewFragmentAdapter(supportFragmentManager, lifecycle)
@@ -105,6 +107,128 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
+    }
+
+    /**
+     * Class that stores keys for [MainActivity]'s [SharedPreferences]
+     */
+    class PreferencesConstants private constructor(){
+        companion object{
+            /**
+             * Key that refers to playlists list layout
+             */
+            const val PLAYLISTS_LAYOUT_KEY = "playlists_layout"
+
+            /**
+             * Key that refers to songs list layout
+             */
+            const val SONGS_LAYOUT_KEY = "songs_layout"
+
+            /**
+             * Key that refers to Activity background color
+             */
+            const val GENERAL_LAYOUT_BG_KEY = "general_layout_bg_color"
+
+            /**
+             * Key that refers to Activity search button foreground color
+             */
+            const val SEARCH_BTN_FG_KEY = "search_button_fg_color"
+
+            /**
+             * Key that refers to Activity search button background color
+             */
+            const val SEARCH_BTN_BG_KEY = "search_button_bg_color"
+
+            /**
+             * Key that refers to Activity options button foreground color
+             */
+            const val OPTIONS_BTN_FG_KEY = "options_button_fg_color"
+
+            /**
+             * Key that refers to Activity options button background color
+             */
+            const val OPTIONS_BTN_BG_KEY = "options_button_bg_color"
+
+            /**
+             * Key that refers to Activity tabs color
+             */
+            const val TAB_COLOR_KEY = "tab_color"
+
+            /**
+             * Key that refers to Activity playlist items container background color
+             */
+            const val PLAYLIST_ITEMS_CONTAINER_BG_KEY = "playlist_items_container_color"
+
+            /**
+             * Key that refers to Activity playlist item background color
+             */
+            const val PLAYLIST_ITEM_BG_KEY = "playlist_item_bg_color"
+
+            /**
+             * Key that refers to Activity playlist item image placeholder foreground color
+             */
+            const val PLAYLIST_ITEM_IMG_FG_KEY = "playlist_item_image_fg_color"
+
+            /**
+             * Key that refers to Activity playlist item image placeholder background color
+             */
+            const val PLAYLIST_ITEM_IMG_BG_KEY = "playlist_item_image_bg_color"
+
+            /**
+             * Key that refers to Activity playlist item text color
+             */
+            const val PLAYLIST_ITEM_TEXT_KEY = "playlist_item_text_color"
+
+            /**
+             * Key that refers to Activity playlist item icon color
+             */
+            const val PLAYLIST_ITEM_ICON_KEY = "item_icon_color"
+
+            /**
+             * Key that refers to Activity crete playlist button foreground color
+             */
+            const val CREATE_PLAYLIST_BTN_FG_KEY = "create_playlist_button_fg_color"
+
+            /**
+             * Key that refers to Activity crete playlist button background color
+             */
+            const val CREATE_PLAYLIST_BTN_BG_KEY = "create_playlist_button_bg_color"
+
+            /**
+             * Key that refers to Activity songs items container background color
+             */
+            const val SONGS_ITEMS_CONTAINER_BG_KEY = "songs_items_container_color"
+
+            /**
+             * Key that refers to Activity songs item background color
+             */
+            const val SONGS_ITEM_BG_KEY = "songs_item_bg_color"
+
+            /**
+             * Key that refers to Activity songs item image placeholder foreground color
+             */
+            const val SONGS_ITEM_IMG_FG_KEY = "songs_item_image_fg_color"
+
+            /**
+             * Key that refers to Activity songs item image placeholder background color
+             */
+            const val SONGS_ITEM_IMG_BG_KEY = "songs_item_image_bg_color"
+
+            /**
+             * Key that refers to Activity songs item text color
+             */
+            const val SONGS_ITEM_TEXT_KEY = "songs_item_text_color"
+
+            /**
+             * Key that refers to Activity songs item options button foreground color
+             */
+            const val SONGS_ITEM_BTN_FG_KEY = "songs_item_button_fg_color"
+
+            /**
+             * Key that refers to Activity songs item options button background color
+             */
+            const val SONGS_ITEM_BTN_BG_KEY = "songs_item_button_bg_color"
+        }
     }
 }
 

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import com.example.animations.ImageFadeInAnimation
 import com.example.cmp3.R
@@ -16,7 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlaylistInfoFragment1: PlaylistInfoFragment() {
+/**
+ * Fragment class to display a playlist's info.
+ * The info is displayed as follows:
+ * - Image of the first song in the playlist is placed on the left as a rounded corners square
+ * - Playlist name, creation date and duration are displayed on the right, one on top of each other
+ */
+class PlaylistInfoFragment1: PlaylistInfoBaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

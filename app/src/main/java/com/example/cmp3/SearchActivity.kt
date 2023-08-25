@@ -1,8 +1,8 @@
 package com.example.cmp3
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,14 +10,11 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.config.GlobalPreferencesConstants
-import com.example.config.MainActivityPreferencesConstants
 import com.example.recyclerviewAdapters.SearchSongAdapter
-import com.example.recyclerviewAdapters.SongArrayAdapter
 import com.example.songsAndPlaylists.MainListHolder
 import com.google.android.material.button.MaterialButton
 
@@ -141,6 +138,83 @@ class SearchActivity : AppCompatActivity() {
 
             recyclerView.layoutManager = manager
             recyclerView.adapter = adapter
+        }
+    }
+
+    /**
+     * Class that stores keys for [SearchActivity]'s [SharedPreferences]
+     */
+    class PreferencesConstants private constructor(){
+        companion object{
+            /**
+             * Key that refers to Activity background color
+             */
+            const val GENERAL_LAYOUT_BG_KEY = "general_layout_bg_color"
+
+            /**
+             * Key that refers to Activity back button foreground color
+             */
+            const val BACK_BTN_FG_KEY = "back_button_fg_color"
+
+            /**
+             * Key that refers to Activity back button background color
+             */
+            const val BACK_BTN_BG_KEY = "back_button_bg_color"
+
+            /**
+             * Key that refers to Activity options button foreground color
+             */
+            const val OPTIONS_BTN_FG_KEY = "options_button_fg_color"
+
+            /**
+             * Key that refers to Activity options button background color
+             */
+            const val OPTIONS_BTN_BG_KEY = "options_button_bg_color"
+
+            /**
+             * Key that refers to Activity search box text color
+             */
+            const val SEARCH_BOX_KEY = "search_box_text_color"
+
+            /**
+             * Key that refers to Activity clear button text color
+             */
+            const val CLEAR_BTN_KEY = "clear_button_text_color"
+
+            /**
+             * Key that refers to Activity items container background color
+             */
+            const val ITEMS_CONTAINER_BG_KEY = "items_container_color"
+
+            /**
+             * Key that refers to Activity item background color
+             */
+            const val ITEM_BG_KEY = "item_bg_color"
+
+            /**
+             * Key that refers to Activity item image placeholder foreground color
+             */
+            const val ITEM_IMG_FG_KEY = "item_image_fg_color"
+
+            /**
+             * Key that refers to Activity item image placeholder background color
+             */
+            const val ITEM_IMG_BG_KEY = "item_image_bg_color"
+
+            /**
+             * Key that refers to Activity item text color
+             */
+            const val ITEM_TEXT_KEY = "item_text_color"
+
+            /**
+             * Key that refers to Activity item options button foreground color
+             */
+            const val ITEM_BTN_FG_KEY = "item_button_fg_color"
+
+            /**
+             * Key that refers to Activity item options button background color
+             */
+            const val ITEM_BTN_BG_KEY = "item_button_bg_color"
         }
     }
 }

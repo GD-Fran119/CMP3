@@ -4,11 +4,16 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.Size
 import com.example.cmp3.R
 import yuku.ambilwarna.AmbilWarnaDialog
 
+/**
+ * Class to generate a bottom sheet that asks for 3 colors
+ * @param title title for bottom sheet
+ * @param labels labels that will be shown when displaying the bottom sheet. Must have size 3
+ * @param colors colors that will be shown with their corresponding label when displaying the bottom sheet. Must have size 3
+ */
 class ColorPickerBottomSheet3(title: String,
                               @Size(3)
                               labels: Array<String>,

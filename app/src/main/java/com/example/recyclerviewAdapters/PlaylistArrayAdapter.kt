@@ -49,7 +49,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
 
             view.setOnClickListener{
                 val intent = Intent(activity, PlaylistView::class.java)
-                intent.putExtra("playlist", playlist)
+                intent.putExtra(PlaylistView.INTENT_PLAYLIST_KEY, playlist)
                 activity.startActivity(intent)
             }
 

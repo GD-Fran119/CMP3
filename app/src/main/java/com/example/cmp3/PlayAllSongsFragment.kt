@@ -1,7 +1,7 @@
 package com.example.cmp3
 
 import android.content.Intent
-import android.os.Build
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,16 +10,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.example.databaseStuff.SongPlaylistRelationData
 import com.example.playerStuff.Player
 import com.example.songsAndPlaylists.SongList
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
 /**
- * A simple [Fragment] subclass.
- * Use the [PlayAllSongsFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Fragment that displays how many songs have a specific playlist. If this fragment is clicked by the user,
+ * the playlist is set on the [Player], a random song is selected and played and a [PlayControlView] instance is started
  */
 class PlayAllSongsFragment : Fragment() {
 
@@ -33,6 +31,10 @@ class PlayAllSongsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_play_all_songs, container, false)
     }
 
+    /**
+     * Establishes the list to hold
+     * @param newList list this fragment holds
+     */
     fun setList(newList: SongList){
         list = newList
 
@@ -60,6 +62,22 @@ class PlayAllSongsFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() = PlayAllSongsFragment
+        fun newInstance() = PlayAllSongsFragment()
+    }
+
+    /**
+     * Class that stores keys for [PlayAllSongsFragment]'s [SharedPreferences]
+     */
+    class PreferencesConstants private constructor(){
+        companion object{
+            /**
+             * Key that refers to Fragment text and icon color
+             */
+            const val TEXT_KEY = "text_color"
+            /**
+             * Key that refers to Fragment songs number color
+             */
+            const val SONGS_KEY = "songs_color"
+        }
     }
 }

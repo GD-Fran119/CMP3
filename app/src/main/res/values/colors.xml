@@ -6,4 +6,19 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
+
+    <color name="default_layout_bg">#FFFFFFFF</color>
+    <color name="default_buttons_fg">#FF000000</color>
+    <color name="default_buttons_bg">#FF7700FF</color>
+    <color name="default_image_placeholder_fg">#FF000000</color>
+    <color name="default_image_placeholder_bg">#C0C0C0</color>
+    <color name="default_text_color">#FF000000</color>
+    <color name="default_play_control_text_color">#FFFFFFFF</color>
+    <color name="default_tabs_color">#FF000000</color>
+    <color name="default_progress_bar_color">#FFFF0000</color>
+    <color name="default_seek_bar_color">#FF7700FF</color>
+    <color name="default_play_all_icon_color">#FFFF0000</color>
+    <color name="default_play_all_text_color">#B37E7E7E</color>
+    <color name="default_icon_color">#00B7FF</color>
+
 </resources>
