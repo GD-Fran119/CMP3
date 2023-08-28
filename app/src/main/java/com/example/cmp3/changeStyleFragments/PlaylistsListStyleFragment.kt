@@ -14,6 +14,7 @@ import com.example.cmp3.CurrentSongFragment
 import com.example.cmp3.MainActivity
 import com.example.cmp3.R
 import com.example.config.GlobalPreferencesConstants
+import kotlin.properties.Delegates
 
 /**
  * Fragment class used in [ChangeStyleActivity] to change [MainActivity] and [PlaylistListView]'s style
@@ -41,6 +42,9 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
     private lateinit var createButton: ImageView
     private lateinit var playButton: ImageView
     private lateinit var nextButton: ImageView
+    private var actVersion by Delegates.notNull<Int>()
+    private var playlistFragmentVersion by Delegates.notNull<Int>()
+    private var currentSongFragmentVersion by Delegates.notNull<Int>()
     override fun saveChanges() {
         //Activity and tab prefs
         activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -75,6 +79,8 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
                 createButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
             putInt(constants.CREATE_PLAYLIST_BTN_FG_KEY,
                 createButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.PLAYLIST_STYLE_VERSION, playlistFragmentVersion + 1)
+            putInt(constants.MAIN_STYLE_VERSION, actVersion + 1)
         }.apply()
 
         //Current song fragment prefs
@@ -98,6 +104,7 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
                 nextButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
             putInt(constants.PLAY_BTN_FG_KEY,
                 nextButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, currentSongFragmentVersion + 1)
         }.apply()
     }
 
@@ -183,6 +190,9 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            actVersion = getInt(constants.MAIN_STYLE_VERSION, 0)
+            playlistFragmentVersion = getInt(constants.PLAYLIST_STYLE_VERSION, 0)
         }
 
         //Current song fragment prefs
@@ -235,6 +245,8 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            currentSongFragmentVersion = getInt(constants.STYLE_VERSION_KEY, 0)
         }
     }
 

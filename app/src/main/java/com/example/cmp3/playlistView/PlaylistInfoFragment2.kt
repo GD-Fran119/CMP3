@@ -37,26 +37,25 @@ class PlaylistInfoFragment2 : PlaylistInfoBaseFragment() {
         imageView.setImageDrawable(null)
         imageView.foreground = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_music_note)
 
-        if(list!!.isNotEmpty()) {
-            CoroutineScope(Dispatchers.Main)
-                .launch {
-                    val mediaRetriever = MediaMetadataRetriever()
-                    val firstSong = list!!.getSong(0u)
-                    mediaRetriever.setDataSource(firstSong.path)
+        if(list!!.isEmpty()) return
 
-                    val data = mediaRetriever.embeddedPicture
-                    mediaRetriever.release()
+        CoroutineScope(Dispatchers.Main).launch {
+            val mediaRetriever = MediaMetadataRetriever()
+            val firstSong = list!!.getSong(0u)
+            mediaRetriever.setDataSource(firstSong.path)
 
-                    if (data != null) {
-                        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-                        withContext(Dispatchers.Main){
-                            imageView.foreground = null
-                            imageView.setImageBitmap(bitmap)
-                            imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
-                        }
-                    }
-                }
+            val data = mediaRetriever.embeddedPicture
+            mediaRetriever.release()
+
+            if (data == null) return@launch
+
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            withContext(Dispatchers.Main){
+                imageView.foreground = null
+                imageView.setImageBitmap(bitmap)
+                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
+            }
+
         }
-
     }
 }

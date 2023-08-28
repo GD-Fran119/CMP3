@@ -47,7 +47,8 @@
             android:text="Album - Artist"
             android:textColor="#000000"
             android:maxLines="1"
-            android:ellipsize="end"/>
+            android:ellipsize="end"
+            />
     </LinearLayout>
 
     <ImageView

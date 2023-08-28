@@ -26,6 +26,8 @@
             android:id="@+id/albumNArtistBottomBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="description"
             android:alpha="0.5"
             android:justificationMode="inter_word"

@@ -16,6 +16,7 @@ import com.example.cmp3.PlayAllSongsFragment
 import com.example.cmp3.R
 import com.example.cmp3.SongListView
 import com.example.config.GlobalPreferencesConstants
+import kotlin.properties.Delegates
 
 /**
  * Fragment class used in [ChangeStyleActivity] to change [MainActivity] and [SongListView]'s style
@@ -45,6 +46,10 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
     private lateinit var songContainer: ConstraintLayout
     private lateinit var playButton: ImageView
     private lateinit var nextButton: ImageView
+    private var actVersion by Delegates.notNull<Int>()
+    private var songsFragmentVersion by Delegates.notNull<Int>()
+    private var playAllFragmentVersion by Delegates.notNull<Int>()
+    private var currentSongFragmentVersion by Delegates.notNull<Int>()
     override fun saveChanges() {
         //Activity prefs
         activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -75,6 +80,9 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                 itemOptionsButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
             putInt(constants.SONGS_ITEM_BTN_FG_KEY,
                 itemOptionsButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.MAIN_STYLE_VERSION, actVersion + 1)
+            putInt(constants.SONGS_STYLE_VERSION, songsFragmentVersion + 1)
+            
         }.apply()
 
         //Play all fragment prefs
@@ -84,6 +92,7 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                 playAllIcon.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_play_all_icon_color))
             putInt(constants.SONGS_KEY,
                 playAllSongs.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_play_all_text_color))
+            putInt(constants.STYLE_VERSION_KEY, playAllFragmentVersion + 1)
         }.apply()
 
         //Current song fragment prefs
@@ -105,8 +114,9 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                 playButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
             putInt(constants.NEXT_BTN_BG_KEY,
                 nextButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
-            putInt(constants.PLAY_BTN_FG_KEY,
+            putInt(constants.NEXT_BTN_FG_KEY,
                 nextButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, currentSongFragmentVersion + 1)
         }.apply()
     }
 
@@ -184,6 +194,9 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            actVersion = getInt(constants.MAIN_STYLE_VERSION, 0)
+            songsFragmentVersion = getInt(constants.SONGS_STYLE_VERSION, 0)
         }
 
         //Play all fragment prefs
@@ -201,6 +214,8 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                     requireContext().getColor(R.color.default_play_all_text_color)
                 )
             )
+
+            playAllFragmentVersion = getInt(constants.STYLE_VERSION_KEY, 0)
         }
 
         //Current song fragment prefs
@@ -249,10 +264,12 @@ class SongListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) {
                 )
             )
             nextButton.foregroundTintList = ColorStateList.valueOf(
-                getInt(constants.PLAY_BTN_FG_KEY,
+                getInt(constants.NEXT_BTN_FG_KEY,
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            currentSongFragmentVersion = getInt(constants.STYLE_VERSION_KEY, 0)
         }
     }
 

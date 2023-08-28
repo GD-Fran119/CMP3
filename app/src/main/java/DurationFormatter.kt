@@ -9,7 +9,7 @@ class DurationFormatter{
          * @return [String] in format HH:MM:SS, MM:SS and SSs/Ss (e.g. 14s, 3s) depending on the time to format. This is:
          * - If [time] is lower than 1 minute, SSs format is returned
          * - If [time] is between [1, 60) minutes, MM:SS format is returned
-         * - In any other case, HH:MM:SS format is returned
+         * - Otherwise, HH:MM:SS format is returned
          */
         fun format(time: Long): String{
             val sec = (time / 1000) % 60

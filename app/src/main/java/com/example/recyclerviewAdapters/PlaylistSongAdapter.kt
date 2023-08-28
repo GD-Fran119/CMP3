@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomSheets.SongInfoDialogFragment
 import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
+import com.example.cmp3.playlistView.PlaylistView
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelation
 import com.example.playerStuff.Player
@@ -22,13 +23,32 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Adapter used in [PlaylistView]'s [RecyclerView]
+ * @param context [Activity] which creates an [PlaylistSongAdapter] instance
+ * @param playlist [SongList] whose songs will be displayed
+ * @param fragmentManager needed when showing song info with [SongInfoDialogFragment]
+ */
 class PlaylistSongAdapter(private var context: Activity, var playlist: SongList, private val fragmentManager: FragmentManager): RecyclerView.Adapter<PlaylistSongAdapter.PlaylistSongViewHolder>() {
 
+    /**
+     * Property that defines what to do when removing a song from the playlist
+     */
     var onItemRemoved : OnItemRemoved? = null
 
+    /**
+     * [ViewHolder][RecyclerView.ViewHolder] for the [PlaylistSongAdapter]
+     */
     class PlaylistSongViewHolder(private val view: View, private val activity: Activity) : RecyclerView.ViewHolder(view) {
 
         var songItemPos : Int = -1
+
+        /**
+         * Links the view elements with the [song]
+         * @param song song whose info will be displayed
+         * @param pos position of the song in the [PlaylistSongAdapter]
+         * @param fragmentManager needed when showing song info with [SongInfoDialogFragment]
+         */
         fun bind(song: Song, pos: Int, fragmentManager: FragmentManager, onRemoveItem: OnItemRemoved, playlist: SongList){
 
             songItemPos = pos
@@ -46,8 +66,6 @@ class PlaylistSongAdapter(private var context: Activity, var playlist: SongList,
                     override var actionText: String = "Delete song from playlist"
 
                     override fun onAction() {
-                        //TODO
-                        //Delete song from playlist
 
                         CoroutineScope(Dispatchers.Default).launch {
                             val dao = AppDatabase.getInstance(activity).playlistDao()
@@ -84,12 +102,6 @@ class PlaylistSongAdapter(private var context: Activity, var playlist: SongList,
 
     override fun onBindViewHolder(holder: PlaylistSongViewHolder, position: Int) {
         val song = playlist.getSong(position.toUInt())
-        val onClickAction = View.OnClickListener {
-            val player = Player.instance
-            player.setList(playlist)
-            player.setCurrentSongAndPLay(position.toUInt())
-            context.startActivity(Intent(context, PlayControlView::class.java))
-        }
         holder.bind(song, position, fragmentManager, onItemRemoved!!, playlist)
     }
 
@@ -97,7 +109,14 @@ class PlaylistSongAdapter(private var context: Activity, var playlist: SongList,
         return playlist.getListSize().toInt()
     }
 
+    /**
+     * Interface to implement when a notification of item removed is required
+     */
     interface OnItemRemoved{
+        /**
+         * Method invoked when an item is removed from the playlist
+         * @param pos position in the playlist of the item removed before deletion
+         */
         fun notifyItemRemoved(pos: Int)
     }
 

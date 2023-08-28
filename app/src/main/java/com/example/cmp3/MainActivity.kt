@@ -115,14 +115,29 @@ class MainActivity : AppCompatActivity(){
     class PreferencesConstants private constructor(){
         companion object{
             /**
+             * Key that refers to main activity style version
+             */
+            const val MAIN_STYLE_VERSION = "version"
+
+            /**
              * Key that refers to playlists list layout
              */
             const val PLAYLISTS_LAYOUT_KEY = "playlists_layout"
 
             /**
+             * Key that refers to playlists list style version
+             */
+            const val PLAYLIST_STYLE_VERSION = "version"
+
+            /**
              * Key that refers to songs list layout
              */
             const val SONGS_LAYOUT_KEY = "songs_layout"
+
+            /**
+             * Key that refers to songs list style version
+             */
+            const val SONGS_STYLE_VERSION = "version"
 
             /**
              * Key that refers to Activity background color

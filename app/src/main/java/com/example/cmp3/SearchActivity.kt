@@ -18,11 +18,23 @@ import com.example.recyclerviewAdapters.SearchSongAdapter
 import com.example.songsAndPlaylists.MainListHolder
 import com.google.android.material.button.MaterialButton
 
+/**
+ * Activity for searching and filtering device songs
+ */
 class SearchActivity : AppCompatActivity() {
 
     companion object{
+        /**
+         * Constant which refers to available layout 1
+         */
         private const val FULL_WIDTH_LAYOUT = 1
+        /**
+         * Constant which refers to available layout 2
+         */
         private const val HORIZONTAL_CARD_LAYOUT = 2
+        /**
+         * Constant which refers to available layout 3
+         */
         private const val VERTICAL_CARD_LAYOUT = 3
     }
 
@@ -30,6 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchSongAdapter
 
+    //Custom established layout
     private var currentLayout = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +98,9 @@ class SearchActivity : AppCompatActivity() {
         checkAndSetupRecyclerView()
     }
 
+    /**
+     * Checks whether the current layout has been changed. If so, the new layout is set
+     */
     private fun checkAndSetupRecyclerView() {
 
         val prefs = getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, Context.MODE_PRIVATE)
@@ -99,46 +115,50 @@ class SearchActivity : AppCompatActivity() {
             savedLayout = 1
         }
 
-        if(currentLayout != savedLayout){
-            currentLayout = if(savedLayout !in 1..3) 1
-                            else savedLayout
+        if(currentLayout == savedLayout) return
 
-            prefs?.edit().apply {
-                this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
-            }?.apply()
+        currentLayout = if(savedLayout !in 1..3) 1
+                        else savedLayout
 
-            recyclerView = findViewById(R.id.search_recyclerview)
-            recyclerView.setHasFixedSize(true)
+        prefs?.edit().apply {
+            this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
+        }?.apply()
 
-            val manager: RecyclerView.LayoutManager
-            when(currentLayout){
-                FULL_WIDTH_LAYOUT -> {
-                    manager = LinearLayoutManager(this)
-                    adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, R.layout.item_song_list_view1)
-                }
-                HORIZONTAL_CARD_LAYOUT -> {
-                    manager = LinearLayoutManager(this)
-                    adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, R.layout.item_song_list_view2)
-                }
-                VERTICAL_CARD_LAYOUT -> {
-                    manager = GridLayoutManager(this, 2)
-                    adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, R.layout.item_song_list_view3)
-                }
-                else -> {
-                    manager = LinearLayoutManager(this)
-                    adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, R.layout.item_song_list_view1)
-                    currentLayout = 1
-                    prefs?.edit().apply {
-                        this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
-                    }?.apply()
-                }
+        recyclerView = findViewById(R.id.search_recyclerview)
+        recyclerView.setHasFixedSize(true)
+
+        val manager: RecyclerView.LayoutManager
+        val layoutRes: Int
+
+        when(currentLayout){
+            FULL_WIDTH_LAYOUT -> {
+                manager = LinearLayoutManager(this)
+                layoutRes = R.layout.item_song_list_view1
             }
-
-            adapter.filterDataset(editText.text.toString())
-
-            recyclerView.layoutManager = manager
-            recyclerView.adapter = adapter
+            HORIZONTAL_CARD_LAYOUT -> {
+                manager = LinearLayoutManager(this)
+                layoutRes = R.layout.item_song_list_view2
+            }
+            VERTICAL_CARD_LAYOUT -> {
+                manager = GridLayoutManager(this, 2)
+                layoutRes = R.layout.item_song_list_view3
+            }
+            else -> {
+                manager = LinearLayoutManager(this)
+                layoutRes = R.layout.item_song_list_view1
+                currentLayout = 1
+                prefs?.edit().apply {
+                    this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
+                }?.apply()
+            }
         }
+
+        adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, layoutRes)
+        adapter.filterDataset(editText.text.toString())
+
+        recyclerView.layoutManager = manager
+        recyclerView.adapter = adapter
+
     }
 
     /**
@@ -146,6 +166,11 @@ class SearchActivity : AppCompatActivity() {
      */
     class PreferencesConstants private constructor(){
         companion object{
+            /**
+             * Key that refers to Activity style version
+             */
+            const val STYLE_VERSION_KEY = "version"
+
             /**
              * Key that refers to Activity background color
              */

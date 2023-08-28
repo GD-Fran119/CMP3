@@ -41,23 +41,22 @@ class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
         imageView.setImageDrawable(null)
         imageView.foreground = getDrawable(requireContext(), R.drawable.ic_music_note)
 
-        if(list!!.isNotEmpty()) {
-            CoroutineScope(Dispatchers.Main)
-                .launch {
-                    val mediaRetriever = MediaMetadataRetriever()
-                    val firstSong = list!!.getSong(0u)
-                    mediaRetriever.setDataSource(firstSong.path)
+        if(list!!.isEmpty()) return
 
-                    val data = mediaRetriever.embeddedPicture
-                    mediaRetriever.release()
+        CoroutineScope(Dispatchers.Main).launch {
+            val mediaRetriever = MediaMetadataRetriever()
+            val firstSong = list!!.getSong(0u)
+            mediaRetriever.setDataSource(firstSong.path)
 
-                    if (data != null) {
-                        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-                        setRoundedBitmapToImageView(bitmap)
-                    }
-                }
+            val data = mediaRetriever.embeddedPicture
+            mediaRetriever.release()
+
+            if (data == null) return@launch
+
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            setRoundedBitmapToImageView(bitmap)
+
         }
-
     }
 
     /**
@@ -68,14 +67,13 @@ class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
         val height = bitmap.height
         val width = bitmap.width
         val dim = Integer.max(height, width)
+
         val croppedBitmap = ThumbnailUtils.extractThumbnail(bitmap, dim, dim)
         val roundedBitmapDrawable=
             RoundedBitmapDrawableFactory.create(resources, croppedBitmap)
-
         roundedBitmapDrawable.isCircular = true
 
         withContext(Dispatchers.Main) {
-
             imageView.foreground = getDrawable(activity as Context, R.drawable.circle_album_foreground)
             imageView.setImageDrawable(roundedBitmapDrawable)
             imageView.startAnimation(ImageFadeInAnimation(0f, 1f))

@@ -29,17 +29,26 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.config.GlobalPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
+import com.example.databaseStuff.PlaylistDAO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import com.google.android.material.tabs.TabLayout
 
-
+/**
+ * Fragment that displays the information of the available music files stored in the user's device.
+ * It also looks for this music files in the device.
+ */
 class SongListView : Fragment() {
 
+    //Custom established layout
     private var currentLayout = -1
 
+    /**
+     * Launcher for requesting reading storage permission
+     */
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -62,6 +71,13 @@ class SongListView : Fragment() {
             }
         }
 
+    /**
+     * Checks that the information stored in the database is consistent with the device information.
+     * This method checks:
+     * - If there are new songs in the device, then insert the new info in the database.
+     * - If some songs are no longer in the device, they are deleted from the database with their side effects
+     * @see [PlaylistDAO.deleteSongs]
+     */
     private suspend fun checkSongsIntegrityDB() {
         try {
 
@@ -91,7 +107,7 @@ class SongListView : Fragment() {
                 }
             }
 
-        }catch (e: Exception){
+        } catch (e: Exception){
             withContext(Dispatchers.Main) {
                 Toast.makeText(activity, e.message, Toast.LENGTH_LONG).show()
             }
@@ -115,6 +131,10 @@ class SongListView : Fragment() {
         checkForPermissions()
     }
 
+    /**
+     * Check if permissions are granted ([Manifest.permission.READ_EXTERNAL_STORAGE] if SDK < 33, [Manifest.permission.READ_MEDIA_AUDIO] otherwise).
+     * If permissions are granted, songs are loaded from the device
+     */
     private fun checkForPermissions(){
         when {
             ContextCompat.checkSelfPermission(
@@ -152,11 +172,21 @@ class SongListView : Fragment() {
         }
     }
 
+    /**
+     * Hides explanation text (used when permissions are not granted or when there are no songs in the device)
+     */
     private fun deleteExplanationText(){
         view?.findViewById<TextView>(R.id.explanation_text)?.visibility = View.GONE
     }
 
     private var listCreated = false
+
+    /**
+     * Sets up the view itself:
+     * - Finds music
+     * - Establishes the current layout in use
+     * - Sets up the [PlayAllSongsFragment] so it gets functional
+     */
     private fun createListView(){
 
         findMusic()
@@ -174,10 +204,13 @@ class SongListView : Fragment() {
 
     }
 
+    /**
+     * Checks whether the current layout has been changed. If so, the new layout is set
+     */
     private fun checkLayoutAndSetUpRecyclerView(){
 
         val prefs = activity?.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
-        var savedLayout = prefs?.getInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, -1)
+        var savedLayout = prefs?.getInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, -1) ?: -1
 
         //No config
         if(savedLayout == -1) {
@@ -188,45 +221,47 @@ class SongListView : Fragment() {
             savedLayout = 1
         }
 
-        if(currentLayout != savedLayout){
-            currentLayout = if(savedLayout !in 1..3) 1
-                            else savedLayout!!
+        if(currentLayout == savedLayout) return
 
-            prefs?.edit().apply {
-                this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
-            }?.apply()
+        currentLayout = if(savedLayout !in 1..3) 1
+                        else savedLayout
 
-            val recyclerView = view?.findViewById<RecyclerView>(R.id.main_song_list_view)
-            recyclerView?.setHasFixedSize(true)
-            val adapter : SongArrayAdapter
+        prefs?.edit().apply {
+            this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+        }?.apply()
 
-            val manager: LayoutManager
-            when(currentLayout){
-                FULL_WIDTH_LAYOUT -> {
-                    manager = LinearLayoutManager(activity)
-                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view1)
-                }
-                HORIZONTAL_CARD_LAYOUT -> {
-                    manager = LinearLayoutManager(activity)
-                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view2)
-                }
-                VERTICAL_CARD_LAYOUT -> {
-                    manager = GridLayoutManager(activity, 2)
-                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view3)
-                }
-                else -> {
-                    manager = LinearLayoutManager(activity)
-                    adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, R.layout.item_song_list_view1)
-                    currentLayout = 1
-                    prefs?.edit().apply {
-                        this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
-                    }?.apply()
-                }
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.main_song_list_view)
+        recyclerView?.setHasFixedSize(true)
+        val adapter : SongArrayAdapter
+
+        val manager: LayoutManager
+        val layoutRes: Int
+        when(currentLayout){
+            FULL_WIDTH_LAYOUT -> {
+                manager = LinearLayoutManager(activity)
+                layoutRes = R.layout.item_song_list_view1
             }
-
-            recyclerView?.layoutManager = manager
-            recyclerView?.adapter = adapter
+            HORIZONTAL_CARD_LAYOUT -> {
+                manager = LinearLayoutManager(activity)
+                layoutRes = R.layout.item_song_list_view2
+            }
+            VERTICAL_CARD_LAYOUT -> {
+                manager = GridLayoutManager(activity, 2)
+                layoutRes = R.layout.item_song_list_view3
+            }
+            else -> {
+                manager = LinearLayoutManager(activity)
+                layoutRes = R.layout.item_song_list_view1
+                currentLayout = 1
+                prefs?.edit().apply {
+                    this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
+                }?.apply()
+            }
         }
+
+        adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, layoutRes)
+        recyclerView?.layoutManager = manager
+        recyclerView?.adapter = adapter
     }
 
     override fun onStart() {
@@ -235,6 +270,9 @@ class SongListView : Fragment() {
             checkLayoutAndSetUpRecyclerView()
     }
 
+    /**
+     * Loads all the music files info in one [SongList] (main song list)
+     */
     private fun findMusic(){
 
         val collection =
@@ -282,7 +320,7 @@ class SongListView : Fragment() {
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
             while (cursor.moveToNext()) {
-                // Get values of columns for a given video.
+                // Get values of columns for a given audio file.
                 val path = cursor.getString(pathColumn)
                 val title = cursor.getString(titleColumn)
                 val duration = cursor.getInt(durationColumn)
@@ -295,6 +333,10 @@ class SongListView : Fragment() {
         }
     }
 
+    /**
+     * Shows permission explanation text. It is used when permissions are not granted and music can not be loaded
+     * to the UI. It informs the user that permissions are denied
+     */
     private fun showPermissionExplanation(){
         view?.findViewById<TextView>(R.id.explanation_text)?.text = "No granted permissions"
     }
@@ -304,11 +346,24 @@ class SongListView : Fragment() {
         fun newInstance() =
             SongListView()
 
+        /**
+         * Constant which refers to available layout 1
+         */
         private const val FULL_WIDTH_LAYOUT = 1
+        /**
+         * Constant which refers to available layout 2
+         */
         private const val HORIZONTAL_CARD_LAYOUT = 2
+        /**
+         * Constant which refers to available layout 3
+         */
         private const val VERTICAL_CARD_LAYOUT = 3
 
     }
 
+    /**
+     * Returns the title of the fragment
+     * @return title of the fragment (used in [TabLayout])
+     */
     override fun toString(): String = title
 }

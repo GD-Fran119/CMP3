@@ -6,13 +6,25 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * Class that defines the Playlists table schema in the database
+ * @param name name of the playlist
+ * @param date date the playlist was created
+ */
 @Entity(indices = [Index(value = ["id"])])
 data class PlaylistEntity(
     var name: String,
     var date: String
 ): Parcelable {
+    /**
+     * Id of the playlist in the database
+     */
     @PrimaryKey(autoGenerate=true) var id : Int = 0
 
+    /**
+     * Constructor from [Parcel]
+     * @param parcel parcel from where to read playlist data and create [PlaylistEntity] instance
+     */
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!

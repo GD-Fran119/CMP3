@@ -34,8 +34,7 @@ class Song(
         parcel.readString()!!,
         parcel.readInt(),
         parcel.readString()
-    ) {
-    }
+    )
 
     /**
      * Constructor for [SongEntity]
@@ -48,14 +47,14 @@ class Song(
      * @return file size formatted to megabytes (E.g. "5.6", "10.2")
      */
     fun getSizeMB(): String {
-        //1024 * 1024 = 1048567
-        val TAMANO_MB = 1048567.0f
+        //1 MB = 1 KB * 1024 = 1024 B * 1024 = 1048567 B
+        val MB_SIZE = 1048567.0f
 
         //1 decimal number
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.HALF_EVEN
 
-        return df.format(fileSize.toFloat() / TAMANO_MB)
+        return df.format(fileSize.toFloat() / MB_SIZE)
     }
 
 

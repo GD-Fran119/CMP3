@@ -21,6 +21,10 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Date
 
+/**
+ * Dialog shown when creating new playlist. Requests for the new playlist name, creates the playlist if name is confirmed by the user
+ * and starts [AddSongsToPlaylistActivity]
+ */
 class PlaylistCreationDialog: DialogFragment() {
 
     private lateinit var view : View
@@ -74,5 +78,4 @@ class PlaylistCreationDialog: DialogFragment() {
         }
         return dialog
     }
-
 }

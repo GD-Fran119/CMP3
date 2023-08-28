@@ -9,12 +9,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.cmp3.AddSongsToPlaylistActivity
 import com.example.cmp3.R
 import com.example.databaseStuff.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Dialog shown when creating new playlist. Requests for the new playlist name and renames the playlist if name is confirmed by the user
+ */
 class PlaylistRenameDialog(private val playlistId: Int): DialogFragment() {
     private lateinit var view : View
     private lateinit var dialog: AlertDialog
@@ -68,9 +72,19 @@ class PlaylistRenameDialog(private val playlistId: Int): DialogFragment() {
 
     }
 
+    /**
+     * Retrieves the text of the text input used to get the playlist new name
+     * @return text written in the [EditText] used to get the playlist new name
+     */
     fun getInput() = view.findViewById<EditText>(R.id.new_playlist_name).text.trim().toString()
 
+    /**
+     * Interface to implement if confirmation notification is required when user accepts the playlist new name
+     */
     interface OnConfirmListener{
+        /**
+         * Method invoked when the user confirms the playlist new name
+         */
         fun notifyConfirmation()
     }
 }

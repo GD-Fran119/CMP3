@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +28,7 @@ import kotlinx.coroutines.withContext
 import com.example.cmp3.CurrentSongFragment
 import com.example.playerStuff.Player
 import android.os.Parcelable
+import com.google.android.material.button.MaterialButton
 
 /**
  * Activity that displays all the info of a playlist:
@@ -168,11 +168,11 @@ class PlaylistView : AppCompatActivity() {
      * Establishes functionality for top bar buttons
      */
     private fun setUpButtons() {
-        findViewById<Button>(R.id.topbar_back_button).setOnClickListener{
+        findViewById<MaterialButton>(R.id.topbar_back_button).setOnClickListener{
             onBackPressed()
         }
 
-        findViewById<Button>(R.id.topbar_options_button).setOnClickListener {
+        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
             //TODO
             //Show menu
             val popup = PopupMenu(this, it)
@@ -309,6 +309,11 @@ class PlaylistView : AppCompatActivity() {
      */
     class PreferencesConstants private constructor(){
         companion object{
+            /**
+             * Key that refers to Activity style version
+             */
+            const val STYLE_VERSION_KEY = "version"
+
             /**
              * Key that refers to Activity background color
              */

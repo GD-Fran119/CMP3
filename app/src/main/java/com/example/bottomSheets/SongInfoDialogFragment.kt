@@ -1,7 +1,5 @@
 package com.example.bottomSheets
 
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +18,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
  */
 class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment() {
 
-
+    /**
+     * Property that defines the code to execute when using the action item
+     */
     var action: SongInfoDialogAction? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,24 +41,26 @@ class SongInfoDialogFragment(private val song: Song):BottomSheetDialogFragment()
         view.findViewById<TextView>(R.id.path_text).text = song.path
 
         //Setting action to perform
-        if(action != null) {
-            view.findViewById<ImageView>(R.id.add_to_playlist_icon)
-                .setImageResource(action!!.actionIcon)
-            view.findViewById<TextView>(R.id.add_to_playlist_text).text = action!!.actionText
-            view.findViewById<ConstraintLayout>(R.id.add_to_playlist_container).setOnClickListener {
-                action?.onAction()
-            }
-        }
-        else{
+        if(action == null) {
             view.findViewById<ImageView>(R.id.add_to_playlist_icon)
                 .setImageResource(R.drawable.ic_horizontal_line)
             view.findViewById<TextView>(R.id.add_to_playlist_text).text = "No action added"
             view.findViewById<ConstraintLayout>(R.id.add_to_playlist_container).setOnClickListener(null)
+            return
+        }
+
+        view.findViewById<ImageView>(R.id.add_to_playlist_icon)
+            .setImageResource(action!!.actionIcon)
+        view.findViewById<TextView>(R.id.add_to_playlist_text).text = action!!.actionText
+        view.findViewById<ConstraintLayout>(R.id.add_to_playlist_container).setOnClickListener {
+            action?.onAction()
         }
     }
 
     /**
-     * Interface to implement when the user is allowed to perform that action it they click the action item
+     * Interface to implement when the user is allowed to perform that action if they click the action item.
+     * The action item is the last item displayed by the [SongInfoDialogFragment]. It is used, as said, to execute
+     * some code when the user taps on this action item
      */
     interface SongInfoDialogAction{
         /**

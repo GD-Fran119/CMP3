@@ -28,7 +28,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class SongListViewHolder(private val view: View, private val activity: Context) : RecyclerView.ViewHolder(view) {
+/**
+ * [ViewHolder][RecyclerView.ViewHolder] used in [SongArrayAdapter] and [SearchSongAdapter]
+ * @param view view held by the ViewHolder
+ * @param context context from where the adapter is created
+ */
+class SongListViewHolder(private val view: View, private val context: Context) : RecyclerView.ViewHolder(view) {
 
     private val titleText: TextView = view.findViewById(R.id.title)
     private val subtitleText: TextView = view.findViewById(R.id.albumNArtist)
@@ -37,6 +42,12 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
     private var job : Job? = null
     private lateinit var song: Song
 
+    /**
+     * Links the view elements with the [song]
+     * @param song song whose info will be displayed
+     * @param pos position of the song in the adapter dataset
+     * @param fragmentManager needed when showing song info with [SongInfoDialogFragment]
+     */
     fun bind(song: Song, pos: UInt, fragmentManager: FragmentManager) {
 
         this.song = song
@@ -46,45 +57,38 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
 
         job?.cancel()
         imageView.setImageDrawable(null)
-        imageView.foreground = AppCompatResources.getDrawable(activity, R.drawable.ic_music_note)
+        imageView.foreground = AppCompatResources.getDrawable(context, R.drawable.ic_music_note)
 
         job = CoroutineScope(Dispatchers.Default).launch {
-
             val mediaRetriever = MediaMetadataRetriever()
             mediaRetriever.setDataSource(song.path)
 
             val data = mediaRetriever.embeddedPicture
             mediaRetriever.release()
 
-            if (data != null) {
+            if (data == null) return@launch
 
-                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
-                withContext(Dispatchers.Main) {
-
-                    imageView.foreground = null
-                    imageView.setImageBitmap(bitmap)
-                    imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
-
-                }
+            withContext(Dispatchers.Main) {
+                imageView.foreground = null
+                imageView.setImageBitmap(bitmap)
+                imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
             }
-
         }
-
 
         view.setOnClickListener {
             //New intent to play control view with song playing
             try {
                 Player.instance.setList(MainListHolder.getMainList())
                 Player.instance.setCurrentSongAndPLay(pos)
-            }catch (e: Exception){
-                Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception){
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
             }
-            val intent = Intent(activity, PlayControlView::class.java)
-            activity.startActivity(intent)
+            val intent = Intent(context, PlayControlView::class.java)
+            context.startActivity(intent)
 
         }
-
 
         button.setOnClickListener {
 
@@ -98,18 +102,17 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
                 override fun onAction() {
                     //TODO
                     CoroutineScope(Dispatchers.Default).launch{
-                        val dao = AppDatabase.getInstance(activity).playlistDao()
+                        val dao = AppDatabase.getInstance(context).playlistDao()
                         val playlists = dao.getPlaylistsInfo()
+
                         if(playlists.isEmpty()){
                             withContext(Dispatchers.Main){
-                                Toast.makeText(activity, "No playlists created", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "No playlists created", Toast.LENGTH_SHORT).show()
                             }
-                        }else {
-                            PlaylistsDialogFragment(playlists, song).show(
-                                fragmentManager,
-                                "Add to playlist"
-                            )
+                            return@launch
                         }
+
+                        PlaylistsDialogFragment(playlists, song).show(fragmentManager,"Add to playlist")
                     }
                     dialog.dismiss()
                 }
@@ -117,6 +120,5 @@ class SongListViewHolder(private val view: View, private val activity: Context) 
             dialog.action = action
             dialog.show(fragmentManager, "Song info")
         }
-
     }
 }

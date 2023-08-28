@@ -1,17 +1,30 @@
 package com.example.recyclerviewAdapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
-import com.example.cmp3.R
+import com.example.bottomSheets.SongInfoDialogFragment
 import com.example.songsAndPlaylists.Song
 import java.util.Locale
+import com.example.cmp3.SearchActivity
 
+/**
+ * Adapter used in [SearchActivity]'s [RecyclerView]
+ * @param context [Activity] which creates an [PlaylistSongAdapter] instance
+ * @param songs list of the songs to be displayed
+ * @param fragmentManager needed when showing song info with [SongInfoDialogFragment]
+ * @param viewLayoutRes resource layout which will be used to display the items of the dataset
+ */
 class SearchSongAdapter(private val context: Context, private val songs: List<Song>, private val fragmentManager: FragmentManager, private val viewLayoutRes: Int): RecyclerView.Adapter<SongListViewHolder>(){
 
+    /**
+     * This dataset will be modified runtime when user enters a new query
+     * @see [filterDataset]
+     */
     private var songsDataset : SortedList<Song> = SortedList(Song::class.java, object:SortedList.Callback<Song>(){
         override fun compare(o1: Song?, o2: Song?): Int {
             if(o1 == null && o2 == null)
@@ -67,6 +80,10 @@ class SearchSongAdapter(private val context: Context, private val songs: List<So
         return songsDataset.size()
     }
 
+    /**
+     * Filters the dataset by comparing the title of the songs with the [query]
+     * @param query text used to filter the dataset. If [query] is an empty [String] the dataset is not filtered and returned to its original state
+     */
     fun filterDataset(query: String){
         val filteredList = songs.filter { it.title.contains(query, true) }
         songsDataset.beginBatchedUpdates()

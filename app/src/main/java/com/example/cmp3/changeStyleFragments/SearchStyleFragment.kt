@@ -14,6 +14,7 @@ import com.example.cmp3.CurrentSongFragment
 import com.example.cmp3.R
 import com.example.cmp3.SearchActivity
 import com.example.config.GlobalPreferencesConstants
+import kotlin.properties.Delegates
 
 /**
  * Fragment class used in [ChangeStyleActivity] to change [SearchActivity]'s style
@@ -39,6 +40,8 @@ class SearchStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
     private lateinit var songContainer: ConstraintLayout
     private lateinit var playButton: ImageView
     private lateinit var nextButton: ImageView
+    private var actVersion by Delegates.notNull<Int>()
+    private var currentSongFragmentVersion by Delegates.notNull<Int>()
     override fun saveChanges() {
         //Activity prefs
         activity?.getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -71,6 +74,7 @@ class SearchStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                 itemOptionsButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
             putInt(constants.ITEM_BTN_FG_KEY,
                 itemOptionsButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, actVersion + 1)
         }.apply()
 
         //Current song fragment prefs
@@ -92,8 +96,9 @@ class SearchStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                 playButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
             putInt(constants.NEXT_BTN_BG_KEY,
                 nextButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
-            putInt(constants.PLAY_BTN_FG_KEY,
+            putInt(constants.NEXT_BTN_FG_KEY,
                 nextButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, currentSongFragmentVersion + 1)
         }.apply()
     }
 
@@ -173,6 +178,8 @@ class SearchStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            actVersion = getInt(constants.STYLE_VERSION_KEY, 0)
         }
 
         //Current song fragment prefs
@@ -221,10 +228,12 @@ class SearchStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                 )
             )
             nextButton.foregroundTintList = ColorStateList.valueOf(
-                getInt(constants.PLAY_BTN_FG_KEY,
+                getInt(constants.NEXT_BTN_FG_KEY,
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+
+            currentSongFragmentVersion = getInt(constants.STYLE_VERSION_KEY, 0)
         }
     }
 

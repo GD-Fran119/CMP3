@@ -105,15 +105,6 @@ class SongList(val title: String, private var songs: MutableList<Song>, val crea
         return songs.size.toUInt()
     }
 
-    /**
-     * Removes a song from the playlist
-     * @param pos position at which the song to be deleted is located
-     */
-    fun removeSong(pos:UInt){
-        if(pos < songs.size.toUInt())
-            songs.removeAt(pos.toInt())
-    }
-
     override fun describeContents(): Int {
         return 0
     }

@@ -19,6 +19,7 @@ class MainListHolder private constructor(){
 
         /**
          * Getter for main list
+         * @return main [SongList]
          */
         fun getMainList() : SongList = mainSongList!!
     }

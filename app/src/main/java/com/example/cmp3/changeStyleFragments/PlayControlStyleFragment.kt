@@ -12,6 +12,7 @@ import com.example.cmp3.ChangeStyleActivity
 import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
 import com.example.config.GlobalPreferencesConstants
+import kotlin.properties.Delegates
 
 /**
  * Fragment class used in [ChangeStyleActivity] to change [PlayControlView]'s style
@@ -31,6 +32,7 @@ class PlayControlStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
     private lateinit var previousButton: ImageView
     private lateinit var playModeButton: ImageView
     private lateinit var listButton: ImageView
+    private var version by Delegates.notNull<Int>()
 
     override fun saveChanges() {
         activity?.getSharedPreferences(GlobalPreferencesConstants.PLAY_CONTROL_ACT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -73,6 +75,7 @@ class PlayControlStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                 nextButton.backgroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_bg))
             putInt(constants.NEXT_BTN_FG_KEY,
                 nextButton.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, version + 1)
         }.apply()
     }
 
@@ -176,6 +179,7 @@ class PlayControlStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+            version = getInt(constants.STYLE_VERSION_KEY, 0)
         }
     }
 

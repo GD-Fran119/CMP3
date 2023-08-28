@@ -6,6 +6,16 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * Class that defines the Songs table schema in the database
+ * @param path file path that acts like primary key
+ * @param title title of the song
+ * @param artist artist of the song
+ * @param album album of the song
+ * @param duration duration of the song in milliseconds
+ * @param size file size in Bytes
+ * @param lyricsPath path of this song's lyrics file
+ */
 @Entity(indices = [Index(value = ["path"])])
 data class SongEntity(
     @PrimaryKey var path: String,
@@ -16,6 +26,11 @@ data class SongEntity(
     var size: Int,
     var lyricsPath: String?
 ):Parcelable{
+
+    /**
+     * Constructor from [Parcel]
+     * @param parcel parcel from where to read song data and create [SongEntity] instance
+     */
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,

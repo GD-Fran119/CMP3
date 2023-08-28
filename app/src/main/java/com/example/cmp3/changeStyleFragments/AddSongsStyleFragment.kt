@@ -12,6 +12,7 @@ import com.example.cmp3.AddSongsToPlaylistActivity
 import com.example.cmp3.R
 import com.example.config.GlobalPreferencesConstants
 import com.example.cmp3.ChangeStyleActivity
+import kotlin.properties.Delegates
 
 /**
  * Fragment class used in [ChangeStyleActivity] to change [AddSongsToPlaylistActivity]'s style
@@ -33,6 +34,7 @@ class AddSongsStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
     private lateinit var titleView2: ImageView
     private lateinit var desc2: ImageView
     private lateinit var itemIcon2: ImageView
+    private var version by Delegates.notNull<Int>()
 
     override fun saveChanges() {
         activity?.getSharedPreferences(GlobalPreferencesConstants.ADD_SONGS_ACT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -59,6 +61,7 @@ class AddSongsStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                 titleView1.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_text_color))
             putInt(constants.ITEM_ICON_KEY,
                 itemIcon1.foregroundTintList?.defaultColor ?: requireContext().getColor(R.color.default_icon_color))
+            putInt(constants.STYLE_VERSION_KEY, version + 1)
         }.apply()
     }
 
@@ -280,6 +283,8 @@ class AddSongsStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                                         )
             itemIcon1.foregroundTintList = ColorStateList.valueOf(itemIconColor)
             itemIcon2.foregroundTintList = ColorStateList.valueOf(itemIconColor)
+
+            version = getInt(constants.STYLE_VERSION_KEY, 0)
         }
     }
 }

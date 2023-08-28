@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.example.cmp3.R
+import com.example.cmp3.AddSongsToPlaylistActivity
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelation
 import com.example.songsAndPlaylists.Song
@@ -19,9 +20,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
+/**
+ * Adapter used in [AddSongsToPlaylistActivity]'s [RecyclerView]
+ */
 class AddSongAdapter private constructor(private var context: Context, private var songs: List<Song>, private val playlistID: Int, private val viewLayoutRes: Int) :
     RecyclerView.Adapter<AddSongAdapter.AddSongViewHolder>(){
 
+    //List of songs that can be filtered
     private var songsDataset : SortedList<Song> = SortedList(Song::class.java, object: SortedList.Callback<Song>(){
         override fun compare(o1: Song?, o2: Song?): Int {
             if(o1 == null && o2 == null)
@@ -62,6 +67,14 @@ class AddSongAdapter private constructor(private var context: Context, private v
     }
 
     companion object{
+        /**
+         * Factory method to create an [AddSongViewHolder]
+         * @param c context from where the adapter will be created
+         * @param id id of the playlist th which add songs
+         * @param songsAddedSet initial dataset of the songs that are already added to the playlists
+         * @param viewLayoutRes resource layout which will be used to display the items of the dataset
+         * @return adapter
+         */
         fun create(c : Context, s: List<Song>, id: Int, songsAddedSet: MutableSet<String> = mutableSetOf(), viewLayoutRes: Int): AddSongAdapter {
             //Reset songs added
             AddSongViewHolder.addedSongs = songsAddedSet
@@ -69,6 +82,9 @@ class AddSongAdapter private constructor(private var context: Context, private v
         }
     }
 
+    /**
+     * [ViewHolder][RecyclerView.ViewHolder] for the [AddSongAdapter]
+     */
     class AddSongViewHolder(private val view: View, private val activity: Context, private val id: Int) : RecyclerView.ViewHolder(view) {
 
         companion object{
@@ -79,6 +95,10 @@ class AddSongAdapter private constructor(private var context: Context, private v
         private val img : ImageView = view.findViewById(R.id.add_song_playlist_item_image)
         private lateinit var song: Song
 
+        /**
+         * Links the view elements with the [song]
+         * @param song song whose info will be displayed
+         */
         fun bind(song: Song) {
 
             this.song = song
@@ -124,6 +144,10 @@ class AddSongAdapter private constructor(private var context: Context, private v
         return songsDataset.size()
     }
 
+    /**
+     * Filters the dataset by comparing the title of the songs with the [query]
+     * @param query text used to filter the dataset. If [query] is an empty [String] the dataset is not filtered and returned to its original state
+     */
     fun filterDataSet(query: String){
         val filteredList = songs.filter { it.title.contains(query, true) }
         songsDataset.beginBatchedUpdates()

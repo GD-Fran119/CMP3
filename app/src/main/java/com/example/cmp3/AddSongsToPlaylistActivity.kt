@@ -110,38 +110,39 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
         }
 
         //Layout changed
-        if(currentLayout != savedLayout){
-            currentLayout = if(savedLayout !in 1..3) 1
-                            else savedLayout
+        if(currentLayout == savedLayout) return
 
-            prefs?.edit().apply {
-                this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
-            }?.apply()
+        currentLayout = if(savedLayout !in 1..3) 1
+                        else savedLayout
 
-            recyclerView.setHasFixedSize(true)
+        prefs?.edit().apply {
+            this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
+        }?.apply()
 
-            when(currentLayout){
-                RIGHT_ICON_LAYOUT -> {
-                    adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item1)
-                }
-                LEFT_ICON_LAYOUT -> {
-                    adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item2)
-                }
-                CORNER_ICON_LAYOUT -> {
-                    adapter = AddSongAdapter.create(this,MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item3)
-                }
-                else -> {
-                    adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item1)
-                    currentLayout = 1
-                    prefs?.edit().apply {
-                        this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
-                    }?.apply()
-                }
+        recyclerView.setHasFixedSize(true)
+
+        when(currentLayout){
+            RIGHT_ICON_LAYOUT -> {
+                adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item1)
             }
-
-            recyclerView.adapter = adapter
-            adapter.filterDataSet(searchBox.text.toString())
+            LEFT_ICON_LAYOUT -> {
+                adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item2)
+            }
+            CORNER_ICON_LAYOUT -> {
+                adapter = AddSongAdapter.create(this,MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item3)
+            }
+            else -> {
+                adapter = AddSongAdapter.create(this, MainListHolder.getMainList().getList(), id, AddSongAdapter.AddSongViewHolder.addedSongs, R.layout.add_songs_playlist_item1)
+                currentLayout = 1
+                prefs?.edit().apply {
+                    this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
+                }?.apply()
+            }
         }
+
+        recyclerView.adapter = adapter
+        adapter.filterDataSet(searchBox.text.toString())
+
     }
 
     companion object{
@@ -169,6 +170,11 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
      */
     class PreferencesConstants private constructor(){
         companion object{
+            /**
+             * Key that refers to Activity style version
+             */
+            const val STYLE_VERSION_KEY = "version"
+
             /**
              * Key that refers to Activity background color
              */
