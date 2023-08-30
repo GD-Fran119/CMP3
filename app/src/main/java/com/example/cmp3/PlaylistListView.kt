@@ -3,13 +3,17 @@ package com.example.cmp3
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,7 +41,10 @@ class PlaylistListView : Fragment() {
     private var infoUpdateJob : Job? = null
     private lateinit var recyclerView: RecyclerView
     private var currentLayout = -1
+    private var currentStyleVersion = -1
+    private var mustChangeStyle = false
     private lateinit var adapter: PlaylistArrayAdapter
+    private lateinit var createPlaylistButton: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +58,8 @@ class PlaylistListView : Fragment() {
 
         recyclerView = view.findViewById(R.id.playlistListView)
 
+        createPlaylistButton = view.findViewById(R.id.playlistsFAB)
+
         val permission = if(Build.VERSION.SDK_INT < 33)
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         else
@@ -58,7 +67,7 @@ class PlaylistListView : Fragment() {
 
         val res = requireContext().checkCallingOrSelfPermission(permission)
         if(res == PackageManager.PERMISSION_GRANTED) {
-            view.findViewById<MaterialButton>(R.id.playlistsFAB).setOnClickListener {
+            createPlaylistButton.setOnClickListener {
                 PlaylistCreationDialog().show(childFragmentManager, "Create playlist")
             }
         }
@@ -181,7 +190,14 @@ class PlaylistListView : Fragment() {
                 }
             }
             recyclerView.adapter = adapter
+            mustChangeStyle = true
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        checkAndSetUpStyle()
     }
 
     override fun onResume() {
@@ -199,6 +215,71 @@ class PlaylistListView : Fragment() {
                 loadPlaylists()
             }
         }
+    }
+
+    /**
+     * Checks whether the current style has been changed. If so, the new style is set
+     */
+    private fun checkAndSetUpStyle() {
+        val prefs = requireContext().getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        var version = prefs.getInt(MainActivity.PreferencesConstants.PLAYLIST_STYLE_VERSION, 0)
+
+        if(version == 0) {
+            createStylePreferences(prefs)
+            version = prefs.getInt(MainActivity.PreferencesConstants.PLAYLIST_STYLE_VERSION, 0)
+        }
+
+        if(!mustChangeStyle && version == currentStyleVersion) return
+
+        currentStyleVersion = version
+
+        prefs.apply {
+            val constants = MainActivity.PreferencesConstants
+            recyclerView.backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.PLAYLIST_ITEMS_CONTAINER_BG_KEY,
+                    requireContext().getColor(R.color.default_layout_bg)
+                )
+            )
+
+            createPlaylistButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.CREATE_PLAYLIST_BTN_BG_KEY,
+                    requireContext().getColor(R.color.default_buttons_bg)
+                )
+            )
+
+            createPlaylistButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.CREATE_PLAYLIST_BTN_FG_KEY,
+                    requireContext().getColor(R.color.default_buttons_fg)
+                )
+            )
+        }
+        //TODO
+        //Get pos and scroll to it
+        recyclerView.adapter = recyclerView.adapter
+
+        mustChangeStyle = false
+    }
+
+    /**
+     * Creates the default style for the view
+     * @param preferences [SharedPreferences] where the style will be stored
+     */
+    private fun createStylePreferences(preferences: SharedPreferences) {
+        preferences.edit().apply {
+            val constants = MainActivity.PreferencesConstants
+            putInt(constants.PLAYLIST_ITEMS_CONTAINER_BG_KEY, requireContext().getColor(R.color.default_layout_bg))
+            putInt(constants.PLAYLIST_ITEM_BG_KEY, requireContext().getColor(R.color.default_layout_bg))
+            putInt(constants.PLAYLIST_ITEM_IMG_BG_KEY, requireContext().getColor(R.color.default_image_placeholder_bg))
+            putInt(constants.PLAYLIST_ITEM_IMG_FG_KEY, requireContext().getColor(R.color.default_image_placeholder_fg))
+            putInt(constants.PLAYLIST_ITEM_TEXT_KEY, requireContext().getColor(R.color.default_text_color))
+            putInt(constants.PLAYLIST_ITEM_ICON_KEY, requireContext().getColor(R.color.default_icon_color))
+            putInt(constants.PLAYLIST_STYLE_VERSION, 1)
+        }.apply()
     }
 
     override fun onPause() {

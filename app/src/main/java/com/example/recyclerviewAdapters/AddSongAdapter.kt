@@ -1,19 +1,26 @@
 package com.example.recyclerviewAdapters
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.example.cmp3.R
 import com.example.cmp3.AddSongsToPlaylistActivity
+import com.example.cmp3.MainActivity
+import com.example.config.GlobalPreferencesConstants
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelation
 import com.example.songsAndPlaylists.Song
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -106,14 +113,15 @@ class AddSongAdapter private constructor(private var context: Context, private v
             val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
             subtitleText.text = "${artist} - ${song.album}"
 
-            val image = if(song.path in addedSongs) R.drawable.ic_item_added_to_list
-                        else R.drawable.ic_playlist_add
-            img.setImageResource(image)
+            val image = AppCompatResources.getDrawable(activity,
+                                    if(song.path in addedSongs) R.drawable.ic_item_added_to_list
+                                    else R.drawable.ic_playlist_add)
+            img.foreground = image
 
             view.setOnClickListener {
                 //Add song to playlist
                 //If it is already added, notify user
-                img.setImageResource(R.drawable.ic_item_added_to_list)
+                img.foreground = AppCompatResources.getDrawable(activity, R.drawable.ic_item_added_to_list)
                 CoroutineScope(Dispatchers.Default).launch {
                     addedSongs += song.path
                     val dao = AppDatabase.getInstance(activity).playlistDao()
@@ -132,7 +140,43 @@ class AddSongAdapter private constructor(private var context: Context, private v
         val view = LayoutInflater
             .from(parent.context)
             .inflate(viewLayoutRes, parent, false)
+
+        decorateView(view)
+
         return AddSongViewHolder(view, context, playlistID)
+    }
+
+    /**
+     * Establishes the colors the view elements must have
+     * @param view view to customize
+     */
+    private fun decorateView(view: View){
+        val prefs = context.getSharedPreferences(GlobalPreferencesConstants.ADD_SONGS_ACT_PREFERENCES, Context.MODE_PRIVATE)
+
+        prefs.apply {
+            val constants = AddSongsToPlaylistActivity.PreferencesConstants
+
+            view.findViewById<ConstraintLayout>(R.id.add_song_playlist_item_layout).backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.ITEM_BG_KEY,
+                    context.getColor(R.color.default_layout_bg)
+                )
+            )
+
+            val textColor= getInt(
+                constants.ITEM_TEXT_KEY,
+                context.getColor(R.color.default_text_color)
+            )
+            view.findViewById<TextView>(R.id.add_song_playlist_item_title).setTextColor(textColor)
+            view.findViewById<TextView>(R.id.add_song_playlist_item_desc).setTextColor(textColor)
+
+            view.findViewById<ImageView>(R.id.add_song_playlist_item_image).foregroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.ITEM_ICON_KEY,
+                    context.getColor(R.color.default_icon_color)
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: AddSongViewHolder, position: Int) {

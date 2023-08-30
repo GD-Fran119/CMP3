@@ -8,9 +8,12 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Build
 import android.widget.Button
 import android.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.config.GlobalPreferencesConstants
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,12 +26,22 @@ class MainActivity : AppCompatActivity(){
 
     private val adapter = MainViewFragmentAdapter(supportFragmentManager, lifecycle)
     private lateinit var viewPager : ViewPager2
+    private var currentStyleVersion = -1
+    private lateinit var bgLayout: ConstraintLayout
+    private lateinit var searchButton: MaterialButton
+    private lateinit var optionsButton: MaterialButton
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        bgLayout = findViewById(R.id.main_activity_layout)
+
+        searchButton = findViewById(R.id.main_search_button)
+        optionsButton = findViewById(R.id.main_options_button)
+
+        tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.view_pager)
         viewPager.adapter = adapter
 
@@ -54,14 +67,13 @@ class MainActivity : AppCompatActivity(){
 
         val res = checkCallingOrSelfPermission(permission)
         if(res == PackageManager.PERMISSION_GRANTED) {
-            findViewById<MaterialButton>(R.id.main_search_button).setOnClickListener {
+            searchButton.setOnClickListener {
                 startActivity(Intent(this, SearchActivity::class.java))
             }
         }
 
 
-        findViewById<Button>(R.id.main_options_button).setOnClickListener {
-
+        optionsButton.setOnClickListener {
             val popup = PopupMenu(this, it)
             popup.menuInflater.inflate(R.menu.customization_menu, popup.menu)
             popup.show()
@@ -101,12 +113,75 @@ class MainActivity : AppCompatActivity(){
                         }
                         startActivity(intent)
                     }
-
                 }
                 true
             }
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+
+        checkAndSetUpStyle()
+    }
+
+    /**
+     * Checks whether the current style has been changed. If so, the new style is set
+     */
+    private fun checkAndSetUpStyle() {
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, MODE_PRIVATE)
+        var version = prefs.getInt(PreferencesConstants.MAIN_STYLE_VERSION, 0)
+
+        if(version == 0) {
+            createStylePreferences(prefs)
+            version = prefs.getInt(PreferencesConstants.MAIN_STYLE_VERSION, 0)
+        }
+
+        if(version == currentStyleVersion) return
+
+        currentStyleVersion = version
+
+        prefs.apply {
+            val constants = PreferencesConstants
+            bgLayout.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg))
+            )
+
+            searchButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.SEARCH_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            searchButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.SEARCH_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+            optionsButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            optionsButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+
+            val tabLayoutColor = getInt(constants.TAB_COLOR_KEY, getColor(R.color.default_tabs_color))
+            tabLayout.tabRippleColor = ColorStateList.valueOf(tabLayoutColor)
+            tabLayout.tabTextColors = ColorStateList.valueOf(tabLayoutColor)
+            tabLayout.setSelectedTabIndicatorColor(tabLayoutColor)
+        }
+    }
+
+    /**
+     * Creates the default style for the view
+     * @param preferences [SharedPreferences] where the style will be stored
+     */
+    private fun createStylePreferences(preferences: SharedPreferences) {
+        preferences.edit().apply {
+            val constants = PreferencesConstants
+            putInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.SEARCH_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.SEARCH_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.TAB_COLOR_KEY, getColor(R.color.default_tabs_color))
+            putInt(constants.MAIN_STYLE_VERSION, 1)
+        }.apply()
     }
 
     /**
@@ -127,7 +202,7 @@ class MainActivity : AppCompatActivity(){
             /**
              * Key that refers to playlists list style version
              */
-            const val PLAYLIST_STYLE_VERSION = "version"
+            const val PLAYLIST_STYLE_VERSION = "playlist_version"
 
             /**
              * Key that refers to songs list layout
@@ -137,7 +212,7 @@ class MainActivity : AppCompatActivity(){
             /**
              * Key that refers to songs list style version
              */
-            const val SONGS_STYLE_VERSION = "version"
+            const val SONGS_STYLE_VERSION = "songs_version"
 
             /**
              * Key that refers to Activity background color

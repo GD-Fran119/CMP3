@@ -7,11 +7,14 @@ import com.example.songsAndPlaylists.SongList
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.database.Cursor
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +22,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.media3.common.MimeTypes
@@ -45,6 +49,11 @@ class SongListView : Fragment() {
 
     //Custom established layout
     private var currentLayout = -1
+    private lateinit var recyclerView: RecyclerView
+    //Custom style version
+    private var currentStyleVersion = -1
+    //Check whether style must be set no matter the version
+    private var mustChangeStyle = false
 
     /**
      * Launcher for requesting reading storage permission
@@ -128,6 +137,9 @@ class SongListView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerView = view.findViewById(R.id.main_song_list_view)
+        recyclerView.setHasFixedSize(true)
+
         checkForPermissions()
     }
 
@@ -201,7 +213,6 @@ class SongListView : Fragment() {
         //
 
         view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)
-
     }
 
     /**
@@ -230,9 +241,7 @@ class SongListView : Fragment() {
             this!!.putInt(MainActivity.PreferencesConstants.SONGS_LAYOUT_KEY, currentLayout)
         }?.apply()
 
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.main_song_list_view)
-        recyclerView?.setHasFixedSize(true)
-        val adapter : SongArrayAdapter
+        val adapter: SongArrayAdapter
 
         val manager: LayoutManager
         val layoutRes: Int
@@ -260,14 +269,70 @@ class SongListView : Fragment() {
         }
 
         adapter = SongArrayAdapter.create(activity as Activity, mainSongList.getList(), childFragmentManager, layoutRes)
-        recyclerView?.layoutManager = manager
-        recyclerView?.adapter = adapter
+        recyclerView.layoutManager = manager
+        recyclerView.adapter = adapter
+
+        mustChangeStyle = true
     }
 
     override fun onStart() {
         super.onStart()
         if(listCreated)
             checkLayoutAndSetUpRecyclerView()
+
+        checkAndSetUpStyle()
+    }
+
+    /**
+     * Checks whether the current style has been changed. If so, the new style is set
+     */
+    private fun checkAndSetUpStyle() {
+        val prefs = requireContext().getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        var version = prefs.getInt(MainActivity.PreferencesConstants.SONGS_STYLE_VERSION, 0)
+
+        if(version == 0) {
+            createStylePreferences(prefs)
+            version = prefs.getInt(MainActivity.PreferencesConstants.SONGS_STYLE_VERSION, 0)
+        }
+
+        if(!mustChangeStyle && version == currentStyleVersion) return
+
+        currentStyleVersion = version
+
+        prefs.apply {
+            val constants = MainActivity.PreferencesConstants
+            recyclerView.backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.SONGS_ITEMS_CONTAINER_BG_KEY,
+                    requireContext().getColor(R.color.default_layout_bg)
+                )
+            )
+        }
+        //TODO
+        //Get pos and scroll to it
+        recyclerView.adapter = recyclerView.adapter
+
+        mustChangeStyle = false
+    }
+
+    /**
+     * Creates the default style for the view
+     * @param preferences [SharedPreferences] where the style will be stored
+     */
+    private fun createStylePreferences(preferences: SharedPreferences) {
+        preferences.edit().apply {
+            val constants = MainActivity.PreferencesConstants
+            putInt(constants.SONGS_ITEMS_CONTAINER_BG_KEY, requireContext().getColor(R.color.default_layout_bg))
+            putInt(constants.SONGS_ITEM_BG_KEY, requireContext().getColor(R.color.default_layout_bg))
+            putInt(constants.SONGS_ITEM_IMG_BG_KEY, requireContext().getColor(R.color.default_image_placeholder_bg))
+            putInt(constants.SONGS_ITEM_IMG_FG_KEY, requireContext().getColor(R.color.default_image_placeholder_fg))
+            putInt(constants.SONGS_ITEM_TEXT_KEY, requireContext().getColor(R.color.default_text_color))
+            putInt(constants.SONGS_ITEM_BTN_BG_KEY, requireContext().getColor(R.color.default_buttons_bg))
+            putInt(constants.SONGS_ITEM_BTN_FG_KEY, requireContext().getColor(R.color.default_buttons_fg))
+            putInt(constants.SONGS_STYLE_VERSION, 1)
+        }.apply()
     }
 
     /**

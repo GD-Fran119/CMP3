@@ -1,6 +1,7 @@
 package com.example.recyclerviewAdapters
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -18,9 +19,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animations.ImageFadeInAnimation
+import com.example.cmp3.MainActivity
 import com.example.cmp3.playlistView.PlaylistView
 import com.example.cmp3.PlaylistListView
 import com.example.cmp3.R
+import com.example.config.GlobalPreferencesConstants
 import com.example.databaseStuff.SongPlaylistRelationData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +37,7 @@ import kotlinx.coroutines.withContext
 class PlaylistArrayAdapter private constructor(private var context: Activity, private var playlists: List<SongPlaylistRelationData>, private val viewLayoutRes: Int) :
     RecyclerView.Adapter<PlaylistArrayAdapter.PlaylistViewHolder>() {
 
+    private var defaultImageFGColor = -1
     companion object{
         /**
          * Factory method to create an [PlaylistArrayAdapter]
@@ -46,14 +50,22 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
             return PlaylistArrayAdapter(c, playlists, viewLayoutRes)
         }
     }
+    init {
+        context.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE).apply {
+            defaultImageFGColor = getInt(
+                MainActivity.PreferencesConstants.PLAYLIST_ITEM_IMG_FG_KEY,
+                context.getColor(R.color.default_image_placeholder_fg)
+            )
+        }
+    }
 
     /**
      * [ViewHolder][RecyclerView.ViewHolder] for the [PlaylistArrayAdapter]
      */
-    class PlaylistViewHolder(private val view: View, private val activity: Activity) : RecyclerView.ViewHolder(view) {
+    class PlaylistViewHolder(private val view: View, private val activity: Activity, private val defaultImageFGColor: Int) : RecyclerView.ViewHolder(view) {
 
         private var job : Job? = null
-        private val imageView = view.findViewById<ImageView>(R.id.playlist_icon)
+        private val imageView = view.findViewById<ImageView>(R.id.playlists_item_image)
 
         /**
          * Links the view elements with the [playlist]
@@ -61,8 +73,8 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
          * @param roundedImage true if the image associated to the playlist will be displayed as circle-shaped, false otherwise
          */
         fun bind(playlist: SongPlaylistRelationData, roundedImage: Boolean){
-            view.findViewById<TextView>(R.id.playlist_name).text = playlist.playlist.name
-            view.findViewById<TextView>(R.id.playlist_songs).text = if(playlist.songs.size != 1) "${playlist.songs.size} songs"
+            view.findViewById<TextView>(R.id.playlists_item_name).text = playlist.playlist.name
+            view.findViewById<TextView>(R.id.playlists_item_songs).text = if(playlist.songs.size != 1) "${playlist.songs.size} songs"
                                                                     else "1 song"
 
             view.setOnClickListener{
@@ -74,9 +86,8 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
             job?.cancel()
             imageView.setImageDrawable(null)
             imageView.foreground = AppCompatResources.getDrawable(activity, R.drawable.ic_music_note)
-            //TODO
-            //Change with default foreground color
-            imageView.foregroundTintList = ColorStateList.valueOf(Color.parseColor("#000000"))
+            imageView.foregroundTintList = ColorStateList.valueOf(defaultImageFGColor)
+
             if(playlist.songs.isEmpty()) return
 
             job = CoroutineScope(Dispatchers.Default).launch {
@@ -139,7 +150,57 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
         val view = LayoutInflater
             .from(parent.context)
             .inflate(viewLayoutRes, parent, false)
-        return PlaylistViewHolder(view, context)
+
+        decorateView(view)
+
+        return PlaylistViewHolder(view, context, defaultImageFGColor)
+    }
+
+    /**
+     * Establishes the colors the view elements must have
+     * @param view view to customize
+     */
+    private fun decorateView(view: View){
+        val prefs = context.getSharedPreferences(GlobalPreferencesConstants.MAIN_ACT_PREFERENCES, Context.MODE_PRIVATE)
+
+        prefs.apply {
+            val constants = MainActivity.PreferencesConstants
+
+            view.findViewById<ConstraintLayout>(R.id.playlists_item_layout).backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.PLAYLIST_ITEM_BG_KEY,
+                    context.getColor(R.color.default_layout_bg)
+                )
+            )
+
+            val image = view.findViewById<ImageView>(R.id.playlists_item_image)
+            image.backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.PLAYLIST_ITEM_IMG_BG_KEY,
+                    context.getColor(R.color.default_image_placeholder_bg)
+                )
+            )
+            image.foregroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.PLAYLIST_ITEM_IMG_FG_KEY,
+                    context.getColor(R.color.default_image_placeholder_fg)
+                )
+            )
+
+            val textColor= getInt(
+                constants.PLAYLIST_ITEM_TEXT_KEY,
+                context.getColor(R.color.default_text_color)
+            )
+            view.findViewById<TextView>(R.id.playlists_item_name).setTextColor(textColor)
+            view.findViewById<TextView>(R.id.playlists_item_songs).setTextColor(textColor)
+
+            view.findViewById<ImageView>(R.id.playlists_item_button)?.foregroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.PLAYLIST_ITEM_ICON_KEY,
+                    context.getColor(R.color.default_icon_color)
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, pos: Int) {

@@ -13,6 +13,8 @@
     <color name="default_image_placeholder_fg">#FF000000</color>
     <color name="default_image_placeholder_bg">#C0C0C0</color>
     <color name="default_text_color">#FF000000</color>
+    <color name="default_search_box_text_color">#FF000000</color>
+    <color name="default_search_clear_button_color">#FF7F7F7F</color>
     <color name="default_play_control_text_color">#FFFFFFFF</color>
     <color name="default_tabs_color">#FF000000</color>
     <color name="default_progress_bar_color">#FFFF0000</color>

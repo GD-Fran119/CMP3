@@ -3,6 +3,7 @@ package com.example.cmp3.playlistView
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.widget.PopupMenu
@@ -28,6 +29,7 @@ import kotlinx.coroutines.withContext
 import com.example.cmp3.CurrentSongFragment
 import com.example.playerStuff.Player
 import android.os.Parcelable
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.button.MaterialButton
 
 /**
@@ -64,8 +66,12 @@ class PlaylistView : AppCompatActivity() {
 
     //Custom layout set
     private var currentLayout = -1
+    private var currentStyleVersion = -1
 
     private lateinit var playlist: SongPlaylistRelationData
+    private lateinit var bgLayout: ConstraintLayout
+    private lateinit var backButton: MaterialButton
+    private lateinit var optionsButton: MaterialButton
     private lateinit var recyclerView: RecyclerView
     //Playlist info fragment
     private lateinit var fragmentContainerView: FragmentContainerView
@@ -76,6 +82,7 @@ class PlaylistView : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist_info)
 
+        bgLayout = findViewById(R.id.playlist_info_layout)
         fragmentContainerView = findViewById(R.id.playlist_info_container)
 
         retrievePlaylist()
@@ -87,6 +94,7 @@ class PlaylistView : AppCompatActivity() {
         super.onStart()
 
         checkAndSetUpInfoFragment()
+        checkAndSetUpStyle()
 
         if(!playAllTextSet) {
             setUpPlayAllSongs()
@@ -148,6 +156,73 @@ class PlaylistView : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks whether the current style has been changed. If so, the new style is set
+     */
+    private fun checkAndSetUpStyle() {
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.PLAYLIST_ACT_PREFERENCES, MODE_PRIVATE)
+        var version = prefs.getInt(PreferencesConstants.STYLE_VERSION_KEY, 0)
+
+        if(version == 0) {
+            createStylePreferences(prefs)
+            version = prefs.getInt(PreferencesConstants.STYLE_VERSION_KEY, 0)
+        }
+
+        if(version == currentStyleVersion) return
+
+        currentStyleVersion = version
+
+        prefs.apply {
+            val constants = PreferencesConstants
+            bgLayout.backgroundTintList = ColorStateList.valueOf(getInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg)))
+
+            backButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.BACK_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            backButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.BACK_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+            optionsButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            optionsButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+
+            recyclerView.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.ITEMS_CONTAINER_BG_KEY, getColor(R.color.default_layout_bg))
+            )
+
+            //TODO
+            //Get pos and scroll to it
+            recyclerView.adapter = recyclerView.adapter
+        }
+    }
+
+    /**
+     * Creates the default style for the view
+     * @param preferences [SharedPreferences] where the style will be stored
+     */
+    private fun createStylePreferences(preferences: SharedPreferences) {
+        preferences.edit().apply {
+            val constants = PreferencesConstants
+            putInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.BACK_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.BACK_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.PLAYLIST_IMG_BG_KEY, getColor(R.color.default_image_placeholder_bg))
+            putInt(constants.PLAYLIST_IMG_FG_KEY, getColor(R.color.default_image_placeholder_fg))
+            putInt(constants.PLAYLIST_INFO_KEY, getColor(R.color.default_text_color))
+            putInt(constants.ITEMS_CONTAINER_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.ITEM_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.ITEM_TEXT_KEY, getColor(R.color.default_text_color))
+            putInt(constants.ITEM_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.ITEM_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, 1)
+        }.apply()
+    }
+
 
     /**
      * Collects the playlist passed as [Parcelable] via intent
@@ -168,13 +243,13 @@ class PlaylistView : AppCompatActivity() {
      * Establishes functionality for top bar buttons
      */
     private fun setUpButtons() {
-        findViewById<MaterialButton>(R.id.topbar_back_button).setOnClickListener{
+        backButton = findViewById(R.id.topbar_back_button)
+        backButton.setOnClickListener{
             onBackPressed()
         }
 
-        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
-            //TODO
-            //Show menu
+        optionsButton = findViewById(R.id.topbar_options_button)
+        optionsButton.setOnClickListener {
             val popup = PopupMenu(this, it)
             popup.menuInflater.inflate(R.menu.playlist_menu, popup.menu)
             popup.show()

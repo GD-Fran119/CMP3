@@ -3,6 +3,7 @@ package com.example.cmp3
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,21 +40,31 @@ class SearchActivity : AppCompatActivity() {
         private const val VERTICAL_CARD_LAYOUT = 3
     }
 
-    private lateinit var editText: EditText
+    private lateinit var bgLayout: ConstraintLayout
+    private lateinit var backButton: MaterialButton
+    private lateinit var optionsButton: MaterialButton
+    private lateinit var searchBox: EditText
+    private lateinit var clearButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchSongAdapter
 
     //Custom established layout
     private var currentLayout = -1
+    private var currentStyleVersion = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        findViewById<MaterialButton>(R.id.topbar_back_button).setOnClickListener {
+        bgLayout = findViewById(R.id.search_layout_parent)
+
+        backButton = findViewById(R.id.topbar_back_button)
+        backButton.setOnClickListener {
             onBackPressed()
         }
 
-        findViewById<MaterialButton>(R.id.topbar_options_button).setOnClickListener {
+        optionsButton = findViewById(R.id.topbar_options_button)
+        optionsButton.setOnClickListener {
             val popup = PopupMenu(this, it)
             popup.menuInflater.inflate(R.menu.customization_menu, popup.menu)
             popup.show()
@@ -76,9 +88,9 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        editText = findViewById(R.id.search_text)
+        searchBox = findViewById(R.id.search_text)
 
-        editText.addTextChangedListener(object: TextWatcher{
+        searchBox.addTextChangedListener(object: TextWatcher{
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 adapter.filterDataset(s.toString())
                 recyclerView.scrollToPosition(0)
@@ -88,20 +100,25 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        findViewById<Button>(R.id.search_clear_button).setOnClickListener{
-            editText.text.clear()
+        clearButton = findViewById(R.id.search_clear_button)
+        clearButton.setOnClickListener{
+            searchBox.text.clear()
         }
+
+        recyclerView = findViewById(R.id.search_recyclerview)
+        recyclerView.setHasFixedSize(true)
     }
 
     override fun onStart() {
         super.onStart()
-        checkAndSetupRecyclerView()
+        checkAndSetUpLayout()
+        checkAndSetUpStyle()
     }
 
     /**
      * Checks whether the current layout has been changed. If so, the new layout is set
      */
-    private fun checkAndSetupRecyclerView() {
+    private fun checkAndSetUpLayout() {
 
         val prefs = getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, Context.MODE_PRIVATE)
         var savedLayout = prefs.getInt(GlobalPreferencesConstants.LAYOUT_KEY, -1)
@@ -123,9 +140,6 @@ class SearchActivity : AppCompatActivity() {
         prefs?.edit().apply {
             this!!.putInt(GlobalPreferencesConstants.LAYOUT_KEY, currentLayout)
         }?.apply()
-
-        recyclerView = findViewById(R.id.search_recyclerview)
-        recyclerView.setHasFixedSize(true)
 
         val manager: RecyclerView.LayoutManager
         val layoutRes: Int
@@ -154,11 +168,87 @@ class SearchActivity : AppCompatActivity() {
         }
 
         adapter = SearchSongAdapter(this, MainListHolder.getMainList().getList(), supportFragmentManager, layoutRes)
-        adapter.filterDataset(editText.text.toString())
+        adapter.filterDataset(searchBox.text.toString())
 
         recyclerView.layoutManager = manager
         recyclerView.adapter = adapter
 
+    }
+
+    /**
+     * Checks whether the current style has been changed. If so, the new style is set
+     */
+    private fun checkAndSetUpStyle() {
+        val prefs = getSharedPreferences(GlobalPreferencesConstants.SEARCH_ACT_PREFERENCES, MODE_PRIVATE)
+        var version = prefs.getInt(PreferencesConstants.STYLE_VERSION_KEY, 0)
+
+        if(version == 0) {
+            createStylePreferences(prefs)
+            version = prefs.getInt(PreferencesConstants.STYLE_VERSION_KEY, 0)
+        }
+
+        if(version == currentStyleVersion) return
+
+        currentStyleVersion = version
+
+        prefs.apply {
+            val constants = PreferencesConstants
+            bgLayout.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg))
+            )
+
+            backButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.BACK_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            backButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.BACK_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+            optionsButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            )
+            optionsButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            )
+
+            val searchTextColor = getInt(constants.SEARCH_BOX_KEY, getColor(R.color.default_search_box_text_color))
+            searchBox.setTextColor(searchTextColor)
+            searchBox.setHintTextColor(ColorStateList.valueOf(searchTextColor).withAlpha(0x80).defaultColor)
+
+            clearButton.setTextColor(getInt(constants.CLEAR_BTN_KEY, getColor(R.color.default_search_clear_button_color)))
+
+            recyclerView.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.ITEMS_CONTAINER_BG_KEY, getColor(R.color.default_layout_bg))
+            )
+
+            //TODO
+            //Get pos and scroll to it
+            recyclerView.adapter = recyclerView.adapter
+        }
+    }
+
+    /**
+     * Creates the default style for the view
+     * @param preferences [SharedPreferences] where the style will be stored
+     */
+    private fun createStylePreferences(preferences: SharedPreferences) {
+        preferences.edit().apply {
+            val constants = PreferencesConstants
+            putInt(constants.GENERAL_LAYOUT_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.BACK_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.BACK_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.OPTIONS_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.OPTIONS_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.SEARCH_BOX_KEY, getColor(R.color.default_search_box_text_color))
+            putInt(constants.CLEAR_BTN_KEY, getColor(R.color.default_search_clear_button_color))
+            putInt(constants.ITEMS_CONTAINER_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.ITEM_BG_KEY, getColor(R.color.default_layout_bg))
+            putInt(constants.ITEM_IMG_BG_KEY, getColor(R.color.default_image_placeholder_bg))
+            putInt(constants.ITEM_IMG_FG_KEY, getColor(R.color.default_image_placeholder_fg))
+            putInt(constants.ITEM_TEXT_KEY, getColor(R.color.default_text_color))
+            putInt(constants.ITEM_BTN_BG_KEY, getColor(R.color.default_buttons_bg))
+            putInt(constants.ITEM_BTN_FG_KEY, getColor(R.color.default_buttons_fg))
+            putInt(constants.STYLE_VERSION_KEY, 1)
+        }.apply()
     }
 
     /**

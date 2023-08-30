@@ -1,18 +1,23 @@
 package com.example.recyclerviewAdapters
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomSheets.SongInfoDialogFragment
 import com.example.cmp3.PlayControlView
 import com.example.cmp3.R
 import com.example.cmp3.playlistView.PlaylistView
+import com.example.config.GlobalPreferencesConstants
 import com.example.databaseStuff.AppDatabase
 import com.example.databaseStuff.SongPlaylistRelation
 import com.example.playerStuff.Player
@@ -52,12 +57,12 @@ class PlaylistSongAdapter(private var context: Activity, var playlist: SongList,
         fun bind(song: Song, pos: Int, fragmentManager: FragmentManager, onRemoveItem: OnItemRemoved, playlist: SongList){
 
             songItemPos = pos
-            view.findViewById<TextView>(R.id.item_song_title).text = song.title
+            view.findViewById<TextView>(R.id.playlist_item_song_title).text = song.title
 
             val artist = if (song.artist == "<unknown>") "Unknown" else song.artist
-            view.findViewById<TextView>(R.id.item_song_desc).text = "$artist - ${song.album}"
+            view.findViewById<TextView>(R.id.playlist_item_song_desc).text = "$artist - ${song.album}"
 
-            view.findViewById<MaterialButton>(R.id.item_song_options).setOnClickListener{
+            view.findViewById<MaterialButton>(R.id.playlist_item_song_options).setOnClickListener{
 
                 val dialog = SongInfoDialogFragment(song)
                 val action = object : SongInfoDialogFragment.SongInfoDialogAction{
@@ -97,7 +102,50 @@ class PlaylistSongAdapter(private var context: Activity, var playlist: SongList,
         val view = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.item_playlist_view, parent, false)
+
+        decorateView(view)
+
         return PlaylistSongViewHolder(view, context)
+    }
+
+    /**
+     * Establishes the colors the view elements must have
+     * @param view view to customize
+     */
+    private fun decorateView(view: View){
+        val prefs = context.getSharedPreferences(GlobalPreferencesConstants.PLAYLIST_ACT_PREFERENCES, Context.MODE_PRIVATE)
+
+        prefs.apply {
+            val constants = PlaylistView.PreferencesConstants
+
+            view.findViewById<ConstraintLayout>(R.id.playlist_item_layout).backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.ITEM_BG_KEY,
+                    context.getColor(R.color.default_layout_bg)
+                )
+            )
+
+            val textColor = getInt(
+                constants.ITEM_TEXT_KEY,
+                context.getColor(R.color.default_text_color)
+            )
+            view.findViewById<TextView>(R.id.playlist_item_song_title).setTextColor(textColor)
+            view.findViewById<TextView>(R.id.playlist_item_song_desc).setTextColor(textColor)
+
+            val button = view.findViewById<MaterialButton>(R.id.playlist_item_song_options)
+            button.backgroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.ITEM_BTN_BG_KEY,
+                    context.getColor(R.color.default_buttons_bg)
+                )
+            )
+            button.foregroundTintList = ColorStateList.valueOf(
+                getInt(
+                    constants.ITEM_BTN_FG_KEY,
+                    context.getColor(R.color.default_buttons_fg)
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: PlaylistSongViewHolder, position: Int) {

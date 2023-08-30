@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.bottomSheets.ColorPickerBottomSheet1
 import com.example.bottomSheets.ColorPickerBottomSheet2
@@ -82,6 +83,7 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
             putInt(constants.PLAYLIST_STYLE_VERSION, playlistFragmentVersion + 1)
             putInt(constants.MAIN_STYLE_VERSION, actVersion + 1)
         }.apply()
+
 
         //Current song fragment prefs
         activity?.getSharedPreferences(GlobalPreferencesConstants.CURRENT_SONG_FRAGMENT_PREFERENCES, Context.MODE_PRIVATE)!!.edit().apply {
@@ -362,16 +364,11 @@ class PlaylistsListStyleFragment(layoutRes: Int) : StyleFragmentBase(layoutRes) 
 
         itemOptionsButton = view.findViewById(R.id.change_style_item_options)
         itemOptionsButton?.setOnClickListener {
-            val picker = ColorPickerBottomSheet2("Item options button",
-                arrayOf("Foreground color", "Background color"),
-                intArrayOf((it.foregroundTintList?.defaultColor ?: 0), (it.backgroundTintList?.defaultColor ?: 0)))
-            picker.setOnColorSelectedListener { itemPosition, color ->
-                if(itemPosition == 0){
-                    it.foregroundTintList = ColorStateList.valueOf(color)
-                }
-                else if(itemPosition == 1){
-                    it.backgroundTintList = ColorStateList.valueOf(color)
-                }
+            val picker = ColorPickerBottomSheet1("Item options button",
+                arrayOf("Icon color"),
+                intArrayOf((it.foregroundTintList?.defaultColor ?: 0)))
+            picker.setOnColorSelectedListener { _, color ->
+                it.foregroundTintList = ColorStateList.valueOf(color)
             }
             picker.show(childFragmentManager, "Bottom sheet")
         }

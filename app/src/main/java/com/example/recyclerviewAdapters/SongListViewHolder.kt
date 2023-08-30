@@ -35,10 +35,10 @@ import java.lang.Exception
  */
 class SongListViewHolder(private val view: View, private val context: Context) : RecyclerView.ViewHolder(view) {
 
-    private val titleText: TextView = view.findViewById(R.id.title)
-    private val subtitleText: TextView = view.findViewById(R.id.albumNArtist)
-    private val imageView: ImageView = view.findViewById(R.id.icon)
-    private val button : Button = view.findViewById(R.id.mainViewSongButton)
+    private val titleText: TextView = view.findViewById(R.id.song_list_item_title)
+    private val subtitleText: TextView = view.findViewById(R.id.song_list_item_album_artist)
+    private val imageView: ImageView = view.findViewById(R.id.song_list_item_image)
+    private val button : Button = view.findViewById(R.id.song_list_item_button)
     private var job : Job? = null
     private lateinit var song: Song
 

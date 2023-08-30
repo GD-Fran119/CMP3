@@ -1,6 +1,7 @@
 package com.example.cmp3.playlistView
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
@@ -40,6 +41,7 @@ class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
 
         imageView.setImageDrawable(null)
         imageView.foreground = getDrawable(requireContext(), R.drawable.ic_music_note)
+        imageView.foregroundTintList = ColorStateList.valueOf(imgForegroundDefaultColor)
 
         if(list!!.isEmpty()) return
 
@@ -75,6 +77,7 @@ class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
 
         withContext(Dispatchers.Main) {
             imageView.foreground = getDrawable(activity as Context, R.drawable.circle_album_foreground)
+            imageView.foregroundTintList = ColorStateList.valueOf(imgForegroundColorWhenImageSet)
             imageView.setImageDrawable(roundedBitmapDrawable)
             imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
         }

@@ -20,7 +20,7 @@
         android:background="#FFFFFF">
 
         <ImageView
-            android:id="@id/playlist_icon"
+            android:id="@id/playlists_item_image"
             android:layout_width="0sp"
             android:layout_height="0sp"
             app:layout_constraintDimensionRatio="1:1"
@@ -32,22 +32,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/playlist_text_container"/>
+            app:layout_constraintBottom_toTopOf="@id/playlists_item_text_container"/>
 
         <LinearLayout
-            android:id="@id/playlist_text_container"
+            android:id="@id/playlists_item_text_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10sp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/playlist_icon"
+            app:layout_constraintTop_toBottomOf="@id/playlists_item_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
-                android:id="@id/playlist_name"
+                android:id="@id/playlists_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="title"
@@ -59,7 +59,7 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
             <TextView
-                android:id="@id/playlist_songs"
+                android:id="@id/playlists_item_songs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"

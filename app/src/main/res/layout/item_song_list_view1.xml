@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/song_list_text_container">
             <ImageView
-                android:id="@+id/icon"
+                android:id="@+id/song_list_item_image"
                 android:layout_width="50sp"
                 android:layout_height="50sp"
                 android:scaleType="centerCrop"
@@ -44,10 +44,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/song_list_card"
-            app:layout_constraintEnd_toStartOf="@id/mainViewSongButton">
+            app:layout_constraintEnd_toStartOf="@id/song_list_item_button">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/song_list_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="title"
@@ -58,7 +58,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/albumNArtist"
+                android:id="@+id/song_list_item_album_artist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -70,7 +70,7 @@
         </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mainViewSongButton"
+        android:id="@+id/song_list_item_button"
         android:layout_width="30sp"
         android:layout_height="30sp"
         android:insetTop="0dp"

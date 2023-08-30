@@ -269,14 +269,16 @@ class AddSongsStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
             val itemBGColor = getInt(constants.ITEM_BG_KEY,
                                         requireContext().getColor(R.color.default_layout_bg)
                                         )
-            itemIcon1.backgroundTintList = ColorStateList.valueOf(itemBGColor)
-            itemIcon2.backgroundTintList = ColorStateList.valueOf(itemBGColor)
+            itemLayout1.backgroundTintList = ColorStateList.valueOf(itemBGColor)
+            itemLayout2.backgroundTintList = ColorStateList.valueOf(itemBGColor)
 
             val itemTextColor = getInt(constants.ITEM_TEXT_KEY,
                                         requireContext().getColor(R.color.default_text_color)
                                         )
             titleView1.foregroundTintList = ColorStateList.valueOf(itemTextColor)
             titleView2.foregroundTintList = ColorStateList.valueOf(itemTextColor)
+            desc1.foregroundTintList = ColorStateList.valueOf(itemTextColor)
+            desc2.foregroundTintList = ColorStateList.valueOf(itemTextColor)
 
             val itemIconColor = getInt(constants.ITEM_ICON_KEY,
                                         requireContext().getColor(R.color.default_icon_color)

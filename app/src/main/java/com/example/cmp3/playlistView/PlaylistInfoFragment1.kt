@@ -55,7 +55,6 @@ class PlaylistInfoFragment1: PlaylistInfoBaseFragment() {
                 imageView.setImageBitmap(bitmap)
                 imageView.startAnimation(ImageFadeInAnimation(0f, 1f))
             }
-
         }
     }
 }

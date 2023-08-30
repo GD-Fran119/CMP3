@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:hint="Playlist name"
         android:textSize="20sp"
+        android:maxLength="100"
         android:layout_marginHorizontal="10sp"
         android:layout_marginBottom="10sp"
         android:inputType="textCapSentences"/>
