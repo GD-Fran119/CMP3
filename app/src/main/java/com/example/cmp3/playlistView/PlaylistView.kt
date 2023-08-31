@@ -86,6 +86,9 @@ class PlaylistView : AppCompatActivity() {
         fragmentContainerView = findViewById(R.id.playlist_info_container)
 
         retrievePlaylist()
+
+        val fragment = PlayAllSongsFragment(SongList(playlist))
+        supportFragmentManager.beginTransaction().setReorderingAllowed(true).replace(R.id.playlist_play_all_fragment, fragment).commit()
         setUpButtons()
         setUpRecyclerView()
     }

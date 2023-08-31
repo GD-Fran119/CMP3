@@ -37,7 +37,6 @@
         android:id="@+id/playlist_play_all_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.example.cmp3.PlayAllSongsFragment"
         app:layout_constraintBottom_toTopOf="@id/playlist_info_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

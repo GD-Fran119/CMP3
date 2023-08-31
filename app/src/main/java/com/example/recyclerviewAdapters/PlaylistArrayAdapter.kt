@@ -115,7 +115,7 @@ class PlaylistArrayAdapter private constructor(private var context: Activity, pr
         private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
             val height = bitmap.height
             val width = bitmap.width
-            val dim = Integer.max(height, width)
+            val dim = Integer.min(height, width)
 
             val croppedBitmap = ThumbnailUtils.extractThumbnail(bitmap, dim, dim)
             val roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.resources, croppedBitmap)

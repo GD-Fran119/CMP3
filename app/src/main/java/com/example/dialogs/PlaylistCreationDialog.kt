@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.databaseStuff.PlaylistEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 
@@ -63,7 +65,9 @@ class PlaylistCreationDialog: DialogFragment() {
                     //Do important stuff for creating new playlist
                     CoroutineScope(Dispatchers.Default).launch {
                         val dao = AppDatabase.getInstance(activity as Context).playlistDao()
-                        val date = LocalDate.now().toString()
+                        val date = if(Build.VERSION.SDK_INT < 26)
+                                    SimpleDateFormat("yyyy-MM-dd").format(Date())
+                                    else LocalDate.now().toString()
                         val newPlaylist = PlaylistEntity(input, date)
                         val id = dao.insertPlaylist(newPlaylist)
 

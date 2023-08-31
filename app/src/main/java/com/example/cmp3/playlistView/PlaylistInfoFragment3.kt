@@ -68,8 +68,9 @@ class PlaylistInfoFragment3 : PlaylistInfoBaseFragment() {
     private suspend fun setRoundedBitmapToImageView(bitmap: Bitmap){
         val height = bitmap.height
         val width = bitmap.width
-        val dim = Integer.max(height, width)
+        val dim = Integer.min(height, width)
 
+        //Square-ize bitmap
         val croppedBitmap = ThumbnailUtils.extractThumbnail(bitmap, dim, dim)
         val roundedBitmapDrawable=
             RoundedBitmapDrawableFactory.create(resources, croppedBitmap)

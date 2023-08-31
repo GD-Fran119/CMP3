@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.example.cmp3.playlistView.PlaylistInfoFragment1
 import com.example.config.GlobalPreferencesConstants
 import com.example.config.PlayerStateSaver
 import com.example.databaseStuff.AppDatabase
@@ -148,11 +149,15 @@ class SongListView : Fragment() {
      * If permissions are granted, songs are loaded from the device
      */
     private fun checkForPermissions(){
+        val permission = if(Build.VERSION.SDK_INT < 33)
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        else
+                            Manifest.permission.READ_MEDIA_AUDIO
+
         when {
             ContextCompat.checkSelfPermission(
-                activity as Context
-                ,
-                Manifest.permission.READ_MEDIA_AUDIO
+                activity as Context,
+                permission
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
                 try {
@@ -166,20 +171,13 @@ class SongListView : Fragment() {
                     Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 }
             }
-            shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_AUDIO) -> {
+            shouldShowRequestPermissionRationale(permission) -> {
                 showPermissionExplanation()
             }
             else -> {
                 // You can directly ask for the permission.
                 // The registered ActivityResultCallback gets the result of this request.
-                if(Build.VERSION.SDK_INT < 33)
-                    requestPermissionLauncher.launch(
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    )
-                else
-                    requestPermissionLauncher.launch(
-                        Manifest.permission.READ_MEDIA_AUDIO
-                    )
+                requestPermissionLauncher.launch(permission)
             }
         }
     }
@@ -212,7 +210,8 @@ class SongListView : Fragment() {
         }
         //
 
-        view?.findViewById<FragmentContainerView>(R.id.main_play_all_fragment)?.getFragment<PlayAllSongsFragment>()?.setList(mainSongList)
+        val fragment = PlayAllSongsFragment(mainSongList)
+        childFragmentManager.beginTransaction().setReorderingAllowed(true).replace(R.id.main_play_all_fragment, fragment).commit()
     }
 
     /**

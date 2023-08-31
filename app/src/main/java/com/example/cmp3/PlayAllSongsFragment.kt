@@ -23,7 +23,7 @@ import kotlin.random.nextUInt
  * Fragment that displays how many songs have a specific playlist. If this fragment is clicked by the user,
  * the playlist is set on the [Player], a random song is selected and played and a [PlayControlView] instance is started
  */
-class PlayAllSongsFragment : Fragment() {
+class PlayAllSongsFragment(private var songList: SongList) : Fragment() {
 
     private lateinit var list: SongList
     //Style version
@@ -46,6 +46,7 @@ class PlayAllSongsFragment : Fragment() {
         playAllText = view.findViewById(R.id.play_all_songs_text)
         desc = view.findViewById(R.id.play_all_songs_number)
         icon = view.findViewById(R.id.play_all_songs_icon)
+        setList(songList)
     }
 
     override fun onStart() {
@@ -120,18 +121,6 @@ class PlayAllSongsFragment : Fragment() {
         }
     }
 
-
-    companion object {
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         * @return A new instance of fragment PlayAllSongsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() = PlayAllSongsFragment()
-    }
 
     /**
      * Class that stores keys for [PlayAllSongsFragment]'s [SharedPreferences]
