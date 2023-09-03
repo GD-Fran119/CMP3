@@ -213,6 +213,7 @@ class SearchActivity : AppCompatActivity() {
             val searchTextColor = getInt(constants.SEARCH_BOX_KEY, getColor(R.color.default_search_box_text_color))
             searchBox.setTextColor(searchTextColor)
             searchBox.setHintTextColor(ColorStateList.valueOf(searchTextColor).withAlpha(0x80).defaultColor)
+            searchBox.backgroundTintList = ColorStateList.valueOf(searchTextColor)
 
             clearButton.setTextColor(getInt(constants.CLEAR_BTN_KEY, getColor(R.color.default_search_clear_button_color)))
 
