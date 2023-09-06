@@ -49,6 +49,9 @@ class AddSongsToPlaylistActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.add_playlist_recyclerview)
 
+        //Reset added songs dataset
+        AddSongAdapter.AddSongViewHolder.addedSongs.clear()
+
         searchBox = findViewById(R.id.search_text)
         searchBox.addTextChangedListener(object: TextWatcher{
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
