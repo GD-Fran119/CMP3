@@ -135,6 +135,16 @@ class PlaylistViewStyleFragment(layoutRes: Int): StyleFragmentBase(layoutRes) {
                     requireContext().getColor(R.color.default_buttons_fg)
                 )
             )
+            optionsButton.backgroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_BG_KEY,
+                    requireContext().getColor(R.color.default_buttons_bg)
+                )
+            )
+            optionsButton.foregroundTintList = ColorStateList.valueOf(
+                getInt(constants.OPTIONS_BTN_FG_KEY,
+                    requireContext().getColor(R.color.default_buttons_fg)
+                )
+            )
             playlistImage.backgroundTintList = ColorStateList.valueOf(
                 getInt(constants.PLAYLIST_IMG_BG_KEY,
                     requireContext().getColor(R.color.default_image_placeholder_bg)
